@@ -3,88 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Генерация персонажа через промпт</title>
+    <title>Генерация персонажа через промпт | Danganronpa</title>
     <style>
+        /* === ОБЩИЕ СТИЛИ (улучшенная читаемость, эффекты) === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             background: radial-gradient(circle at 20% 30%, #1a0f0a, #050101);
-            font-family: 'Courier New', monospace;
+            font-family: 'Courier New', 'Courier', monospace;
             padding: 20px;
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+        /* Эффект "кинескопа" */
         .crt {
-            max-width: 1000px;
+            max-width: 1100px;
+            width: 100%;
             margin: auto;
             background: #0a0a0a;
             border: 8px solid #3a2a2a;
             border-radius: 28px;
             padding: 30px;
             box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 10px rgba(0,0,0,0.5);
+            position: relative;
+            backdrop-filter: blur(1px);
         }
+        .crt::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,255,0,0.03) 0px, rgba(0,255,0,0.03) 2px, transparent 2px, transparent 4px);
+            pointer-events: none;
+            border-radius: 26px;
+        }
+        /* Заголовки */
         h1 {
             text-align: center;
-            font-size: clamp(28px, 7vw, 38px);
+            font-size: clamp(28px, 7vw, 42px);
             color: #ff8866;
             text-shadow: 0 0 6px #ff4422, 2px 2px 0 #3a1a1a;
             margin-bottom: 15px;
+            letter-spacing: 3px;
         }
         .sub {
             text-align: center;
             color: #dd8888;
-            font-size: 16px;
+            font-size: 18px;
             margin-bottom: 30px;
             border-bottom: 2px solid #aa5544;
             padding-bottom: 15px;
+            font-weight: bold;
         }
+        /* Блок ввода промпта */
         .prompt-area {
             background: #111111cc;
             border-left: 6px solid #d45a2e;
             padding: 20px;
-            border-radius: 16px;
+            border-radius: 20px;
             margin-bottom: 20px;
             backdrop-filter: blur(4px);
+            transition: border 0.2s;
+        }
+        .prompt-area label {
+            display: block;
+            font-weight: bold;
+            color: #ffccaa;
+            margin-bottom: 12px;
+            font-size: 18px;
         }
         textarea {
             width: 100%;
             background: #1a1a1a;
             border: 2px solid #aa5544;
             color: #f0e0d0;
-            padding: 15px;
-            font-family: monospace;
-            font-size: 14px;
-            border-radius: 16px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            border-radius: 20px;
             resize: vertical;
-            transition: border 0.2s;
+            transition: all 0.2s;
+            line-height: 1.5;
         }
         textarea:focus {
             border-color: #ff8866;
             outline: none;
-            box-shadow: 0 0 10px #ff6644;
+            box-shadow: 0 0 12px #ff6644;
         }
+        /* Кнопки */
         button {
             background: #2a1a1a;
             border: 2px solid #aa6644;
             color: #ffccaa;
             padding: 14px;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
-            border-radius: 40px;
-            transition: all 0.2s;
-            margin-top: 10px;
+            border-radius: 60px;
+            transition: all 0.2s ease;
+            margin-top: 12px;
+            letter-spacing: 1px;
         }
         button:hover {
             background: #4a2a2a;
             border-color: #ffaa66;
             color: #fff;
-            box-shadow: 0 0 15px #ff8866;
+            box-shadow: 0 0 16px #ff8866;
             transform: scale(1.01);
         }
         .example-btn {
             background: #1a3a2a;
             border-color: #66aa66;
         }
+        .example-btn:hover {
+            background: #2a5a2a;
+            box-shadow: 0 0 12px #88ff88;
+        }
+        /* Результат */
         .result-area {
             margin-top: 30px;
             padding-top: 20px;
@@ -94,62 +138,123 @@
         .result-header {
             color: #88ff88;
             text-align: center;
-            margin-bottom: 15px;
-            font-size: 20px;
-            text-shadow: 0 0 4px #00aa00;
+            margin-bottom: 20px;
+            font-size: 22px;
+            text-shadow: 0 0 6px #00aa00;
+            font-weight: bold;
         }
         .preview-card {
             background: #1a1f1aee;
             border: 2px solid #ffaa66;
             border-radius: 28px;
-            width: 240px;
+            width: 260px;
             padding: 20px;
             margin: 0 auto;
             text-align: center;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 25px rgba(0,0,0,0.6);
+            transition: transform 0.2s;
+        }
+        .preview-card:hover {
+            transform: scale(1.02);
+            border-color: #ffcc88;
         }
         .preview-avatar {
-            font-size: 64px;
+            font-size: 72px;
+            margin-bottom: 10px;
         }
+        .preview-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffeebb;
+            text-shadow: 1px 1px 0 #2a1a1a;
+        }
+        .preview-talent {
+            font-size: 14px;
+            color: #ddbb88;
+            margin-top: 6px;
+            font-weight: bold;
+        }
+        .preview-tag {
+            background: #000000aa;
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 40px;
+            color: #ffcc88;
+            margin-top: 12px;
+            font-size: 12px;
+        }
+        .extracted-info {
+            background: #1a1a1a;
+            padding: 18px;
+            border-radius: 24px;
+            margin-top: 20px;
+            font-size: 15px;
+            border-left: 4px solid #ffaa66;
+            line-height: 1.5;
+        }
+        /* Уведомления */
         .toast {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 25px;
+            right: 25px;
             background: #2a4a2a;
             color: #cfeca8;
-            padding: 12px 24px;
-            border-radius: 40px;
+            padding: 14px 28px;
+            border-radius: 60px;
             font-weight: bold;
+            font-size: 15px;
             z-index: 1000;
             animation: fadeOut 3s forwards;
+            box-shadow: 0 0 12px #88ff88;
         }
         @keyframes fadeOut {
             0% { opacity: 1; transform: translateY(0); }
             70% { opacity: 1; }
             100% { opacity: 0; visibility: hidden; transform: translateY(20px); }
         }
+        /* Навигация */
         .main-link {
             display: inline-block;
             background: #1a2a1a;
             color: #ccffaa;
             text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 40px;
+            padding: 10px 28px;
+            border-radius: 60px;
             font-size: 16px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             transition: 0.2s;
+            font-weight: bold;
+            border: 1px solid #66aa66;
         }
         .main-link:hover {
             background: #2a4a2a;
-            box-shadow: 0 0 8px #88ff88;
+            box-shadow: 0 0 12px #88ff88;
+            color: white;
         }
         .success-buttons {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 20px;
+            margin-top: 25px;
+            justify-content: center;
         }
         .success-buttons button {
             margin-top: 0;
+            width: auto;
+            padding: 12px 24px;
+        }
+        .note {
+            margin-top: 25px;
+            color: #aa8866;
+            text-align: center;
+            font-size: 14px;
+            border-top: 1px solid #5a3a2a;
+            padding-top: 18px;
+        }
+        /* Адаптив */
+        @media (max-width: 700px) {
+            .crt { padding: 20px; }
+            button { font-size: 16px; }
+            .preview-card { width: 220px; }
         }
     </style>
 </head>
@@ -157,27 +262,38 @@
 <div class="crt">
     <a href="index.html" class="main-link">🏠 НА ГЛАВНУЮ</a>
     <h1>⚡ ГЕНЕРАЦИЯ ПЕРСОНАЖА ИЗ ПРОМПТА ⚡</h1>
-    <div class="sub">Вставь промпт — и персонаж автоматически добавится в главное меню!</div>
+    <div class="sub">Вставь описание — и персонаж автоматически добавится в главное меню!</div>
+
     <div class="prompt-area">
-        <textarea id="promptInput" placeholder="Например:
+        <label>📝 ВВЕДИТЕ ПРОМПТ (свободная форма):</label>
+        <textarea id="promptInput" rows="8" placeholder="Например:
 Имя: Иван Диогенов
 Талант: Бета-тестер Реальности
-Фирменная фраза: «Интересный ход… но у меня есть пасхалки»..."></textarea>
+Фирменная фраза: «Интересный ход… но у меня есть пасхалки»
+Внешность: школьная форма, картридж вместо галстука
+Характер: говорит короткими фразами, использует слова «баг», «промпт»
+Тайна: читает исходный код игры
+Название казни: «Жестокая отладка»
+Описание казни: Monokuma запускает Windows 95, команда kill -9 не срабатывает
+Фраза перед казнью: «Я сохранил лог»
+Улика: обрывок системного лога Monokuma"></textarea>
         <button id="exampleBtn" class="example-btn">📋 ЗАПОЛНИТЬ ПРИМЕРОМ</button>
-        <button id="generateBtn">🔮 СГЕНЕРИРОВАТЬ И СОХРАНИТЬ В МЕНЮ 🔮</button>
+        <button id="generateBtn">🔮 СОЗДАТЬ И СОХРАНИТЬ В МЕНЮ 🔮</button>
     </div>
+
     <div id="resultArea" class="result-area">
-        <div class="result-header">✅ ПЕРСОНАЖ СОЗДАН И ДОБАВЛЕН В МЕНЮ!</div>
+        <div class="result-header">✅ ПЕРСОНАЖ ГОТОВ И ДОБАВЛЕН В МЕНЮ!</div>
         <div id="characterPreview"></div>
         <div class="success-buttons">
             <button id="goToMenuBtn">🏠 ПЕРЕЙТИ В ГЛАВНОЕ МЕНЮ</button>
             <button id="generateAnotherBtn">🔄 СОЗДАТЬ ЕЩЁ</button>
         </div>
     </div>
-    <div class="note" style="margin-top: 20px; color: #aa8866; text-align: center;">✨ Промпт может быть в свободной форме.</div>
+    <div class="note">✨ Промпт может быть в произвольной форме. ИИ извлечёт имя, талант, фразу и другие ключевые поля.</div>
 </div>
 
 <script>
+    // Уведомления
     function showToast(msg) {
         let t = document.createElement('div');
         t.className = 'toast';
@@ -185,6 +301,8 @@
         document.body.appendChild(t);
         setTimeout(() => t.remove(), 3000);
     }
+
+    // Парсер промпта (извлекает поля)
     function parsePrompt(text) {
         let name = (text.match(/имя[:\s]+([^\n]+)/i) || [])[1] || 'Сгенерированный персонаж';
         let talent = (text.match(/талант[:\s]+([^\n]+)/i) || [])[1] || 'Новый талант';
@@ -196,75 +314,99 @@
         let execDesc = (text.match(/описание казни[:\s]+([^\n]+)/i) || [])[1] || 'Описание казни';
         let lastWords = (text.match(/фраза перед казнью[:\s]+«?([^»\n]+)»?/i) || [])[1] || '«...»';
         let evidence = (text.match(/улик[аы][:\s]+([^\n]+)/i) || [])[1] || 'Нет улики';
-        return { name: name.trim(), talent: talent.trim(), phrase: phrase.trim(), appearance: appearance.trim(), personality: personality.trim(), secret: secret.trim(), execName: execName.trim(), execDesc: execDesc.trim(), lastWords: lastWords.trim(), evidence: evidence.trim() };
+        return {
+            name: name.trim(),
+            talent: talent.trim(),
+            phrase: phrase.trim(),
+            appearance: appearance.trim(),
+            personality: personality.trim(),
+            secret: secret.trim(),
+            execName: execName.trim(),
+            execDesc: execDesc.trim(),
+            lastWords: lastWords.trim(),
+            evidence: evidence.trim()
+        };
     }
-    function generateProfileHTML(char) {
-        return `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>${char.name}</title><style>body{background:#1a0000;font-family:'Courier New';padding:20px;}.crt{max-width:1000px;margin:auto;background:#0a0a0a;border:8px solid #3a1a1a;padding:20px;}.tabs{display:flex;gap:5px;flex-wrap:wrap;}.tab-btn{background:#2a0a0a;border:none;color:#aa7777;padding:10px;cursor:pointer;}.tab-btn.active{background:#4a1a1a;color:#ff5555;}.tab-content{display:none;}.tab-content.active{display:block;}.id-card{background:#111;border:2px solid #333;padding:15px;display:flex;gap:15px;}.id-avatar{width:70px;height:70px;border:2px solid #d42e2e;display:flex;align-items:center;justify-content:center;font-size:30px;}.quote{border-left:4px solid #ff4444;background:#181010;padding:10px;margin:10px 0;}.execution{background:#1a0000;border:2px solid #aa2222;padding:10px;}button{background:#2a0a0a;border:1px solid #aa4444;color:#ffaaaa;padding:10px;width:100%;margin-top:15px;}</style></head>
-<body><div class="crt">
-<div class="tabs"><button class="tab-btn active" data-tab="tab1">📁 Личное дело</button><button class="tab-btn" data-tab="tab2">🎭 Диалоги</button><button class="tab-btn" data-tab="tab3">💀 Казнь</button><button class="tab-btn" data-tab="tab4">🔍 Улики</button><button class="tab-btn" data-tab="tab5">🖼️ Галерея</button><button class="tab-btn" data-tab="tab6">🎵 Саундтрек</button><button class="tab-btn" data-tab="tab7">📜 Секретный файл</button></div>
-<div id="tab1" class="tab-content active"><div class="id-card"><div class="id-avatar">⭐</div><div><p><strong>Имя:</strong> ${char.name}</p><p><strong>Талант:</strong> ${char.talent}</p><p><strong>Фраза:</strong> ${char.phrase}</p></div></div><div class="quote">${char.phrase}</div><div class="quote"><strong>Внешность:</strong> ${char.appearance}</div><div class="quote"><strong>Характер:</strong> ${char.personality}</div><div class="execution">⚡ СЕКРЕТ: ${char.secret}</div></div>
-<div id="tab2" class="tab-content"><div class="quote">MONOKUMA: Пупупу! Ты кто?<br>${char.name}: ${char.phrase}</div></div>
-<div id="tab3" class="tab-content"><div class="execution"><strong>${char.execName}</strong><br>${char.execDesc}</div><div class="quote">${char.lastWords}</div></div>
-<div id="tab4" class="tab-content"><div class="quote"><strong>Улика:</strong> ${char.evidence}</div></div>
-<div id="tab5" class="tab-content"><div class="quote">Нейтральный спрайт: спокойная поза.<br>Эмоциональный спрайт: наклон вперёд.</div></div>
-<div id="tab6" class="tab-content"><div class="quote">Основная тема: загадочная мелодия.</div></div>
-<div id="tab7" class="tab-content"><div class="execution">Секретный файл: Monokuma боится этого персонажа.</div></div>
-<footer style="text-align:center;">⬤ DR: СОЗДАНО ИЗ ПРОМПТА</footer>
-</div><script>
-const btns=document.querySelectorAll('.tab-btn');
-const contents=document.querySelectorAll('.tab-content');
-btns.forEach(btn=>{btn.addEventListener('click',()=>{let target=btn.getAttribute('data-tab');btns.forEach(b=>b.classList.remove('active'));contents.forEach(c=>c.classList.remove('active'));btn.classList.add('active');document.getElementById(target).classList.add('active');});});
-<\/script></body></html>`;
-    }
+
+    // Аватар по первой букве
     function getAvatar(name) {
         let first = name.charAt(0).toUpperCase();
-        let avatars = { 'И':'⚡', 'К':'🔧', 'Т':'🎮', 'С':'🎵', 'М':'🎭' };
+        let avatars = { 'И':'⚡', 'К':'🔧', 'Т':'🎮', 'С':'🎵', 'М':'🎭', 'А':'⭐', 'В':'⚡', 'Д':'🎲', 'Е':'📖' };
         return avatars[first] || '⭐';
     }
+
+    // Сохранение персонажа в localStorage (только основные поля)
     function saveCharacter(character) {
         try {
             let chars = JSON.parse(localStorage.getItem('customCharacters') || '[]');
             chars = chars.filter(c => c.name !== character.name);
-            chars.push(character);
+            chars.push({
+                name: character.name,
+                talent: character.talent,
+                phrase: character.phrase,
+                avatar: character.avatar
+            });
             localStorage.setItem('customCharacters', JSON.stringify(chars));
             return true;
         } catch(e) {
-            console.error('Ошибка сохранения в localStorage', e);
-            alert('Ошибка сохранения: превышен лимит localStorage или другие проблемы');
+            console.error('Ошибка сохранения', e);
+            alert('Ошибка: превышен лимит localStorage или другие проблемы');
             return false;
         }
     }
+
+    // Основная генерация и сохранение
     function generateAndSave() {
         let text = document.getElementById('promptInput').value.trim();
-        if (!text) { alert('Введите промпт!'); return; }
+        if (!text) {
+            alert('Введите промпт!');
+            return;
+        }
         let data = parsePrompt(text);
         let character = {
             name: data.name,
             talent: data.talent,
             phrase: data.phrase,
-            avatar: getAvatar(data.name),
-            // сохраним дополнительные поля для полноты (они не будут храниться в localStorage, но нужны для генерации HTML)
-            appearance: data.appearance,
-            personality: data.personality,
-            secret: data.secret,
-            execName: data.execName,
-            execDesc: data.execDesc,
-            lastWords: data.lastWords,
-            evidence: data.evidence
+            avatar: getAvatar(data.name)
         };
+        // Дополнительные поля для предпросмотра (не сохраняем)
+        let fullData = { ...character, ...data };
+
         if (saveCharacter(character)) {
+            // Показываем предпросмотр карточки
             let previewDiv = document.getElementById('characterPreview');
-            previewDiv.innerHTML = `<div class="preview-card"><div class="preview-avatar">${character.avatar}</div><div class="preview-name" style="font-size:20px; font-weight:bold;">${character.name.toUpperCase()}</div><div class="preview-talent" style="color:#ffcc88;">${character.talent}</div><div class="preview-tag" style="background:#000000aa; padding:4px 12px; border-radius:30px; margin-top:10px;">${character.phrase.substring(0,35)}...</div></div><div style="background:#1a1a1a; padding:12px; border-radius:16px; margin-top:15px;"><strong>✅ Сохранено!</strong><br>Имя: ${character.name}<br>Талант: ${character.talent}</div>`;
+            previewDiv.innerHTML = `
+                <div class="preview-card">
+                    <div class="preview-avatar">${character.avatar}</div>
+                    <div class="preview-name">${character.name.toUpperCase()}</div>
+                    <div class="preview-talent">${character.talent}</div>
+                    <div class="preview-tag">${character.phrase.substring(0, 40)}</div>
+                </div>
+                <div class="extracted-info">
+                    <strong>📋 Персонаж сохранён в меню!</strong><br>
+                    📛 Имя: ${character.name}<br>
+                    🎭 Талант: ${character.talent}<br>
+                    💬 Фраза: ${character.phrase}<br>
+                    👁️ Внешность: ${data.appearance}<br>
+                    ⚡ Характер: ${data.personality}<br>
+                    🔮 Тайна: ${data.secret}<br>
+                    💀 Казнь: ${data.execName}<br>
+                    🔪 Улика: ${data.evidence}<br>
+                    💾 Теперь персонаж доступен на главной странице.
+                </div>
+            `;
             document.getElementById('resultArea').style.display = 'block';
             showToast(`✅ Персонаж "${character.name}" добавлен в меню!`);
-        } else { showToast('Ошибка сохранения'); }
+        } else {
+            showToast('⚠️ Ошибка сохранения');
+        }
     }
+
+    // Пример для заполнения
     document.getElementById('exampleBtn').onclick = () => {
         document.getElementById('promptInput').value = `Имя: Иван Диогенов
 Талант: Бета-тестер Реальности
 Фирменная фраза: «Интересный ход… но у меня есть пасхалки»
-Аксессуар: браслет, взламывающий системные файлы
 Внешность: школьная форма, картридж вместо галстука, чёрно-красная гамма
 Характер: говорит короткими фразами, использует слова «баг», «промпт», «код»
 Тайна: читает исходный код игры, Monokuma боится его
@@ -272,8 +414,9 @@ btns.forEach(btn=>{btn.addEventListener('click',()=>{let target=btn.getAttribute
 Описание казни: Monokuma запускает Windows 95, команда kill -9 не срабатывает
 Фраза перед казнью: «Я сохранил лог. В следующем прохождении я выиграю»
 Улика: обрывок системного лога Monokuma о промпт-ограничениях`;
-        showToast('Пример загружен');
+        showToast('📋 Пример загружен!');
     };
+
     document.getElementById('generateBtn').onclick = generateAndSave;
     document.getElementById('goToMenuBtn').onclick = () => window.location.href = 'index.html';
     document.getElementById('generateAnotherBtn').onclick = () => {
