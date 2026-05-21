@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Генерация персонажа через промпт | Danganronpa</title>
     <style>
-        /* === ОБЩИЕ СТИЛИ (улучшенная читаемость, эффекты) === */
         * {
             margin: 0;
             padding: 0;
@@ -20,7 +19,6 @@
             justify-content: center;
             align-items: center;
         }
-        /* Эффект "кинескопа" */
         .crt {
             max-width: 1100px;
             width: 100%;
@@ -44,7 +42,6 @@
             pointer-events: none;
             border-radius: 26px;
         }
-        /* Заголовки */
         h1 {
             text-align: center;
             font-size: clamp(28px, 7vw, 42px);
@@ -62,7 +59,6 @@
             padding-bottom: 15px;
             font-weight: bold;
         }
-        /* Блок ввода промпта */
         .prompt-area {
             background: #111111cc;
             border-left: 6px solid #d45a2e;
@@ -97,7 +93,6 @@
             outline: none;
             box-shadow: 0 0 12px #ff6644;
         }
-        /* Кнопки */
         button {
             background: #2a1a1a;
             border: 2px solid #aa6644;
@@ -128,7 +123,6 @@
             background: #2a5a2a;
             box-shadow: 0 0 12px #88ff88;
         }
-        /* Результат */
         .result-area {
             margin-top: 30px;
             padding-top: 20px;
@@ -192,7 +186,6 @@
             border-left: 4px solid #ffaa66;
             line-height: 1.5;
         }
-        /* Уведомления */
         .toast {
             position: fixed;
             bottom: 25px;
@@ -212,7 +205,6 @@
             70% { opacity: 1; }
             100% { opacity: 0; visibility: hidden; transform: translateY(20px); }
         }
-        /* Навигация */
         .main-link {
             display: inline-block;
             background: #1a2a1a;
@@ -250,7 +242,6 @@
             border-top: 1px solid #5a3a2a;
             padding-top: 18px;
         }
-        /* Адаптив */
         @media (max-width: 700px) {
             .crt { padding: 20px; }
             button { font-size: 16px; }
@@ -293,7 +284,6 @@
 </div>
 
 <script>
-    // Уведомления
     function showToast(msg) {
         let t = document.createElement('div');
         t.className = 'toast';
@@ -302,7 +292,6 @@
         setTimeout(() => t.remove(), 3000);
     }
 
-    // Парсер промпта (извлекает поля)
     function parsePrompt(text) {
         let name = (text.match(/имя[:\s]+([^\n]+)/i) || [])[1] || 'Сгенерированный персонаж';
         let talent = (text.match(/талант[:\s]+([^\n]+)/i) || [])[1] || 'Новый талант';
@@ -328,14 +317,12 @@
         };
     }
 
-    // Аватар по первой букве
     function getAvatar(name) {
         let first = name.charAt(0).toUpperCase();
         let avatars = { 'И':'⚡', 'К':'🔧', 'Т':'🎮', 'С':'🎵', 'М':'🎭', 'А':'⭐', 'В':'⚡', 'Д':'🎲', 'Е':'📖' };
         return avatars[first] || '⭐';
     }
 
-    // Сохранение персонажа в localStorage (только основные поля)
     function saveCharacter(character) {
         try {
             let chars = JSON.parse(localStorage.getItem('customCharacters') || '[]');
@@ -349,19 +336,15 @@
             localStorage.setItem('customCharacters', JSON.stringify(chars));
             return true;
         } catch(e) {
-            console.error('Ошибка сохранения', e);
-            alert('Ошибка: превышен лимит localStorage или другие проблемы');
+            console.error(e);
+            alert('Ошибка сохранения: превышен лимит localStorage');
             return false;
         }
     }
 
-    // Основная генерация и сохранение
     function generateAndSave() {
         let text = document.getElementById('promptInput').value.trim();
-        if (!text) {
-            alert('Введите промпт!');
-            return;
-        }
+        if (!text) { alert('Введите промпт!'); return; }
         let data = parsePrompt(text);
         let character = {
             name: data.name,
@@ -369,11 +352,7 @@
             phrase: data.phrase,
             avatar: getAvatar(data.name)
         };
-        // Дополнительные поля для предпросмотра (не сохраняем)
-        let fullData = { ...character, ...data };
-
         if (saveCharacter(character)) {
-            // Показываем предпросмотр карточки
             let previewDiv = document.getElementById('characterPreview');
             previewDiv.innerHTML = `
                 <div class="preview-card">
@@ -396,13 +375,12 @@
                 </div>
             `;
             document.getElementById('resultArea').style.display = 'block';
-            showToast(`✅ Персонаж "${character.name}" добавлен в меню!`);
+            showToast(`✅ "${character.name}" добавлен в меню!`);
         } else {
             showToast('⚠️ Ошибка сохранения');
         }
     }
 
-    // Пример для заполнения
     document.getElementById('exampleBtn').onclick = () => {
         document.getElementById('promptInput').value = `Имя: Иван Диогенов
 Талант: Бета-тестер Реальности
@@ -414,7 +392,7 @@
 Описание казни: Monokuma запускает Windows 95, команда kill -9 не срабатывает
 Фраза перед казнью: «Я сохранил лог. В следующем прохождении я выиграю»
 Улика: обрывок системного лога Monokuma о промпт-ограничениях`;
-        showToast('📋 Пример загружен!');
+        showToast('📋 Пример загружен');
     };
 
     document.getElementById('generateBtn').onclick = generateAndSave;
