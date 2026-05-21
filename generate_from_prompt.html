@@ -137,7 +137,19 @@
             font-size: 26px;
             text-shadow: 0 0 6px #00aa00;
         }
-        /* Стиль досье персонажа */
+        .preview-card {
+            background: #1a1f1aee;
+            border: 2px solid #ffaa66;
+            border-radius: 32px;
+            width: 280px;
+            padding: 20px;
+            margin: 0 auto 20px;
+            text-align: center;
+        }
+        .preview-avatar { font-size: 80px; margin-bottom: 10px; }
+        .preview-name { font-size: 26px; font-weight: bold; color: #ffeebb; }
+        .preview-talent { font-size: 16px; color: #ffcc88; margin-top: 8px; }
+        .preview-tag { background: #000000aa; display: inline-block; padding: 6px 16px; border-radius: 40px; margin-top: 12px; font-size: 13px; color: #ffdd99; }
         .dossier {
             background: #0a0a0a;
             border: 2px solid #aa5544;
@@ -169,41 +181,11 @@
             border-left: 4px solid #ff6644;
             padding-left: 12px;
         }
-        .dossier-section p {
+        .dossier-section p, .dossier-section li {
             font-size: 16px;
             line-height: 1.5;
             color: #e0d0c0;
-            margin-bottom: 8px;
         }
-        .dossier-section ul {
-            list-style: none;
-            padding-left: 20px;
-        }
-        .dossier-section li {
-            font-size: 16px;
-            color: #e0d0c0;
-            margin-bottom: 6px;
-            position: relative;
-        }
-        .dossier-section li::before {
-            content: "⚡";
-            color: #ff6644;
-            position: absolute;
-            left: -20px;
-        }
-        .preview-card {
-            background: #1a1f1aee;
-            border: 2px solid #ffaa66;
-            border-radius: 32px;
-            width: 280px;
-            padding: 20px;
-            margin: 0 auto 20px;
-            text-align: center;
-        }
-        .preview-avatar { font-size: 80px; margin-bottom: 10px; }
-        .preview-name { font-size: 26px; font-weight: bold; color: #ffeebb; }
-        .preview-talent { font-size: 16px; color: #ffcc88; margin-top: 8px; }
-        .preview-tag { background: #000000aa; display: inline-block; padding: 6px 16px; border-radius: 40px; margin-top: 12px; font-size: 13px; color: #ffdd99; }
         .toast {
             position: fixed;
             bottom: 25px;
@@ -277,11 +259,13 @@
     <h1>⚡ СОЗДАЙ СВОЕГО ПЕРСОНАЖА ⚡</h1>
     <div class="sub">Ответь на вопросы – и мы сгенерируем уникального персонажа в стиле Danganronpa!</div>
 
-    <!-- Вопросы (те же, что и ранее) -->
+    <!-- Вопрос 1: Имя -->
     <div class="question">
         <label>1. Твоё имя (или псевдоним):</label>
         <input type="text" id="userName" placeholder="Например: Иван Диогенов">
     </div>
+
+    <!-- Вопрос 2: Любимый цвет -->
     <div class="question">
         <label>2. Какой цвет тебя привлекает?</label>
         <select id="color">
@@ -293,6 +277,8 @@
             <option value="white">🤍 Белый – чистота и правда</option>
         </select>
     </div>
+
+    <!-- Вопрос 3: Главный навык -->
     <div class="question">
         <label>3. Твой главный талант / навык:</label>
         <select id="skill">
@@ -304,6 +290,8 @@
             <option value="scientist">🧪 Наука, эксперименты, изобретения</option>
         </select>
     </div>
+
+    <!-- Вопрос 4: Стиль речи -->
     <div class="question">
         <label>4. Как ты обычно говоришь?</label>
         <div class="radio-group">
@@ -313,6 +301,8 @@
             <label><input type="radio" name="speech" value="nervous"> Быстро, сбивчиво, нервно</label>
         </div>
     </div>
+
+    <!-- Вопрос 5: Реакция на стресс -->
     <div class="question">
         <label>5. Что ты делаешь в стрессовой ситуации?</label>
         <div class="radio-group">
@@ -322,6 +312,8 @@
             <label><input type="radio" name="stress" value="run"> Начинаю действовать хаотично</label>
         </div>
     </div>
+
+    <!-- Вопрос 6: Отношение к Monokuma -->
     <div class="question">
         <label>6. Как ты относишься к Monokuma?</label>
         <select id="monokuma">
@@ -331,14 +323,20 @@
             <option value="ignore">😑 Игнорирую, не обращаю внимания</option>
         </select>
     </div>
+
+    <!-- Вопрос 7: Любимая еда -->
     <div class="question">
         <label>7. Твоё любимое блюдо?</label>
         <input type="text" id="food" placeholder="например: пицца, рамэн, донатс">
     </div>
+
+    <!-- Вопрос 8: Хобби -->
     <div class="question">
         <label>8. Твоё хобби / увлечение?</label>
         <input type="text" id="hobby" placeholder="например: чтение, игры, спорт">
     </div>
+
+    <!-- Вопрос 9: Сильная черта -->
     <div class="question">
         <label>9. Какая твоя сильная черта?</label>
         <select id="strength">
@@ -349,12 +347,26 @@
             <option value="patience">Терпение</option>
         </select>
     </div>
+
+    <!-- Вопрос 10: Судьба (НОВЫЙ ВОПРОС) -->
     <div class="question">
-        <label>10. Что ты скрываешь от других? (необязательно, можно придумать самому)</label>
-        <textarea id="secret" rows="2" placeholder="Например: «Я боюсь темноты» или оставьте пустым для генерации"></textarea>
+        <label>10. Что для тебя важнее в критической ситуации?</label>
+        <div class="radio-group">
+            <label><input type="radio" name="fate" value="killer"> Выжить любой ценой – даже если придётся убить</label>
+            <label><input type="radio" name="fate" value="victim"> Защищать других – даже если это приведёт к моей гибели</label>
+            <label><input type="radio" name="fate" value="survivor"> Найти выход и спастись, не нарушая правил</label>
+        </div>
     </div>
+
+    <!-- Вопрос 11: Слабая сторона -->
     <div class="question">
-        <label>11. Твой фирменный жест или деталь образа?</label>
+        <label>11. Что ты скрываешь от других? (необязательно)</label>
+        <textarea id="secret" rows="2" placeholder="Например: «Я боюсь темноты» или оставьте пустым"></textarea>
+    </div>
+
+    <!-- Вопрос 12: Фирменный жест -->
+    <div class="question">
+        <label>12. Твой фирменный жест или деталь образа?</label>
         <input type="text" id="signature" placeholder="например: поправляет галстук, крутит волосы">
     </div>
 
@@ -368,7 +380,7 @@
             <button id="generateAnotherBtn">🔄 СОЗДАТЬ ЕЩЁ</button>
         </div>
     </div>
-    <div class="note">✨ На основе твоих ответов мы подберём талант, фразу, внешность, характер, тайну, а также историю и отношения с другими учениками.</div>
+    <div class="note">✨ На основе твоих ответов мы подберём талант, фразу, внешность, характер, тайну, а также определим – станешь ты убийцей, жертвой или выжившим.</div>
 </div>
 
 <script>
@@ -394,10 +406,11 @@
         const food = document.getElementById('food').value.trim() || 'неизвестное блюдо';
         const hobby = document.getElementById('hobby').value.trim() || 'неизвестное хобби';
         const strength = document.getElementById('strength').value;
+        const fate = document.querySelector('input[name="fate"]:checked').value; // 'killer', 'victim', 'survivor'
         let secret = document.getElementById('secret').value.trim();
         const signature = document.getElementById('signature').value.trim() || 'загадочно улыбается';
 
-        // --- Генерация основных полей ---
+        // Талант
         let talent = '';
         if (skill === 'hacker') talent = 'Сверхшкольный Взломщик Кода';
         else if (skill === 'detective') talent = 'Сверхшкольный Детектив';
@@ -406,6 +419,7 @@
         else if (skill === 'leader') talent = 'Сверхшкольный Лидер';
         else talent = 'Сверхшкольный Учёный';
 
+        // Фраза
         let phrase = '';
         if (skill === 'hacker') phrase = `«Каждый баг – это дверь, которую я открою. Даже ${food} не скроет правду.»`;
         else if (skill === 'detective') phrase = `«Логика не врёт. Но ${hobby} помогает мне думать яснее.»`;
@@ -414,6 +428,7 @@
         else if (skill === 'leader') phrase = `«Веди за собой, и они пойдут. Даже сквозь ${hobby}.»`;
         else phrase = `«Наука и ${hobby} – вот моё оружие против отчаяния.»`;
 
+        // Внешность
         let appearance = '';
         if (color === 'red') appearance = `Яркая красная одежда, дерзкий взгляд. ${signature.charAt(0).toUpperCase() + signature.slice(1)} — твоя визитная карточка.`;
         else if (color === 'black') appearance = `Всё чёрное, скрытный стиль. ${signature.charAt(0).toUpperCase() + signature.slice(1)} добавляет загадочности.`;
@@ -422,12 +437,14 @@
         else if (color === 'purple') appearance = `Загадочный фиолетовый акцент. ${signature.charAt(0).toUpperCase() + signature.slice(1)} заставляет других нервничать.`;
         else appearance = `Безупречный белый образ, стремящийся к правде. ${signature.charAt(0).toUpperCase() + signature.slice(1)} привлекает внимание.`;
 
+        // Характер
         let personality = '';
         if (speech === 'short') personality = `Говорит коротко, не терпит пустых слов. ${strength === 'loyalty' ? 'Верен друзьям до конца.' : strength === 'intelligence' ? 'Умён и расчётлив.' : strength === 'bravery' ? 'Храбр, но безрассуден.' : 'Креативен и нестандартен.'}`;
         else if (speech === 'long') personality = `Обожает долгие монологи, любит поучать. ${strength === 'patience' ? 'Терпелив, как святой.' : 'Часто берёт на себя роль лидера.'}`;
         else if (speech === 'pause') personality = `Загадочный, делает паузы для эффекта. ${strength === 'creativity' ? 'Идеи приходят в тишине.' : 'Всегда сохраняет спокойствие.'}`;
         else personality = `Нервный, говорит быстро, сбивчиво. ${strength === 'bravery' ? 'Но под давлением становится смелым.' : 'Но его ум работает молниеносно.'}`;
 
+        // Тайна
         if (!secret) {
             if (stress === 'glasses') secret = 'На самом деле никогда не носил очки – это жест, чтобы скрыть нервозность.';
             else if (stress === 'silence') secret = 'В тишине слышит голоса прошлого, которые направляют его.';
@@ -435,30 +452,58 @@
             else secret = 'В стрессовой ситуации действует хаотично, но потом не помнит, что делал.';
         }
 
-        let evidence = '';
-        if (monokuma === 'fear') evidence = 'Системный лог, в котором Monokuma отмечает: «Этот персонаж боится меня, но это делает его опасным».';
-        else if (monokuma === 'defy') evidence = 'Обнаружен скрытый файл с планом уничтожения Monokuma.';
-        else if (monokuma === 'curious') evidence = 'Зашифрованные записи расследования личности Monokuma.';
-        else evidence = 'Странная улика – пустой дневник, где ничего не написано, но все его боятся.';
-
+        // ---- РОЛЬ И СВЯЗАННЫЕ ПОЛЯ (КАЗНЬ, УЛИКА, ПОСЛЕДНИЕ СЛОВА) ----
+        let role = '';
         let execName = '';
-        if (skill === 'hacker') execName = 'Цифровой Суд';
-        else if (skill === 'detective') execName = 'Лабиринт Лжи';
-        else if (skill === 'fighter') execName = 'Арена Смерти';
-        else if (skill === 'artist') execName = 'Галерея Ужаса';
-        else execName = 'Лидерская Диллема';
-
         let execDesc = '';
-        if (skill === 'hacker') execDesc = 'Monokuma запускает виртуальную реальность, но персонаж взламывает код и выходит через «дыру» в системе.';
-        else if (skill === 'detective') execDesc = 'Monokuma заманивает в комнату с уликами, но персонаж распутывает ложные следы и ловит самого Monokuma.';
-        else if (skill === 'fighter') execDesc = 'Арена, полная монстров. Персонаж побеждает их, но Monokuma жульничает.';
-        else execDesc = 'Творческая казнь – персонажа заставляют рисовать свой страх, но он превращает рисунок в оружие.';
-
         let lastWords = '';
-        if (monokuma === 'defy') lastWords = '«Я не боюсь тебя, Monokuma. Отчаяние умрёт вместе со мной.»';
-        else if (monokuma === 'fear') lastWords = '«Пупупу… или нет? Я всё равно не сдамся.»';
-        else lastWords = '«Увидимся в следующем патче, Monokuma.»';
+        let evidence = '';
+        let backstory = '';
+        let relationships = '';
+        let skills = '';
+        let weaknesses = '';
+        let facts = '';
 
+        // Определяем роль на основе выбора пользователя
+        if (fate === 'killer') {
+            role = '🔪 Убийца (признан виновным)';
+            execName = 'Цифровая Казнь';
+            execDesc = 'Monokuma запускает виртуальную реальность, где персонажа раздирают на части ошибки системы. Но перед смертью он успевает взломать код и оставить послание.';
+            lastWords = '«Я не жалею. В следующей жизни я буду быстрее.»';
+            evidence = 'Найден скрытый лог, доказывающий, что персонаж спланировал убийство.';
+        } else if (fate === 'victim') {
+            role = '🕯️ Жертва (погиб от рук другого)';
+            execName = 'Смерть от чужой руки';
+            execDesc = 'Персонаж был убит до начала классного суда. Его тело находят в заброшенной комнате. Казнь не применяется – он уже мёртв.';
+            lastWords = '«Простите... я не хотел...» (предсмертные слова, записанные в улике)';
+            evidence = 'Предсмертная записка или окровавленный предмет, указывающий на настоящего убийцу.';
+        } else {
+            role = '🏆 Выживший (оправдан / сбежал)';
+            execName = 'Исход без казни';
+            execDesc = 'Благодаря уликам и помощи других персонаж доказывает свою невиновность. Monokuma вынужден его отпустить.';
+            lastWords = '«Я выжил, чтобы увидеть правду. Это ещё не конец.»';
+            evidence = 'Алиби и улики, которые полностью оправдывают персонажа.';
+        }
+
+        // Дополнительная вариативность в зависимости от навыка
+        if (skill === 'hacker') {
+            if (fate === 'killer') execDesc = 'Monokuma пытается закодировать персонажа в бесконечный цикл, но он взламывает систему и оставляет после себя вирус.';
+            else if (fate === 'victim') evidence = 'В телефоне жертвы найдены зашифрованные файлы, раскрывающие мотив убийцы.';
+            else execDesc = 'Персонаж находит уязвимость в системе Monokuma и сбегает, не дожидаясь суда.';
+        } else if (skill === 'detective') {
+            if (fate === 'killer') evidence = 'Персонаж подставил другого ученика, но его выдала одна мелкая деталь.';
+            else if (fate === 'victim') lastWords = '«Следи за уликами... они приведут тебя к нему.»';
+            else execDesc = 'Персонаж распутывает дело и доказывает, что убийца – другой ученик.';
+        }
+
+        // История, отношения, навыки, слабости, факты – в зависимости от роли
+        backstory = `Родился в семье ${skill === 'hacker' ? 'программистов' : skill === 'detective' ? 'полицейских' : 'обычных людей'}. С детства проявлял ${skill === 'fighter' ? 'невероятную силу' : 'нестандартное мышление'}. Попал в Академию Надежды, чтобы ${fate === 'killer' ? 'доказать своё превосходство' : (fate === 'victim' ? 'найти друзей' : 'раскрыть тайну')}.`;
+        relationships = `Monokuma: ${monokuma === 'fear' ? 'боится, но скрывает' : monokuma === 'defy' ? 'открытый враг' : monokuma === 'curious' ? 'хочет разгадать его природу' : 'игнорирует'}. Другие ученики: ${fate === 'killer' ? 'некоторые боятся, некоторые уважают' : (fate === 'victim' ? 'опекают его, считают слабым' : 'ценят за надёжность')}.`;
+        skills = `${skill === 'hacker' ? 'Взлом, программирование, быстрая адаптация' : skill === 'detective' ? 'Наблюдательность, дедукция, работа с уликами' : skill === 'fighter' ? 'Физическая сила, боевые приёмы, выносливость' : skill === 'artist' ? 'Креативность, внимание к деталям' : skill === 'leader' ? 'Харизма, стратегическое мышление' : 'Аналитические способности, изобретательность'}`;
+        weaknesses = `${fate === 'killer' ? 'Цинизм, недоверие к окружающим' : (fate === 'victim' ? 'Излишняя доверчивость, физическая слабость' : 'Склонность к самопожертвованию')}`;
+        facts = `Любит ${food}, увлекается ${hobby}. ${signature} — его фирменный жест. ${secret.substring(0, 60)}...`;
+
+        // Аватар
         let avatar = '';
         if (color === 'red') avatar = '🔥';
         else if (color === 'black') avatar = '🖤';
@@ -466,45 +511,6 @@
         else if (color === 'blue') avatar = '💧';
         else if (color === 'purple') avatar = '🔮';
         else avatar = '🤍';
-
-        // --- Новая информация: история, отношения, навыки/слабости, интересные факты ---
-        let backstory = '';
-        if (skill === 'hacker') backstory = `Родился в семье программистов, с детства взламывал школьные серверы. Однажды его поймали, но вместо наказания пригласили в Академию Надежды как уникального специалиста. Теперь он использует свои навыки, чтобы раскрыть тайны Monokuma.`;
-        else if (skill === 'detective') backstory = `В прошлом помогал полиции распутывать запутанные дела, но после того, как его подставили, решил действовать в одиночку. Академия – его шанс восстановить репутацию.`;
-        else if (skill === 'fighter') backstory = `Вырос на улицах, участвовал в подпольных боях. Его сила – единственное, чему он доверяет. В Академии надеется найти цель, ради которой стоит сражаться.`;
-        else if (skill === 'artist') backstory = `Создавал картины, которые пугали людей, но он не понимал, почему. В Академии он надеется найти вдохновение и разгадать тайну своего дара.`;
-        else if (skill === 'leader') backstory = `Всегда был в центре внимания, но его прошлое окутано тайной. Говорят, он спас целый город от катастрофы, но сам отказывается это комментировать.`;
-        else backstory = `Учёный, который потерял коллег в результате неудачного эксперимента. Теперь он ищет правду о природе отчаяния и надежды.`;
-
-        let relationships = '';
-        if (monokuma === 'defy') relationships = `Monokuma: открытый враг. Другие ученики: одни уважают его смелость, другие считают безрассудным.`;
-        else if (monokuma === 'fear') relationships = `Monokuma: скрывает страх, но готов действовать. Другие ученики: считают его надёжным, но слишком скрытным.`;
-        else if (monokuma === 'curious') relationships = `Monokuma: хочет разгадать его природу. Другие ученики: ценят его аналитический ум, но иногда боятся его вопросов.`;
-        else relationships = `Monokuma: игнорирует его, но тот всё равно вмешивается в критические моменты. Другие ученики: считают его странным, но полезным.`;
-
-        let skills = '';
-        let weaknesses = '';
-        if (skill === 'hacker') {
-            skills = 'Взлом систем, анализ кода, быстрая адаптация.';
-            weaknesses = 'Физическая слабость, недоверие к людям.';
-        } else if (skill === 'detective') {
-            skills = 'Наблюдательность, дедукция, работа с уликами.';
-            weaknesses = 'Мнительность, склонность к паранойе.';
-        } else if (skill === 'fighter') {
-            skills = 'Фическая сила, выносливость, боевые приёмы.';
-            weaknesses = 'Импульсивность, недоверие к тактике.';
-        } else if (skill === 'artist') {
-            skills = 'Креативность, внимание к деталям, скрытые послания.';
-            weaknesses = 'Эмоциональная нестабильность.';
-        } else if (skill === 'leader') {
-            skills = 'Харизма, стратегическое мышление, убеждение.';
-            weaknesses = 'Склонность к самопожертвованию.';
-        } else {
-            skills = 'Аналитические способности, изобретательность.';
-            weaknesses = 'Замкнутость, социальная неловкость.';
-        }
-
-        let facts = `Любит ${food}, увлекается ${hobby}. ${signature} — его фирменный жест, который иногда пугает окружающих. Скрывает ${secret.substring(0, 60)}...`;
 
         return {
             name: userName,
@@ -518,14 +524,12 @@
             execDesc: execDesc,
             lastWords: lastWords,
             evidence: evidence,
-            food: food,
-            hobby: hobby,
-            signature: signature,
             backstory: backstory,
             relationships: relationships,
             skills: skills,
             weaknesses: weaknesses,
-            facts: facts
+            facts: facts,
+            role: role
         };
     }
 
@@ -563,7 +567,8 @@
                         <h3>📌 Основная информация</h3>
                         <p><strong>Имя:</strong> ${char.name}</p>
                         <p><strong>Талант:</strong> ${char.talent}</p>
-                        <p><strong>Фирменная фраза:</strong> ${char.phrase}</p>
+                        <p><strong>Роль:</strong> ${char.role}</p>
+                        <p><strong>Фраза:</strong> ${char.phrase}</p>
                         <p><strong>Внешность:</strong> ${char.appearance}</p>
                         <p><strong>Характер:</strong> ${char.personality}</p>
                     </div>
@@ -572,7 +577,7 @@
                         <p>${char.backstory}</p>
                     </div>
                     <div class="dossier-section">
-                        <h3>💬 Отношения с другими учениками</h3>
+                        <h3>💬 Отношения</h3>
                         <p>${char.relationships}</p>
                     </div>
                     <div class="dossier-section">
@@ -581,17 +586,17 @@
                         <p><strong>Слабости:</strong> ${char.weaknesses}</p>
                     </div>
                     <div class="dossier-section">
-                        <h3>🔮 Тайна / Скрытая сторона</h3>
+                        <h3>🔮 Тайна</h3>
                         <p>${char.secret}</p>
                     </div>
                     <div class="dossier-section">
-                        <h3>💀 Казнь</h3>
-                        <p><strong>Название:</strong> ${char.execName}</p>
-                        <p><strong>Описание:</strong> ${char.execDesc}</p>
+                        <h3>💀 Судьба / Казнь</h3>
+                        <p><strong>Событие:</strong> ${char.execName}</p>
+                        <p>${char.execDesc}</p>
                         <p><strong>Последние слова:</strong> ${char.lastWords}</p>
                     </div>
                     <div class="dossier-section">
-                        <h3>🔍 Улика, связанная с персонажем</h3>
+                        <h3>🔍 Улика</h3>
                         <p>${char.evidence}</p>
                     </div>
                     <div class="dossier-section">
@@ -618,6 +623,7 @@
         document.getElementById('signature').value = '';
         document.querySelector('input[name="speech"][value="short"]').checked = true;
         document.querySelector('input[name="stress"][value="glasses"]').checked = true;
+        document.querySelector('input[name="fate"][value="killer"]').checked = true;
         document.getElementById('color').selectedIndex = 0;
         document.getElementById('skill').selectedIndex = 0;
         document.getElementById('monokuma').selectedIndex = 0;
