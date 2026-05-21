@@ -16,7 +16,7 @@
             align-items: center;
         }
         .crt {
-            max-width: 1100px;
+            max-width: 1200px;
             width: 100%;
             margin: auto;
             background: #0a0a0a;
@@ -74,7 +74,6 @@
             outline: none;
             box-shadow: 0 0 10px #ff6644;
         }
-        /* Исправленное выравнивание для radio-групп */
         .radio-group {
             display: flex;
             flex-wrap: wrap;
@@ -138,29 +137,73 @@
             font-size: 26px;
             text-shadow: 0 0 6px #00aa00;
         }
+        /* Стиль досье персонажа */
+        .dossier {
+            background: #0a0a0a;
+            border: 2px solid #aa5544;
+            border-radius: 24px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .dossier-header {
+            background: #2a1a1a;
+            padding: 15px 20px;
+            border-bottom: 2px solid #aa5544;
+        }
+        .dossier-header h2 {
+            color: #ffaa88;
+            font-size: 24px;
+            margin: 0;
+        }
+        .dossier-section {
+            padding: 20px;
+            border-bottom: 1px solid #3a2a2a;
+        }
+        .dossier-section:last-child {
+            border-bottom: none;
+        }
+        .dossier-section h3 {
+            color: #ffcc88;
+            font-size: 20px;
+            margin-bottom: 12px;
+            border-left: 4px solid #ff6644;
+            padding-left: 12px;
+        }
+        .dossier-section p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #e0d0c0;
+            margin-bottom: 8px;
+        }
+        .dossier-section ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        .dossier-section li {
+            font-size: 16px;
+            color: #e0d0c0;
+            margin-bottom: 6px;
+            position: relative;
+        }
+        .dossier-section li::before {
+            content: "⚡";
+            color: #ff6644;
+            position: absolute;
+            left: -20px;
+        }
         .preview-card {
             background: #1a1f1aee;
             border: 2px solid #ffaa66;
             border-radius: 32px;
-            width: 300px;
-            padding: 25px;
-            margin: 0 auto;
+            width: 280px;
+            padding: 20px;
+            margin: 0 auto 20px;
             text-align: center;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
         .preview-avatar { font-size: 80px; margin-bottom: 10px; }
         .preview-name { font-size: 26px; font-weight: bold; color: #ffeebb; }
         .preview-talent { font-size: 16px; color: #ffcc88; margin-top: 8px; }
         .preview-tag { background: #000000aa; display: inline-block; padding: 6px 16px; border-radius: 40px; margin-top: 12px; font-size: 13px; color: #ffdd99; }
-        .extracted-info {
-            background: #1a1a1a;
-            padding: 20px;
-            border-radius: 24px;
-            margin-top: 25px;
-            font-size: 16px;
-            line-height: 1.6;
-            border-left: 5px solid #ffaa66;
-        }
         .toast {
             position: fixed;
             bottom: 25px;
@@ -223,6 +266,8 @@
             .question label { font-size: 18px; }
             input, select { font-size: 16px; }
             .radio-group label { font-size: 14px; padding: 5px 10px; }
+            .dossier-section h3 { font-size: 18px; }
+            .dossier-section p, .dossier-section li { font-size: 14px; }
         }
     </style>
 </head>
@@ -232,13 +277,11 @@
     <h1>⚡ СОЗДАЙ СВОЕГО ПЕРСОНАЖА ⚡</h1>
     <div class="sub">Ответь на вопросы – и мы сгенерируем уникального персонажа в стиле Danganronpa!</div>
 
-    <!-- Вопрос 1: Имя -->
+    <!-- Вопросы (те же, что и ранее) -->
     <div class="question">
         <label>1. Твоё имя (или псевдоним):</label>
         <input type="text" id="userName" placeholder="Например: Иван Диогенов">
     </div>
-
-    <!-- Вопрос 2: Любимый цвет -->
     <div class="question">
         <label>2. Какой цвет тебя привлекает?</label>
         <select id="color">
@@ -250,8 +293,6 @@
             <option value="white">🤍 Белый – чистота и правда</option>
         </select>
     </div>
-
-    <!-- Вопрос 3: Главный навык -->
     <div class="question">
         <label>3. Твой главный талант / навык:</label>
         <select id="skill">
@@ -263,8 +304,6 @@
             <option value="scientist">🧪 Наука, эксперименты, изобретения</option>
         </select>
     </div>
-
-    <!-- Вопрос 4: Стиль речи (исправлен radio-group) -->
     <div class="question">
         <label>4. Как ты обычно говоришь?</label>
         <div class="radio-group">
@@ -274,8 +313,6 @@
             <label><input type="radio" name="speech" value="nervous"> Быстро, сбивчиво, нервно</label>
         </div>
     </div>
-
-    <!-- Вопрос 5: Реакция на стресс (исправлен radio-group) -->
     <div class="question">
         <label>5. Что ты делаешь в стрессовой ситуации?</label>
         <div class="radio-group">
@@ -285,8 +322,6 @@
             <label><input type="radio" name="stress" value="run"> Начинаю действовать хаотично</label>
         </div>
     </div>
-
-    <!-- Вопрос 6: Отношение к Monokuma -->
     <div class="question">
         <label>6. Как ты относишься к Monokuma?</label>
         <select id="monokuma">
@@ -296,20 +331,14 @@
             <option value="ignore">😑 Игнорирую, не обращаю внимания</option>
         </select>
     </div>
-
-    <!-- Вопрос 7: Любимая еда -->
     <div class="question">
         <label>7. Твоё любимое блюдо?</label>
         <input type="text" id="food" placeholder="например: пицца, рамэн, донатс">
     </div>
-
-    <!-- Вопрос 8: Хобби -->
     <div class="question">
         <label>8. Твоё хобби / увлечение?</label>
         <input type="text" id="hobby" placeholder="например: чтение, игры, спорт">
     </div>
-
-    <!-- Вопрос 9: Сильная сторона характера -->
     <div class="question">
         <label>9. Какая твоя сильная черта?</label>
         <select id="strength">
@@ -320,14 +349,10 @@
             <option value="patience">Терпение</option>
         </select>
     </div>
-
-    <!-- Вопрос 10: Слабая сторона (тайна) -->
     <div class="question">
         <label>10. Что ты скрываешь от других? (необязательно, можно придумать самому)</label>
         <textarea id="secret" rows="2" placeholder="Например: «Я боюсь темноты» или оставьте пустым для генерации"></textarea>
     </div>
-
-    <!-- Вопрос 11: Фирменный жест / деталь -->
     <div class="question">
         <label>11. Твой фирменный жест или деталь образа?</label>
         <input type="text" id="signature" placeholder="например: поправляет галстук, крутит волосы">
@@ -343,7 +368,7 @@
             <button id="generateAnotherBtn">🔄 СОЗДАТЬ ЕЩЁ</button>
         </div>
     </div>
-    <div class="note">✨ На основе твоих ответов мы подберём талант, фразу, внешность, характер и тайну.</div>
+    <div class="note">✨ На основе твоих ответов мы подберём талант, фразу, внешность, характер, тайну, а также историю и отношения с другими учениками.</div>
 </div>
 
 <script>
@@ -372,7 +397,7 @@
         let secret = document.getElementById('secret').value.trim();
         const signature = document.getElementById('signature').value.trim() || 'загадочно улыбается';
 
-        // Талант на основе навыка
+        // --- Генерация основных полей ---
         let talent = '';
         if (skill === 'hacker') talent = 'Сверхшкольный Взломщик Кода';
         else if (skill === 'detective') talent = 'Сверхшкольный Детектив';
@@ -381,7 +406,6 @@
         else if (skill === 'leader') talent = 'Сверхшкольный Лидер';
         else talent = 'Сверхшкольный Учёный';
 
-        // Фирменная фраза на основе навыка + еды/хобби
         let phrase = '';
         if (skill === 'hacker') phrase = `«Каждый баг – это дверь, которую я открою. Даже ${food} не скроет правду.»`;
         else if (skill === 'detective') phrase = `«Логика не врёт. Но ${hobby} помогает мне думать яснее.»`;
@@ -390,7 +414,6 @@
         else if (skill === 'leader') phrase = `«Веди за собой, и они пойдут. Даже сквозь ${hobby}.»`;
         else phrase = `«Наука и ${hobby} – вот моё оружие против отчаяния.»`;
 
-        // Внешность по цвету + жесту
         let appearance = '';
         if (color === 'red') appearance = `Яркая красная одежда, дерзкий взгляд. ${signature.charAt(0).toUpperCase() + signature.slice(1)} — твоя визитная карточка.`;
         else if (color === 'black') appearance = `Всё чёрное, скрытный стиль. ${signature.charAt(0).toUpperCase() + signature.slice(1)} добавляет загадочности.`;
@@ -399,14 +422,12 @@
         else if (color === 'purple') appearance = `Загадочный фиолетовый акцент. ${signature.charAt(0).toUpperCase() + signature.slice(1)} заставляет других нервничать.`;
         else appearance = `Безупречный белый образ, стремящийся к правде. ${signature.charAt(0).toUpperCase() + signature.slice(1)} привлекает внимание.`;
 
-        // Характер на основе стиля речи и сильной стороны
         let personality = '';
         if (speech === 'short') personality = `Говорит коротко, не терпит пустых слов. ${strength === 'loyalty' ? 'Верен друзьям до конца.' : strength === 'intelligence' ? 'Умён и расчётлив.' : strength === 'bravery' ? 'Храбр, но безрассуден.' : 'Креативен и нестандартен.'}`;
         else if (speech === 'long') personality = `Обожает долгие монологи, любит поучать. ${strength === 'patience' ? 'Терпелив, как святой.' : 'Часто берёт на себя роль лидера.'}`;
         else if (speech === 'pause') personality = `Загадочный, делает паузы для эффекта. ${strength === 'creativity' ? 'Идеи приходят в тишине.' : 'Всегда сохраняет спокойствие.'}`;
         else personality = `Нервный, говорит быстро, сбивчиво. ${strength === 'bravery' ? 'Но под давлением становится смелым.' : 'Но его ум работает молниеносно.'}`;
 
-        // Тайна (если не заполнена – генерируем)
         if (!secret) {
             if (stress === 'glasses') secret = 'На самом деле никогда не носил очки – это жест, чтобы скрыть нервозность.';
             else if (stress === 'silence') secret = 'В тишине слышит голоса прошлого, которые направляют его.';
@@ -414,14 +435,12 @@
             else secret = 'В стрессовой ситуации действует хаотично, но потом не помнит, что делал.';
         }
 
-        // Улика
         let evidence = '';
         if (monokuma === 'fear') evidence = 'Системный лог, в котором Monokuma отмечает: «Этот персонаж боится меня, но это делает его опасным».';
         else if (monokuma === 'defy') evidence = 'Обнаружен скрытый файл с планом уничтожения Monokuma.';
         else if (monokuma === 'curious') evidence = 'Зашифрованные записи расследования личности Monokuma.';
         else evidence = 'Странная улика – пустой дневник, где ничего не написано, но все его боятся.';
 
-        // Название казни
         let execName = '';
         if (skill === 'hacker') execName = 'Цифровой Суд';
         else if (skill === 'detective') execName = 'Лабиринт Лжи';
@@ -429,20 +448,17 @@
         else if (skill === 'artist') execName = 'Галерея Ужаса';
         else execName = 'Лидерская Диллема';
 
-        // Описание казни
         let execDesc = '';
         if (skill === 'hacker') execDesc = 'Monokuma запускает виртуальную реальность, но персонаж взламывает код и выходит через «дыру» в системе.';
         else if (skill === 'detective') execDesc = 'Monokuma заманивает в комнату с уликами, но персонаж распутывает ложные следы и ловит самого Monokuma.';
         else if (skill === 'fighter') execDesc = 'Арена, полная монстров. Персонаж побеждает их, но Monokuma жульничает.';
         else execDesc = 'Творческая казнь – персонажа заставляют рисовать свой страх, но он превращает рисунок в оружие.';
 
-        // Последние слова
         let lastWords = '';
         if (monokuma === 'defy') lastWords = '«Я не боюсь тебя, Monokuma. Отчаяние умрёт вместе со мной.»';
         else if (monokuma === 'fear') lastWords = '«Пупупу… или нет? Я всё равно не сдамся.»';
         else lastWords = '«Увидимся в следующем патче, Monokuma.»';
 
-        // Аватар
         let avatar = '';
         if (color === 'red') avatar = '🔥';
         else if (color === 'black') avatar = '🖤';
@@ -450,6 +466,45 @@
         else if (color === 'blue') avatar = '💧';
         else if (color === 'purple') avatar = '🔮';
         else avatar = '🤍';
+
+        // --- Новая информация: история, отношения, навыки/слабости, интересные факты ---
+        let backstory = '';
+        if (skill === 'hacker') backstory = `Родился в семье программистов, с детства взламывал школьные серверы. Однажды его поймали, но вместо наказания пригласили в Академию Надежды как уникального специалиста. Теперь он использует свои навыки, чтобы раскрыть тайны Monokuma.`;
+        else if (skill === 'detective') backstory = `В прошлом помогал полиции распутывать запутанные дела, но после того, как его подставили, решил действовать в одиночку. Академия – его шанс восстановить репутацию.`;
+        else if (skill === 'fighter') backstory = `Вырос на улицах, участвовал в подпольных боях. Его сила – единственное, чему он доверяет. В Академии надеется найти цель, ради которой стоит сражаться.`;
+        else if (skill === 'artist') backstory = `Создавал картины, которые пугали людей, но он не понимал, почему. В Академии он надеется найти вдохновение и разгадать тайну своего дара.`;
+        else if (skill === 'leader') backstory = `Всегда был в центре внимания, но его прошлое окутано тайной. Говорят, он спас целый город от катастрофы, но сам отказывается это комментировать.`;
+        else backstory = `Учёный, который потерял коллег в результате неудачного эксперимента. Теперь он ищет правду о природе отчаяния и надежды.`;
+
+        let relationships = '';
+        if (monokuma === 'defy') relationships = `Monokuma: открытый враг. Другие ученики: одни уважают его смелость, другие считают безрассудным.`;
+        else if (monokuma === 'fear') relationships = `Monokuma: скрывает страх, но готов действовать. Другие ученики: считают его надёжным, но слишком скрытным.`;
+        else if (monokuma === 'curious') relationships = `Monokuma: хочет разгадать его природу. Другие ученики: ценят его аналитический ум, но иногда боятся его вопросов.`;
+        else relationships = `Monokuma: игнорирует его, но тот всё равно вмешивается в критические моменты. Другие ученики: считают его странным, но полезным.`;
+
+        let skills = '';
+        let weaknesses = '';
+        if (skill === 'hacker') {
+            skills = 'Взлом систем, анализ кода, быстрая адаптация.';
+            weaknesses = 'Физическая слабость, недоверие к людям.';
+        } else if (skill === 'detective') {
+            skills = 'Наблюдательность, дедукция, работа с уликами.';
+            weaknesses = 'Мнительность, склонность к паранойе.';
+        } else if (skill === 'fighter') {
+            skills = 'Фическая сила, выносливость, боевые приёмы.';
+            weaknesses = 'Импульсивность, недоверие к тактике.';
+        } else if (skill === 'artist') {
+            skills = 'Креативность, внимание к деталям, скрытые послания.';
+            weaknesses = 'Эмоциональная нестабильность.';
+        } else if (skill === 'leader') {
+            skills = 'Харизма, стратегическое мышление, убеждение.';
+            weaknesses = 'Склонность к самопожертвованию.';
+        } else {
+            skills = 'Аналитические способности, изобретательность.';
+            weaknesses = 'Замкнутость, социальная неловкость.';
+        }
+
+        let facts = `Любит ${food}, увлекается ${hobby}. ${signature} — его фирменный жест, который иногда пугает окружающих. Скрывает ${secret.substring(0, 60)}...`;
 
         return {
             name: userName,
@@ -465,7 +520,12 @@
             evidence: evidence,
             food: food,
             hobby: hobby,
-            signature: signature
+            signature: signature,
+            backstory: backstory,
+            relationships: relationships,
+            skills: skills,
+            weaknesses: weaknesses,
+            facts: facts
         };
     }
 
@@ -495,21 +555,49 @@
                     <div class="preview-talent">${char.talent}</div>
                     <div class="preview-tag">${char.phrase}</div>
                 </div>
-                <div class="extracted-info">
-                    <strong>✨ Твой персонаж готов!</strong><br>
-                    📛 Имя: ${char.name}<br>
-                    🎭 Талант: ${char.talent}<br>
-                    💬 Фраза: ${char.phrase}<br>
-                    👁️ Внешность: ${char.appearance}<br>
-                    ⚡ Характер: ${char.personality}<br>
-                    🔮 Тайна: ${char.secret}<br>
-                    💀 Казнь: ${char.execName}<br>
-                    📜 Описание казни: ${char.execDesc}<br>
-                    💬 Последние слова: ${char.lastWords}<br>
-                    🔍 Улика: ${char.evidence}<br>
-                    🍔 Любимая еда: ${char.food}<br>
-                    🎯 Хобби: ${char.hobby}<br>
-                    🎭 Фирменный жест: ${char.signature}
+                <div class="dossier">
+                    <div class="dossier-header">
+                        <h2>📁 ДОСЬЕ ПЕРСОНАЖА</h2>
+                    </div>
+                    <div class="dossier-section">
+                        <h3>📌 Основная информация</h3>
+                        <p><strong>Имя:</strong> ${char.name}</p>
+                        <p><strong>Талант:</strong> ${char.talent}</p>
+                        <p><strong>Фирменная фраза:</strong> ${char.phrase}</p>
+                        <p><strong>Внешность:</strong> ${char.appearance}</p>
+                        <p><strong>Характер:</strong> ${char.personality}</p>
+                    </div>
+                    <div class="dossier-section">
+                        <h3>📜 История</h3>
+                        <p>${char.backstory}</p>
+                    </div>
+                    <div class="dossier-section">
+                        <h3>💬 Отношения с другими учениками</h3>
+                        <p>${char.relationships}</p>
+                    </div>
+                    <div class="dossier-section">
+                        <h3>⚔️ Навыки и слабости</h3>
+                        <p><strong>Навыки:</strong> ${char.skills}</p>
+                        <p><strong>Слабости:</strong> ${char.weaknesses}</p>
+                    </div>
+                    <div class="dossier-section">
+                        <h3>🔮 Тайна / Скрытая сторона</h3>
+                        <p>${char.secret}</p>
+                    </div>
+                    <div class="dossier-section">
+                        <h3>💀 Казнь</h3>
+                        <p><strong>Название:</strong> ${char.execName}</p>
+                        <p><strong>Описание:</strong> ${char.execDesc}</p>
+                        <p><strong>Последние слова:</strong> ${char.lastWords}</p>
+                    </div>
+                    <div class="dossier-section">
+                        <h3>🔍 Улика, связанная с персонажем</h3>
+                        <p>${char.evidence}</p>
+                    </div>
+                    <div class="dossier-section">
+                        <h3>✨ Интересные факты</h3>
+                        <p>${char.facts}</p>
+                    </div>
                 </div>
             `;
             document.getElementById('resultArea').style.display = 'block';
