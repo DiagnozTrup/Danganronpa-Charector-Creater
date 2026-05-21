@@ -5,27 +5,209 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Danganronpa 2: Выбор персонажа</title>
     <style>
-        /* Ваши существующие стили (я их сократил для читаемости, но вы можете оставить свои) */
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
-        body { background: radial-gradient(circle at 20% 30%, #1a0f0a, #050101); font-family: 'Courier New', monospace; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .crt { position: relative; max-width: 1400px; width: 100%; background: #0b0e0a; border: 12px solid #3a2a2a; border-radius: 24px; padding: 30px 20px; box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.5); }
-        .crt::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, rgba(0,255,0,0.03) 0px, rgba(0,255,0,0.03) 2px, transparent 2px, transparent 4px); pointer-events: none; border-radius: 20px; }
-        .game-title { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #d44a2e; padding-bottom: 15px; }
-        .game-title h1 { font-size: clamp(28px, 7vw, 42px); letter-spacing: 4px; color: #ffe6cc; text-shadow: 0 0 8px #ff6644, 4px 4px 0 #3a1a1a; }
-        .game-title p { font-size: clamp(14px, 4vw, 18px); color: #ffaa88; margin-top: 8px; }
-        .section-label { font-size: clamp(18px, 5vw, 24px); color: #ffcc88; text-align: center; margin-bottom: 25px; background: #2a1a1acc; display: inline-block; padding: 8px 28px; border-radius: 40px; }
-        .characters-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 35px; margin: 30px 0; }
-        .character-card { background: #1a1f1aee; border: 2px solid #aa6644; border-radius: 28px; width: min(240px, 85vw); padding: 20px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
-        .character-card:hover { transform: translateY(-12px) scale(1.02); border-color: #ffaa66; box-shadow: 0 0 25px #ffaa6688; }
-        .character-avatar { width: 90px; height: 90px; margin: 0 auto 15px; border-radius: 50%; background: #1e2a1a; border: 3px solid #ffaa66; display: flex; align-items: center; justify-content: center; font-size: 52px; }
-        .character-name { font-size: clamp(18px, 5vw, 22px); font-weight: bold; color: #ffeebb; }
-        .character-title { font-size: 13px; color: #ddbb88; margin-top: 5px; }
-        .character-tag { font-size: 11px; background: #000000aa; display: inline-block; padding: 5px 12px; border-radius: 30px; color: #ffcc88; margin-top: 10px; }
-        .admin-buttons { display: flex; justify-content: center; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
-        .admin-btn { background: #2a1a1a; border: 1px solid #aa6644; color: #ffccaa; padding: 10px 20px; border-radius: 40px; font-size: 13px; cursor: pointer; }
-        .admin-btn:hover { background: #4a2a2a; box-shadow: 0 0 8px #ff8866; }
-        .monokuma-note { font-size: 14px; color: #ccaa88; text-align: center; margin-top: 30px; border-top: 1px solid #5a3a2a; padding-top: 20px; }
-        @media (max-width: 760px) { .character-card { width: 180px; } .character-avatar { width: 70px; height: 70px; font-size: 40px; } }
+        body {
+            background: radial-gradient(circle at 20% 30%, #1a0f0a, #050101);
+            font-family: 'Courier New', 'Courier', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: "⚠ ⚠ ⚠";
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: #aa444466;
+            white-space: nowrap;
+            animation: scroll 20s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .crt {
+            position: relative;
+            max-width: 1400px;
+            width: 100%;
+            background: #0b0e0a;
+            border: 12px solid #3a2a2a;
+            border-radius: 24px;
+            padding: 30px 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8), 0 0 0 4px #1f1a0e, inset 0 0 20px rgba(0,0,0,0.5);
+            backdrop-filter: blur(1px);
+        }
+        .crt::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,255,0,0.03) 0px, rgba(0,255,0,0.03) 2px, transparent 2px, transparent 4px);
+            pointer-events: none;
+            border-radius: 20px;
+        }
+        .game-title {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #d44a2e;
+            padding-bottom: 15px;
+        }
+        .game-title h1 {
+            font-size: clamp(28px, 7vw, 42px);
+            letter-spacing: 4px;
+            color: #ffe6cc;
+            text-shadow: 0 0 8px #ff6644, 4px 4px 0 #3a1a1a;
+            font-weight: bold;
+        }
+        .game-title p {
+            font-size: clamp(14px, 4vw, 18px);
+            color: #ffaa88;
+            margin-top: 8px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0 #3a1a1a;
+        }
+        .section-label {
+            font-size: clamp(18px, 5vw, 24px);
+            color: #ffcc88;
+            text-align: center;
+            margin-bottom: 25px;
+            background: #2a1a1acc;
+            display: inline-block;
+            padding: 8px 28px;
+            border-radius: 40px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: bold;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 10px #ff664422;
+        }
+        .characters-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 35px;
+            margin: 30px 0;
+        }
+        .character-card {
+            background: #1a1f1aee;
+            backdrop-filter: blur(4px);
+            border: 2px solid #aa6644;
+            border-radius: 28px;
+            width: min(240px, 85vw);
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+        .character-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,100,80,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .character-card:hover::after {
+            left: 100%;
+        }
+        .character-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            border-color: #ffaa66;
+            box-shadow: 0 0 25px #ffaa6688;
+        }
+        .character-avatar {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            background: #1e2a1a;
+            border: 3px solid #ffaa66;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 52px;
+            transition: transform 0.2s;
+        }
+        .character-card:hover .character-avatar {
+            transform: scale(1.05);
+        }
+        .character-name {
+            font-size: clamp(18px, 5vw, 22px);
+            font-weight: bold;
+            color: #ffeebb;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 0 #2a1a1a;
+        }
+        .character-title {
+            font-size: 13px;
+            color: #ddbb88;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        .character-tag {
+            font-size: 11px;
+            background: #000000aa;
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 30px;
+            color: #ffcc88;
+            margin-top: 10px;
+        }
+        .admin-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .admin-btn {
+            background: #2a1a1a;
+            border: 1px solid #aa6644;
+            color: #ffccaa;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .admin-btn:hover {
+            background: #4a2a2a;
+            color: #fff;
+            box-shadow: 0 0 8px #ff8866;
+        }
+        .monokuma-note {
+            font-size: 14px;
+            color: #ccaa88;
+            text-align: center;
+            margin-top: 30px;
+            border-top: 1px solid #5a3a2a;
+            padding-top: 20px;
+            font-weight: bold;
+        }
+        @media (max-width: 760px) {
+            .character-card { width: 180px; padding: 15px 10px; }
+            .character-avatar { width: 70px; height: 70px; font-size: 40px; }
+            .character-name { font-size: 16px; }
+        }
     </style>
 </head>
 <body>
@@ -37,9 +219,9 @@
         <button id="refreshBtn" class="admin-btn">🔄 ОБНОВИТЬ МЕНЮ</button>
         <button id="exportAllBtn" class="admin-btn">📤 ЭКСПОРТ ВСЕХ</button>
         <button id="importBtn" class="admin-btn">📥 ИМПОРТ</button>
-        <button id="clearAllBtn" class="admin-btn">🗑️ ОЧИСТИТЬ</button>
+        <button id="clearAllBtn" class="admin-btn" style="background:#2a1a1a;">🗑️ ОЧИСТИТЬ</button>
     </div>
-    <div class="monokuma-note">🐻 MONOKUMA: «Пупупу... выбери цель для испытания. Создай персонажа через генератор!»</div>
+    <div class="monokuma-note">🐻 MONOKUMA: «Пупупу... выбери цель для испытания. Создай своего персонажа через генератор!»</div>
 </div>
 <input type="file" id="importFileInput" style="display:none" accept=".json">
 
@@ -61,21 +243,147 @@
         osc.stop(now + 0.1);
     }
 
-    // Простая генерация профиля (без сложных строк)
+    // ПОЛНАЯ ФУНКЦИЯ ГЕНЕРАЦИИ ПРОФИЛЯ (со всеми полями, как в генераторе)
     function generateProfileHTML(char) {
+        const escape = (s) => (s || '').replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+        const name = escape(char.name);
+        const talent = escape(char.talent);
+        const phrase = escape(char.phrase);
+        const avatar = char.avatar || '⭐';
+        const appearance = escape(char.appearance || 'Не указана');
+        const personality = escape(char.personality || 'Загадочный');
+        const secret = escape(char.secret || 'Хранит тайну');
+        const execName = escape(char.execName || 'Судьбоносная казнь');
+        const execDesc = escape(char.execDesc || 'Описание казни');
+        const lastWords = escape(char.lastWords || '«...»');
+        const evidence = escape(char.evidence || 'Неизвестная улика');
+        const backstory = escape(char.backstory || 'История не известна');
+        const relationships = escape(char.relationships || 'Отношения не определены');
+        const skills = escape(char.skills || 'Неизвестно');
+        const weaknesses = escape(char.weaknesses || 'Неизвестно');
+        const facts = escape(char.facts || 'Нет информации');
+
         return `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>${char.name}</title>
-<style>body{background:#1a0000;font-family:'Courier New';padding:20px;}.crt{max-width:1000px;margin:auto;background:#0a0a0a;border:8px solid #3a1a1a;padding:20px;}.tabs{display:flex;gap:5px;flex-wrap:wrap;}.tab-btn{background:#2a0a0a;border:none;color:#aa7777;padding:10px;cursor:pointer;}.tab-btn.active{background:#4a1a1a;color:#ff5555;}.tab-content{display:none;}.tab-content.active{display:block;}.id-card{background:#111;border:2px solid #333;padding:15px;display:flex;gap:15px;}.id-avatar{width:70px;height:70px;border:2px solid #d42e2e;display:flex;align-items:center;justify-content:center;font-size:30px;}.quote{border-left:4px solid #ff4444;background:#181010;padding:10px;margin:10px 0;}.execution{background:#1a0000;border:2px solid #aa2222;padding:10px;}</style>
-<body><div class="crt"><div class="tabs"><button class="tab-btn active" data-tab="tab1">📁 Личное дело</button><button class="tab-btn" data-tab="tab2">🎭 Диалоги</button><button class="tab-btn" data-tab="tab3">💀 Казнь</button></div>
-<div id="tab1" class="tab-content active"><div class="id-card"><div class="id-avatar">${char.avatar||'⭐'}</div><div><p><strong>Имя:</strong> ${char.name}</p><p><strong>Талант:</strong> ${char.talent}</p><p><strong>Фраза:</strong> ${char.phrase}</p></div></div><div class="quote">${char.phrase}</div><div class="execution">⚡ СЕКРЕТ: ${char.secret||'Неизвестно'}</div></div>
-<div id="tab2" class="tab-content"><div class="quote">MONOKUMA: Пупупу! Ты кто?<br>${char.name}: ${char.phrase}</div></div>
-<div id="tab3" class="tab-content"><div class="execution"><strong>${char.execName||'Казнь'}</strong><br>${char.execDesc||'Описание казни'}</div><div class="quote">${char.lastWords||'«...»'}</div></div>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Danganronpa :: ${name}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: linear-gradient(135deg, #1a0000 0%, #2d0000 100%); font-family: 'Courier New', monospace; padding: 15px 12px; min-height: 100vh; }
+        .crt { max-width: 1000px; width: 100%; margin: 0 auto; background: #0a0a0a; border: 8px solid #3a1a1a; border-radius: 8px; position: relative; }
+        .crt::before { content: " "; display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, rgba(0,255,0,0.03) 0px, rgba(0,255,0,0.03) 2px, transparent 2px, transparent 4px); pointer-events: none; border-radius: 6px; }
+        .case-file { padding: 20px 18px; color: #e0e0e0; border: 1px solid #5a2a2a; background: #0d0d0d; position: relative; z-index: 1; }
+        .monokuma-header { text-align: center; border-bottom: 3px solid #d42e2e; margin-bottom: 20px; padding-bottom: 12px; }
+        .monokuma-header h1 { font-size: clamp(28px, 7vw, 36px); letter-spacing: 3px; color: #ffffff; text-shadow: 3px 3px 0 #5a0000; }
+        .monokuma-header p { font-size: 14px; color: #ff8888; margin-top: 8px; font-weight: bold; }
+        .warning { background: #1a0505; border-left: 8px solid #ff0000; padding: 12px; margin-bottom: 20px; font-weight: bold; color: #ffaaaa; font-size: 13px; text-transform: uppercase; }
+        .tabs-wrapper { overflow-x: auto; overflow-y: hidden; margin-bottom: 20px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: #aa4444 #1a0a0a; }
+        .tabs-wrapper::-webkit-scrollbar { height: 8px; }
+        .tabs-wrapper::-webkit-scrollbar-track { background: #1a0a0a; border-radius: 4px; border: 1px solid #5a2a2a; }
+        .tabs-wrapper::-webkit-scrollbar-thumb { background: #aa4444; border-radius: 4px; }
+        .tabs { display: flex; flex-wrap: nowrap; gap: 6px; padding-bottom: 5px; min-width: min-content; }
+        .tab-btn { background: #1a0a0a; border: none; color: #cc9999; font-family: 'Courier New', monospace; font-size: 14px; font-weight: bold; padding: 12px 16px; cursor: pointer; border-radius: 8px 8px 0 0; white-space: nowrap; transition: 0.2s; }
+        .tab-btn:hover { background: #2a1515; color: #ffaaaa; }
+        .tab-btn.active { background: #2a0a0a; color: #ff7777; border-bottom: 2px solid #ff4444; }
+        .tab-content { display: none; animation: fadeIn 0.25s ease; max-height: 55vh; overflow-y: auto; padding-right: 8px; scrollbar-width: thin; scrollbar-color: #aa4444 #1a0a0a; }
+        .tab-content::-webkit-scrollbar { width: 8px; }
+        .tab-content::-webkit-scrollbar-track { background: #1a0a0a; border-radius: 4px; border: 1px solid #5a2a2a; }
+        .tab-content::-webkit-scrollbar-thumb { background: #aa4444; border-radius: 4px; }
+        .tab-content::-webkit-scrollbar-thumb:hover { background: #ff6666; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .id-card { background: #111111; border: 2px solid #333; padding: 18px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 15px; }
+        .id-avatar { background: #1a1a1a; width: 80px; height: 80px; border: 2px solid #d42e2e; display: flex; align-items: center; justify-content: center; font-size: 36px; color: #ff8888; flex-shrink: 0; }
+        .id-stats { flex: 1; min-width: 160px; }
+        .id-stats p { margin: 8px 0; font-size: 15px; line-height: 1.5; }
+        .stat-label { color: #ffaaaa; font-weight: bold; }
+        .quote { background: #181010; border-left: 6px solid #ff4444; padding: 14px; margin: 15px 0; font-style: italic; font-size: 15px; color: #ffddaa; font-weight: bold; }
+        .dossier-section { background: #0a0f0a; border-left: 4px solid #ffaa66; padding: 12px; margin: 12px 0; border-radius: 6px; }
+        .dossier-section h3 { color: #ffcc88; font-size: 18px; margin-bottom: 8px; }
+        .execution { background: #1a0000; border: 2px solid #aa2222; padding: 16px; margin: 15px 0; color: #ffaaaa; font-size: 15px; border-radius: 8px; }
+        .bracelet { display: inline-block; width: 14px; height: 14px; border-radius: 50%; margin-left: 8px; vertical-align: middle; }
+        .bracelet.green { background: #00ff00; animation: pulseGreen 1s infinite; box-shadow: 0 0 5px #00ff00; }
+        .bracelet.red { background: #ff0000; animation: pulseRed 0.3s infinite; box-shadow: 0 0 5px #ff0000; }
+        .bracelet.yellow { background: #ffff00; animation: pulseYellow 0.5s infinite; box-shadow: 0 0 5px #ffff00; }
+        @keyframes pulseGreen { 0% { opacity: 0.6; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
+        @keyframes pulseRed { 0% { opacity: 0.5; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1.2); } }
+        @keyframes pulseYellow { 0% { opacity: 0.6; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
+        button:not(.tab-btn) { background: #2a0a0a; color: #ffcccc; border: 1px solid #aa4444; padding: 14px; margin-top: 18px; font-size: 16px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        button:not(.tab-btn):hover { background: #4a1a1a; border-color: #ff8888; color: white; }
+        footer { text-align: center; font-size: 12px; margin-top: 20px; color: #886666; }
+        @media (max-width: 600px) { .case-file { padding: 15px; } .tab-btn { padding: 10px 12px; font-size: 12px; } .id-avatar { width: 60px; height: 60px; font-size: 28px; } .id-stats p { font-size: 13px; } .tab-content { max-height: 50vh; } }
+    </style>
+</head>
+<body>
+<div class="crt"><div class="case-file">
+    <div class="monokuma-header"><h1>⚡ ФАЙЛ MONOKUMA ⚡</h1><p>🔒 ${name} • ЗАКРЫТЫЙ ДОСТУП 🔒</p></div>
+    <div class="warning">⚠️ СТРОГО КОНФИДЕНЦИАЛЬНО. РАЗГЛАШЕНИЕ КАРАЕТСЯ КАЗНЬЮ. ⚠️</div>
+    <div class="tabs-wrapper"><div class="tabs">
+        <button class="tab-btn active" data-tab="tab1">📁 Личное дело</button>
+        <button class="tab-btn" data-tab="tab2">🎭 Диалоги</button>
+        <button class="tab-btn" data-tab="tab3">💀 Казнь</button>
+        <button class="tab-btn" data-tab="tab4">🔍 Улики</button>
+        <button class="tab-btn" data-tab="tab5">📜 Досье</button>
+    </div></div>
+    <!-- Вкладка 1: Личное дело -->
+    <div id="tab1" class="tab-content active">
+        <div class="id-card"><div class="id-avatar">${avatar}</div><div class="id-stats"><p><span class="stat-label">Имя:</span> ${name} <span class="bracelet green" id="braceletIndicator"></span></p><p><span class="stat-label">Талант:</span> <strong style="color:#ff8888;">${talent}</strong></p><p><span class="stat-label">Фраза:</span> ${phrase}</p><p><span class="stat-label">Статус:</span> Активен. Разыскивается Monokuma.</p></div></div>
+        <div class="quote">${phrase}</div>
+        <div class="dossier-section"><h3>👁️ Внешность</h3><p>${appearance}</p></div>
+        <div class="dossier-section"><h3>⚡ Характер</h3><p>${personality}</p></div>
+        <div class="warning">⚡ КОММЕНТАРИЙ MONOKUMA: Этот персонаж пугает меня. Он пытается прочитать исходный код игры.</div>
+    </div>
+    <!-- Вкладка 2: Диалоги -->
+    <div id="tab2" class="tab-content">
+        <div class="quote"><span class="dialogue-name">MONOKUMA:</span> Пупупу! Ты кто?<br><span class="dialogue-name">${name}:</span> ${phrase}</div>
+        <div class="quote"><span class="dialogue-name">${name}:</span> «Я уже прочитал все твои концовки.»</div>
+        <div class="quote"><span class="dialogue-name">${name}:</span> «Страшно, что однажды за экраном никого не окажется.»</div>
+        <div class="quote"><span class="dialogue-name">${name}:</span> (Смотрит в камеру) «Ты ведь всё это читаешь? Ты мог остановиться. Почему?»</div>
+    </div>
+    <!-- Вкладка 3: Казнь -->
+    <div id="tab3" class="tab-content">
+        <div class="execution"><strong>💀 КАЗНЬ: ${execName}</strong><br>${execDesc}</div>
+        <div class="quote"><strong>ФРАЗА ПЕРЕД КАЗНЬЮ:</strong><br>${lastWords}</div>
+    </div>
+    <!-- Вкладка 4: Улики -->
+    <div id="tab4" class="tab-content">
+        <div class="dossier-section"><h3>🔍 УЛИКА, связанная с персонажем</h3><p>${evidence}</p></div>
+    </div>
+    <!-- Вкладка 5: Полное досье -->
+    <div id="tab5" class="tab-content">
+        <div class="dossier-section"><h3>📜 История</h3><p>${backstory}</p></div>
+        <div class="dossier-section"><h3>💬 Отношения с другими учениками</h3><p>${relationships}</p></div>
+        <div class="dossier-section"><h3>⚔️ Навыки и слабости</h3><p><strong>Навыки:</strong> ${skills}</p><p><strong>Слабости:</strong> ${weaknesses}</p></div>
+        <div class="dossier-section"><h3>🔮 Тайна / Скрытая сторона</h3><p>${secret}</p></div>
+        <div class="dossier-section"><h3>✨ Интересные факты</h3><p>${facts}</p></div>
+    </div>
+    <footer>⬤ DR: ПОЛНОЕ ДОСЬЕ ⬤</footer>
+    <button id="glitchBtn">🔍 НАЖАТЬ, ЕСЛИ ХОЧЕШЬ УМЕРЕТЬ</button>
+</div></div>
 <script>
-const btns=document.querySelectorAll('.tab-btn');
-const contents=document.querySelectorAll('.tab-content');
-btns.forEach(btn=>{btn.addEventListener('click',()=>{let target=btn.getAttribute('data-tab');btns.forEach(b=>b.classList.remove('active'));contents.forEach(c=>c.classList.remove('active'));btn.classList.add('active');document.getElementById(target).classList.add('active');});});
-<\/script>
-</body></html>`;
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => { tab.addEventListener('click', () => { const target = tab.getAttribute('data-tab'); tabs.forEach(t => t.classList.remove('active')); contents.forEach(c => c.classList.remove('active')); tab.classList.add('active'); document.getElementById(target).classList.add('active'); }); });
+    const bracelet = document.getElementById('braceletIndicator');
+    let bstate = 0;
+    document.getElementById('glitchBtn').addEventListener('click', () => {
+        bstate = (bstate + 1) % 3;
+        bracelet.classList.remove('green', 'yellow', 'red');
+        if (bstate === 0) bracelet.classList.add('green');
+        else if (bstate === 1) bracelet.classList.add('yellow');
+        else bracelet.classList.add('red');
+        alert('Пупупу... Сгенерированный персонаж уже всё прочитал.');
+    });
+</script>
+</body>
+</html>`;
     }
 
     function loadMenu() {
@@ -102,10 +410,29 @@ btns.forEach(btn=>{btn.addEventListener('click',()=>{let target=btn.getAttribute
             card.className = 'character-card';
             card.style.background = '#1a2a2aee';
             card.style.borderColor = '#aa88aa';
-            card.innerHTML = `<div class="character-avatar">${char.avatar || '⭐'}</div><div class="character-name">${char.name.toUpperCase()}</div><div class="character-title">${char.talent}</div><div class="character-tag">${char.phrase.substring(0, 35)}...</div>`;
+            card.innerHTML = `<div class="character-avatar">${char.avatar || '⭐'}</div><div class="character-name">${char.name.toUpperCase()}</div><div class="character-title">${char.talent}</div><div class="character-tag">${(char.phrase || '').substring(0, 35)}...</div>`;
             card.addEventListener('click', () => {
                 playSelectSound();
-                const html = generateProfileHTML(char);
+                // Передаём все поля, которые могут быть в localStorage (включая новые)
+                const fullChar = {
+                    name: char.name,
+                    talent: char.talent,
+                    phrase: char.phrase,
+                    avatar: char.avatar,
+                    appearance: char.appearance || 'Не указана',
+                    personality: char.personality || 'Загадочный',
+                    secret: char.secret || 'Хранит тайну',
+                    execName: char.execName || 'Судьбоносная казнь',
+                    execDesc: char.execDesc || 'Описание казни',
+                    lastWords: char.lastWords || '«...»',
+                    evidence: char.evidence || 'Неизвестная улика',
+                    backstory: char.backstory || 'История не известна',
+                    relationships: char.relationships || 'Отношения не определены',
+                    skills: char.skills || 'Неизвестно',
+                    weaknesses: char.weaknesses || 'Неизвестно',
+                    facts: char.facts || 'Нет информации'
+                };
+                const html = generateProfileHTML(fullChar);
                 const blob = new Blob([html], { type: 'text/html' });
                 const url = URL.createObjectURL(blob);
                 window.open(url, '_blank');
