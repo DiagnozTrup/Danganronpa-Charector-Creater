@@ -74,13 +74,14 @@
             outline: none;
             box-shadow: 0 0 10px #ff6644;
         }
-        .radio-group, .checkbox-group {
+        /* Исправленное выравнивание для radio-групп */
+        .radio-group {
             display: flex;
-            gap: 25px;
             flex-wrap: wrap;
+            gap: 20px;
             margin-top: 8px;
         }
-        .radio-group label, .checkbox-group label {
+        .radio-group label {
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -88,6 +89,21 @@
             font-size: 18px;
             color: #ddbb88;
             cursor: pointer;
+            background: #1a1a1a66;
+            padding: 8px 16px;
+            border-radius: 40px;
+            border: 1px solid #aa5544;
+            transition: 0.2s;
+        }
+        .radio-group label:hover {
+            background: #2a2a2a;
+            border-color: #ff8866;
+        }
+        .radio-group input {
+            width: auto;
+            transform: scale(1.2);
+            margin-right: 5px;
+            accent-color: #ff6644;
         }
         button {
             background: #2a1a1a;
@@ -206,6 +222,7 @@
             .preview-card { width: 260px; }
             .question label { font-size: 18px; }
             input, select { font-size: 16px; }
+            .radio-group label { font-size: 14px; padding: 5px 10px; }
         }
     </style>
 </head>
@@ -247,7 +264,7 @@
         </select>
     </div>
 
-    <!-- Вопрос 4: Стиль речи -->
+    <!-- Вопрос 4: Стиль речи (исправлен radio-group) -->
     <div class="question">
         <label>4. Как ты обычно говоришь?</label>
         <div class="radio-group">
@@ -258,7 +275,7 @@
         </div>
     </div>
 
-    <!-- Вопрос 5: Реакция на стресс -->
+    <!-- Вопрос 5: Реакция на стресс (исправлен radio-group) -->
     <div class="question">
         <label>5. Что ты делаешь в стрессовой ситуации?</label>
         <div class="radio-group">
@@ -511,10 +528,8 @@
         document.getElementById('hobby').value = '';
         document.getElementById('secret').value = '';
         document.getElementById('signature').value = '';
-        // Сброс радиокнопок на значения по умолчанию
         document.querySelector('input[name="speech"][value="short"]').checked = true;
         document.querySelector('input[name="stress"][value="glasses"]').checked = true;
-        // Сброс select
         document.getElementById('color').selectedIndex = 0;
         document.getElementById('skill').selectedIndex = 0;
         document.getElementById('monokuma').selectedIndex = 0;
