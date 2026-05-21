@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Danganronpa 2: Выбор персонажа</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
         body {
             background: radial-gradient(circle at 20% 30%, #1a0f0a, #050101);
             font-family: 'Courier New', 'Courier', monospace;
@@ -217,16 +222,18 @@
         <button id="refreshBtn" class="admin-btn">🔄 ОБНОВИТЬ МЕНЮ</button>
         <button id="exportAllBtn" class="admin-btn">📤 ЭКСПОРТ ВСЕХ</button>
         <button id="importBtn" class="admin-btn">📥 ИМПОРТ</button>
-        <button id="clearAllBtn" class="admin-btn">🗑️ ОЧИСТИТЬ</button>
+        <button id="clearAllBtn" class="admin-btn" style="background:#2a1a1a;">🗑️ ОЧИСТИТЬ</button>
     </div>
     <div class="monokuma-note">🐻 MONOKUMA: «Пупупу... выбери цель для испытания. Создай своего персонажа через генератор!»</div>
 </div>
 <input type="file" id="importFileInput" style="display:none" accept=".json">
 
 <script>
-    // ЗВУК
+    // ЗВУК (простой)
     let audioCtx = null;
-    function initAudio() { if (!audioCtx) audioCtx = new (AudioContext || webkitAudioContext)(); }
+    function initAudio() {
+        if (!audioCtx) audioCtx = new (AudioContext || webkitAudioContext)();
+    }
     function playSound() {
         initAudio();
         if (!audioCtx) return;
@@ -242,66 +249,161 @@
         osc.stop(now + 0.1);
     }
 
-    // ГЕНЕРАЦИЯ ПРОФИЛЯ (простая конкатенация, без сложных строк)
-    function buildProfileHTML(char) {
-        var name = (char.name || '').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var talent = (char.talent || '').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var phrase = (char.phrase || '').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var avatar = char.avatar || '⭐';
-        var appearance = (char.appearance || 'Не указана').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var personality = (char.personality || 'Загадочный').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var secret = (char.secret || 'Хранит тайну').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var execName = (char.execName || 'Судьбоносная казнь').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var execDesc = (char.execDesc || 'Описание казни').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var lastWords = (char.lastWords || '«...»').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var evidence = (char.evidence || 'Неизвестная улика').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var backstory = (char.backstory || 'История не известна').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var relationships = (char.relationships || 'Отношения не определены').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var skills = (char.skills || 'Неизвестно').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var weaknesses = (char.weaknesses || 'Неизвестно').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
-        var facts = (char.facts || 'Нет информации').replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
+    // Экранирование
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
 
-        return '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Danganronpa :: ' + name + '</title><style>' +
-            '*{margin:0;padding:0;box-sizing:border-box;}body{background:#1a0000;font-family:"Courier New",monospace;padding:20px;}' +
-            '.crt{max-width:1000px;margin:auto;background:#0a0a0a;border:8px solid #3a1a1a;border-radius:8px;}' +
-            '.case-file{padding:20px;color:#e0e0e0;}.monokuma-header{text-align:center;border-bottom:3px solid #d42e2e;margin-bottom:20px;}' +
-            '.monokuma-header h1{font-size:32px;color:#fff;text-shadow:3px 3px 0 #5a0000;}.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}' +
-            '.tab-btn{background:#2a0a0a;border:none;color:#cc9999;padding:12px 16px;cursor:pointer;}.tab-btn.active{background:#4a1a1a;color:#ff7777;}' +
-            '.tab-content{display:none;max-height:55vh;overflow-y:auto;}.tab-content.active{display:block;}' +
-            '.id-card{background:#111;border:2px solid #333;padding:18px;display:flex;gap:15px;}.id-avatar{width:80px;height:80px;border:2px solid #d42e2e;display:flex;align-items:center;justify-content:center;font-size:36px;}' +
-            '.quote{border-left:4px solid #ff4444;background:#181010;padding:14px;margin:15px 0;}.execution{background:#1a0000;border:2px solid #aa2222;padding:16px;margin:15px 0;}' +
-            'button{background:#2a0a0a;border:1px solid #aa4444;color:#ffaaaa;padding:14px;width:100%;margin-top:15px;cursor:pointer;}' +
-            '.dossier-section{background:#0a0f0a;border-left:4px solid #ffaa66;padding:12px;margin:12px 0;}' +
-            '.bracelet{display:inline-block;width:14px;height:14px;border-radius:50%;margin-left:8px;vertical-align:middle;}' +
-            '.bracelet.green{background:#0f0;animation:pulse 1s infinite;}@keyframes pulse{0%{opacity:0.6}100%{opacity:1}}' +
-            '</style></head><body><div class="crt"><div class="case-file">' +
-            '<div class="monokuma-header"><h1>⚡ ФАЙЛ MONOKUMA ⚡</h1><p>🔒 ' + name + ' • ЗАКРЫТЫЙ ДОСТУП 🔒</p></div>' +
-            '<div class="warning" style="background:#1a0505;border-left:8px solid red;padding:12px;margin-bottom:20px;">⚠️ СТРОГО КОНФИДЕНЦИАЛЬНО ⚠️</div>' +
-            '<div class="tabs"><button class="tab-btn active" data-tab="tab1">📁 Личное дело</button><button class="tab-btn" data-tab="tab2">🎭 Диалоги</button><button class="tab-btn" data-tab="tab3">💀 Казнь</button><button class="tab-btn" data-tab="tab4">🔍 Улики</button><button class="tab-btn" data-tab="tab5">📜 Досье</button></div>' +
-            '<div id="tab1" class="tab-content active"><div class="id-card"><div class="id-avatar">' + avatar + '</div><div><p><strong>Имя:</strong> ' + name + ' <span class="bracelet green" id="braceletIndicator"></span></p><p><strong>Талант:</strong> ' + talent + '</p><p><strong>Фраза:</strong> ' + phrase + '</p></div></div><div class="quote">' + phrase + '</div><div class="dossier-section"><strong>Внешность:</strong> ' + appearance + '</div><div class="dossier-section"><strong>Характер:</strong> ' + personality + '</div></div>' +
-            '<div id="tab2" class="tab-content"><div class="quote">MONOKUMA: Пупупу! Ты кто?<br>' + name + ': ' + phrase + '</div><div class="quote">' + name + ': «Я уже прочитал все твои концовки.»</div><div class="quote">' + name + ': «Страшно, что однажды за экраном никого не окажется.»</div></div>' +
-            '<div id="tab3" class="tab-content"><div class="execution"><strong>💀 КАЗНЬ: ' + execName + '</strong><br>' + execDesc + '</div><div class="quote">' + lastWords + '</div></div>' +
-            '<div id="tab4" class="tab-content"><div class="dossier-section"><strong>🔍 Улика:</strong> ' + evidence + '</div></div>' +
-            '<div id="tab5" class="tab-content"><div class="dossier-section"><strong>📜 История:</strong> ' + backstory + '</div><div class="dossier-section"><strong>💬 Отношения:</strong> ' + relationships + '</div><div class="dossier-section"><strong>⚔️ Навыки:</strong> ' + skills + '<br><strong>Слабости:</strong> ' + weaknesses + '</div><div class="dossier-section"><strong>🔮 Тайна:</strong> ' + secret + '</div><div class="dossier-section"><strong>✨ Факты:</strong> ' + facts + '</div></div>' +
-            '<footer style="text-align:center; margin-top:20px;">⬤ DR: ПОЛНОЕ ДОСЬЕ ⬤</footer>' +
-            '<button id="glitchBtn">🔍 НАЖАТЬ, ЕСЛИ ХОЧЕШЬ УМЕРЕТЬ</button>' +
-            '</div></div><script>' +
-            'var tabs=document.querySelectorAll(".tab-btn");var contents=document.querySelectorAll(".tab-content");' +
-            'tabs.forEach(function(t){t.addEventListener("click",function(){var target=t.getAttribute("data-tab");' +
-            'tabs.forEach(function(btn){btn.classList.remove("active");});' +
-            'contents.forEach(function(c){c.classList.remove("active");});' +
-            't.classList.add("active");document.getElementById(target).classList.add("active");});});' +
-            'var bracelet=document.getElementById("braceletIndicator");var bstate=0;' +
-            'document.getElementById("glitchBtn").addEventListener("click",function(){bstate=(bstate+1)%3;' +
-            'bracelet.classList.remove("green","red","yellow");if(bstate===0)bracelet.classList.add("green");' +
-            'else if(bstate===1)bracelet.classList.add("yellow");else bracelet.classList.add("red");' +
-            'alert("Пупупу... Сгенерированный персонаж уже всё прочитал.");});' +
-            '<\/script></body></html>';
+    // ГЕНЕРАЦИЯ ПОЛНОГО ПРОФИЛЯ (как эталонный, с 5 вкладками, досье, ролью)
+    function buildProfileHTML(char) {
+        var name = escapeHtml(char.name || 'Персонаж');
+        var talent = escapeHtml(char.talent || 'Талант');
+        var phrase = escapeHtml(char.phrase || '«...»');
+        var role = escapeHtml(char.role || 'Не определена');
+        var avatar = char.avatar || '⭐';
+        var appearance = escapeHtml(char.appearance || 'Не указана');
+        var personality = escapeHtml(char.personality || 'Загадочный');
+        var secret = escapeHtml(char.secret || 'Хранит тайну');
+        var execName = escapeHtml(char.execName || 'Казнь');
+        var execDesc = escapeHtml(char.execDesc || 'Описание');
+        var lastWords = escapeHtml(char.lastWords || '«...»');
+        var evidence = escapeHtml(char.evidence || 'Нет улики');
+        var backstory = escapeHtml(char.backstory || 'История не известна');
+        var relationships = escapeHtml(char.relationships || 'Не определены');
+        var skills = escapeHtml(char.skills || 'Неизвестно');
+        var weaknesses = escapeHtml(char.weaknesses || 'Неизвестно');
+        var facts = escapeHtml(char.facts || 'Нет информации');
+
+        return '<!DOCTYPE html>\n' +
+'<html lang="ru">\n' +
+'<head>\n' +
+'    <meta charset="UTF-8">\n' +
+'    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">\n' +
+'    <title>Danganronpa :: ' + name + '</title>\n' +
+'    <style>\n' +
+'        * { margin: 0; padding: 0; box-sizing: border-box; }\n' +
+'        body { background: linear-gradient(135deg, #1a0000 0%, #2d0000 100%); font-family: "Courier New", monospace; padding: 20px; min-height: 100vh; }\n' +
+'        .crt { max-width: 1000px; width: 100%; margin: 0 auto; background: #0a0a0a; border: 8px solid #3a1a1a; border-radius: 8px; position: relative; }\n' +
+'        .crt::before { content: " "; display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, rgba(0,255,0,0.03) 0px, rgba(0,255,0,0.03) 2px, transparent 2px, transparent 4px); pointer-events: none; border-radius: 6px; }\n' +
+'        .case-file { padding: 20px 18px; color: #e0e0e0; border: 1px solid #5a2a2a; background: #0d0d0d; position: relative; z-index: 1; }\n' +
+'        .monokuma-header { text-align: center; border-bottom: 3px solid #d42e2e; margin-bottom: 20px; padding-bottom: 12px; }\n' +
+'        .monokuma-header h1 { font-size: clamp(28px, 7vw, 36px); letter-spacing: 3px; color: #ffffff; text-shadow: 3px 3px 0 #5a0000; }\n' +
+'        .monokuma-header p { font-size: 14px; color: #ff8888; margin-top: 8px; font-weight: bold; }\n' +
+'        .warning { background: #1a0505; border-left: 8px solid #ff0000; padding: 12px; margin-bottom: 20px; font-weight: bold; color: #ffaaaa; font-size: 13px; text-transform: uppercase; }\n' +
+'        .tabs-wrapper { overflow-x: auto; overflow-y: hidden; margin-bottom: 20px; }\n' +
+'        .tabs { display: flex; flex-wrap: nowrap; gap: 6px; padding-bottom: 5px; min-width: min-content; }\n' +
+'        .tab-btn { background: #1a0a0a; border: none; color: #cc9999; font-family: "Courier New", monospace; font-size: 14px; font-weight: bold; padding: 12px 16px; cursor: pointer; border-radius: 8px 8px 0 0; white-space: nowrap; transition: 0.2s; }\n' +
+'        .tab-btn:hover { background: #2a1515; color: #ffaaaa; }\n' +
+'        .tab-btn.active { background: #2a0a0a; color: #ff7777; border-bottom: 2px solid #ff4444; }\n' +
+'        .tab-content { display: none; animation: fadeIn 0.25s ease; max-height: 55vh; overflow-y: auto; padding-right: 8px; }\n' +
+'        .tab-content.active { display: block; }\n' +
+'        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }\n' +
+'        .id-card { background: #111111; border: 2px solid #333; padding: 18px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 15px; }\n' +
+'        .id-avatar { background: #1a1a1a; width: 80px; height: 80px; border: 2px solid #d42e2e; display: flex; align-items: center; justify-content: center; font-size: 36px; color: #ff8888; flex-shrink: 0; }\n' +
+'        .id-stats { flex: 1; min-width: 160px; }\n' +
+'        .id-stats p { margin: 8px 0; font-size: 15px; line-height: 1.5; }\n' +
+'        .stat-label { color: #ffaaaa; font-weight: bold; }\n' +
+'        .quote { background: #181010; border-left: 6px solid #ff4444; padding: 14px; margin: 15px 0; font-style: italic; font-size: 15px; color: #ffddaa; font-weight: bold; }\n' +
+'        .dossier-section { background: #0a0f0a; border-left: 4px solid #ffaa66; padding: 12px; margin: 12px 0; border-radius: 6px; }\n' +
+'        .dossier-section h3 { color: #ffcc88; font-size: 18px; margin-bottom: 8px; }\n' +
+'        .execution { background: #1a0000; border: 2px solid #aa2222; padding: 16px; margin: 15px 0; color: #ffaaaa; font-size: 15px; border-radius: 8px; }\n' +
+'        .bracelet { display: inline-block; width: 14px; height: 14px; border-radius: 50%; margin-left: 8px; vertical-align: middle; }\n' +
+'        .bracelet.green { background: #00ff00; animation: pulseGreen 1s infinite; box-shadow: 0 0 5px #00ff00; }\n' +
+'        .bracelet.red { background: #ff0000; animation: pulseRed 0.3s infinite; box-shadow: 0 0 5px #ff0000; }\n' +
+'        .bracelet.yellow { background: #ffff00; animation: pulseYellow 0.5s infinite; box-shadow: 0 0 5px #ffff00; }\n' +
+'        @keyframes pulseGreen { 0% { opacity: 0.6; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }\n' +
+'        @keyframes pulseRed { 0% { opacity: 0.5; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1.2); } }\n' +
+'        @keyframes pulseYellow { 0% { opacity: 0.6; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }\n' +
+'        button:not(.tab-btn) { background: #2a0a0a; color: #ffcccc; border: 1px solid #aa4444; padding: 14px; margin-top: 18px; font-size: 16px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }\n' +
+'        button:not(.tab-btn):hover { background: #4a1a1a; border-color: #ff8888; color: white; }\n' +
+'        footer { text-align: center; font-size: 12px; margin-top: 20px; color: #886666; }\n' +
+'        @media (max-width: 600px) { .case-file { padding: 15px; } .tab-btn { padding: 10px 12px; font-size: 12px; } .id-avatar { width: 60px; height: 60px; font-size: 28px; } .id-stats p { font-size: 13px; } .tab-content { max-height: 50vh; } }\n' +
+'    </style>\n' +
+'</head>\n' +
+'<body>\n' +
+'<div class="crt"><div class="case-file">\n' +
+'    <div class="monokuma-header"><h1>⚡ ФАЙЛ MONOKUMA ⚡</h1><p>🔒 ' + name + ' • ЗАКРЫТЫЙ ДОСТУП 🔒</p></div>\n' +
+'    <div class="warning">⚠️ СТРОГО КОНФИДЕНЦИАЛЬНО. РАЗГЛАШЕНИЕ КАРАЕТСЯ КАЗНЬЮ. ⚠️</div>\n' +
+'    <div class="tabs-wrapper"><div class="tabs">\n' +
+'        <button class="tab-btn active" data-tab="tab1">📁 Личное дело</button>\n' +
+'        <button class="tab-btn" data-tab="tab2">🎭 Диалоги</button>\n' +
+'        <button class="tab-btn" data-tab="tab3">💀 Казнь</button>\n' +
+'        <button class="tab-btn" data-tab="tab4">🔍 Улики</button>\n' +
+'        <button class="tab-btn" data-tab="tab5">📜 Досье</button>\n' +
+'    </div></div>\n' +
+'    <div id="tab1" class="tab-content active">\n' +
+'        <div class="id-card"><div class="id-avatar">' + avatar + '</div><div class="id-stats">\n' +
+'            <p><span class="stat-label">Имя:</span> ' + name + ' <span class="bracelet green" id="braceletIndicator"></span></p>\n' +
+'            <p><span class="stat-label">Талант:</span> <strong style="color:#ff8888;">' + talent + '</strong></p>\n' +
+'            <p><span class="stat-label">Роль:</span> ' + role + '</p>\n' +
+'            <p><span class="stat-label">Фраза:</span> ' + phrase + '</p>\n' +
+'            <p><span class="stat-label">Статус:</span> Активен. Разыскивается Monokuma.</p>\n' +
+'        </div></div>\n' +
+'        <div class="quote">' + phrase + '</div>\n' +
+'        <div class="dossier-section"><h3>👁️ Внешность</h3><p>' + appearance + '</p></div>\n' +
+'        <div class="dossier-section"><h3>⚡ Характер</h3><p>' + personality + '</p></div>\n' +
+'        <div class="warning">⚡ КОММЕНТАРИЙ MONOKUMA: Этот персонаж пугает меня. Он пытается прочитать исходный код игры.</div>\n' +
+'    </div>\n' +
+'    <div id="tab2" class="tab-content">\n' +
+'        <div class="quote"><span class="dialogue-name">MONOKUMA:</span> Пупупу! Ты кто?<br><span class="dialogue-name">' + name + ':</span> ' + phrase + '</div>\n' +
+'        <div class="quote"><span class="dialogue-name">' + name + ':</span> «Я уже прочитал все твои концовки.»</div>\n' +
+'        <div class="quote"><span class="dialogue-name">' + name + ':</span> «Страшно, что однажды за экраном никого не окажется.»</div>\n' +
+'        <div class="quote"><span class="dialogue-name">' + name + ':</span> (Смотрит в камеру) «Ты ведь всё это читаешь? Ты мог остановиться. Почему?»</div>\n' +
+'    </div>\n' +
+'    <div id="tab3" class="tab-content">\n' +
+'        <div class="execution"><strong>💀 КАЗНЬ: ' + execName + '</strong><br>' + execDesc + '</div>\n' +
+'        <div class="quote"><strong>ФРАЗА ПЕРЕД КАЗНЬЮ:</strong><br>' + lastWords + '</div>\n' +
+'    </div>\n' +
+'    <div id="tab4" class="tab-content">\n' +
+'        <div class="dossier-section"><h3>🔍 УЛИКА, связанная с персонажем</h3><p>' + evidence + '</p></div>\n' +
+'    </div>\n' +
+'    <div id="tab5" class="tab-content">\n' +
+'        <div class="dossier-section"><h3>📜 История</h3><p>' + backstory + '</p></div>\n' +
+'        <div class="dossier-section"><h3>💬 Отношения с другими учениками</h3><p>' + relationships + '</p></div>\n' +
+'        <div class="dossier-section"><h3>⚔️ Навыки и слабости</h3><p><strong>Навыки:</strong> ' + skills + '</p><p><strong>Слабости:</strong> ' + weaknesses + '</p></div>\n' +
+'        <div class="dossier-section"><h3>🔮 Тайна / Скрытая сторона</h3><p>' + secret + '</p></div>\n' +
+'        <div class="dossier-section"><h3>✨ Интересные факты</h3><p>' + facts + '</p></div>\n' +
+'    </div>\n' +
+'    <footer>⬤ DR: ПОЛНОЕ ДОСЬЕ ⬤</footer>\n' +
+'    <button id="glitchBtn">🔍 НАЖАТЬ, ЕСЛИ ХОЧЕШЬ УМЕРЕТЬ</button>\n' +
+'</div></div>\n' +
+'<script>\n' +
+'    var tabs = document.querySelectorAll(".tab-btn");\n' +
+'    var contents = document.querySelectorAll(".tab-content");\n' +
+'    tabs.forEach(function(tab) {\n' +
+'        tab.addEventListener("click", function() {\n' +
+'            var target = tab.getAttribute("data-tab");\n' +
+'            tabs.forEach(function(t) { t.classList.remove("active"); });\n' +
+'            contents.forEach(function(c) { c.classList.remove("active"); });\n' +
+'            tab.classList.add("active");\n' +
+'            document.getElementById(target).classList.add("active");\n' +
+'        });\n' +
+'    });\n' +
+'    var bracelet = document.getElementById("braceletIndicator");\n' +
+'    var bstate = 0;\n' +
+'    document.getElementById("glitchBtn").addEventListener("click", function() {\n' +
+'        bstate = (bstate + 1) % 3;\n' +
+'        bracelet.classList.remove("green", "yellow", "red");\n' +
+'        if (bstate === 0) bracelet.classList.add("green");\n' +
+'        else if (bstate === 1) bracelet.classList.add("yellow");\n' +
+'        else bracelet.classList.add("red");\n' +
+'        alert("Пупупу... Сгенерированный персонаж уже всё прочитал.");\n' +
+'    });\n' +
+'<\/script>\n' +
+'</body>\n' +
+'</html>';
     }
 
     // ЗАГРУЗКА МЕНЮ
     function loadMenu() {
         var grid = document.getElementById('charactersGrid');
+        if (!grid) return;
         grid.innerHTML = '';
         var standard = [
             { name: 'ИВАН ДИОГЕНОВ', talent: 'Бета-тестер', tag: '#root', avatar: '⚡', file: 'ivan_profile_sound.html' },
@@ -316,9 +418,9 @@
             if (c.isLink) card.style.background = '#2a1a2aee';
             card.innerHTML = '<div class="character-avatar">' + c.avatar + '</div><div class="character-name">' + c.name + '</div><div class="character-title">' + c.talent + '</div><div class="character-tag">' + c.tag + '</div>';
             if (c.isLink) {
-                card.addEventListener('click', function(url) { return function() { playSound(); setTimeout(function(){ window.location.href = url; }, 100); }; }(c.url));
+                card.addEventListener('click', (function(url) { return function() { playSound(); setTimeout(function() { window.location.href = url; }, 100); }; })(c.url));
             } else {
-                card.addEventListener('click', function(file) { return function() { playSound(); setTimeout(function(){ window.location.href = file; }, 100); }; }(c.file));
+                card.addEventListener('click', (function(file) { return function() { playSound(); setTimeout(function() { window.location.href = file; }, 100); }; })(c.file));
             }
             grid.appendChild(card);
         }
@@ -339,6 +441,7 @@
                         talent: charData.talent,
                         phrase: charData.phrase,
                         avatar: charData.avatar,
+                        role: charData.role || 'Не определена',
                         appearance: charData.appearance,
                         personality: charData.personality,
                         secret: charData.secret,
@@ -355,8 +458,11 @@
                     var html = buildProfileHTML(full);
                     var blob = new Blob([html], { type: 'text/html' });
                     var url = URL.createObjectURL(blob);
-                    window.open(url, '_blank');
-                    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+                    var win = window.open(url, '_blank');
+                    if (!win) {
+                        alert('Пожалуйста, разрешите всплывающие окна для этого сайта, чтобы открыть профиль персонажа.');
+                    }
+                    setTimeout(function() { URL.revokeObjectURL(url); }, 5000);
                 };
             })(ch));
             grid.appendChild(cCard);
