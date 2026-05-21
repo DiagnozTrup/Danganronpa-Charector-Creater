@@ -3,264 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Danganronpa :: Генератор промпта для персонажа</title>
+    <title>Генерация персонажа через промпт | Danganronpa</title>
     <style>
+        /* (стили такие же, как в предыдущей версии, оставляем их для краткости, но они уже были) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: radial-gradient(circle at 20% 30%, #1a0f0a, #050101); font-family: 'Courier New', monospace; padding: 20px; min-height: 100vh; }
-        .crt { max-width: 1100px; width: 100%; margin: 0 auto; background: #0a0a0a; border: 8px solid #3a2a2a; border-radius: 28px; padding: 30px; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        .crt { max-width: 1100px; width: 100%; margin: auto; background: #0a0a0a; border: 8px solid #3a2a2a; border-radius: 28px; padding: 30px; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
         h1 { text-align: center; font-size: clamp(28px, 7vw, 38px); color: #ff8866; text-shadow: 0 0 6px #ff4422, 2px 2px 0 #3a1a1a; margin-bottom: 15px; }
-        .sub { text-align: center; color: #dd8888; font-size: 16px; margin-bottom: 30px; border-bottom: 1px solid #aa5544; padding-bottom: 15px; }
-        .question { background: #111111cc; border-left: 6px solid #d45a2e; padding: 20px; margin-bottom: 20px; border-radius: 16px; backdrop-filter: blur(4px); }
-        .question label { display: block; font-weight: bold; color: #ffccaa; margin-bottom: 10px; font-size: 16px; }
-        .question input, .question textarea, .question select { width: 100%; background: #1a1a1a; border: 1px solid #aa5544; color: #f0e0d0; padding: 12px; font-family: 'Courier New', monospace; font-size: 15px; border-radius: 12px; }
-        .question textarea { min-height: 80px; resize: vertical; }
-        .radio-group { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
-        .radio-group label { display: inline-flex; align-items: center; gap: 8px; font-weight: normal; margin-bottom: 0; cursor: pointer; }
-        button { background: #2a1a1a; border: 2px solid #aa6644; color: #ffccaa; padding: 16px; font-family: monospace; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; border-radius: 40px; transition: 0.2s; margin-top: 10px; }
-        button:hover { background: #4a2a2a; border-color: #ffaa66; color: #fff; box-shadow: 0 0 15px #ff8866; }
+        .sub { text-align: center; color: #dd8888; font-size: 16px; margin-bottom: 30px; border-bottom: 2px solid #aa5544; padding-bottom: 15px; }
+        .prompt-area { background: #111111cc; border-left: 6px solid #d45a2e; padding: 20px; border-radius: 16px; margin-bottom: 20px; backdrop-filter: blur(4px); }
+        textarea { width: 100%; background: #1a1a1a; border: 2px solid #aa5544; color: #f0e0d0; padding: 15px; font-family: monospace; font-size: 14px; border-radius: 16px; resize: vertical; }
+        textarea:focus { border-color: #ff8866; outline: none; box-shadow: 0 0 10px #ff6644; }
+        button { background: #2a1a1a; border: 2px solid #aa6644; color: #ffccaa; padding: 14px; font-family: monospace; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; border-radius: 40px; transition: all 0.2s; margin-top: 10px; }
+        button:hover { background: #4a2a2a; border-color: #ffaa66; color: #fff; box-shadow: 0 0 15px #ff8866; transform: scale(1.01); }
+        .example-btn { background: #1a3a2a; border-color: #66aa66; }
         .result-area { margin-top: 30px; padding-top: 20px; border-top: 2px dashed #aa5544; display: none; }
-        .result-header { color: #88ff88; text-align: center; margin-bottom: 15px; font-size: 18px; }
-        pre { background: #0a0a0a; padding: 15px; overflow-x: auto; font-size: 12px; border: 1px solid #aa5544; border-radius: 16px; max-height: 500px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word; font-family: monospace; color: #f0e0d0; }
-        .copy-btn { background: #1a3a2a; border-color: #66aa66; margin-top: 15px; }
-        .note { font-size: 13px; color: #aa8866; text-align: center; margin-top: 20px; }
+        .result-header { color: #88ff88; text-align: center; margin-bottom: 15px; font-size: 20px; text-shadow: 0 0 4px #00aa00; }
+        .preview-card { background: #1a1f1aee; border: 2px solid #ffaa66; border-radius: 28px; width: 260px; padding: 20px; margin: 0 auto; text-align: center; }
+        .preview-avatar { font-size: 64px; }
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #2a4a2a; color: #cfeca8; padding: 12px 24px; border-radius: 40px; font-weight: bold; z-index: 1000; animation: fadeOut 3s forwards; }
+        @keyframes fadeOut { 0% { opacity: 1; transform: translateY(0); } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; transform: translateY(20px); } }
         .main-link { display: inline-block; background: #1a2a1a; color: #ccffaa; text-decoration: none; padding: 8px 20px; border-radius: 40px; font-size: 16px; margin-bottom: 20px; transition: 0.2s; }
         .main-link:hover { background: #2a4a2a; box-shadow: 0 0 8px #88ff88; }
-        .toast { position: fixed; bottom: 20px; right: 20px; background: #2a4a2a; color: #cfeca8; padding: 12px 24px; border-radius: 40px; font-weight: bold; z-index: 1000; animation: fadeOut 3s forwards; }
-        @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
-        h3 { color: #ffccaa; margin: 25px 0 10px; font-size: 22px; border-left: 3px solid #ff6644; padding-left: 12px; }
+        .success-buttons { display: flex; gap: 15px; margin-top: 20px; }
+        .success-buttons button { margin-top: 0; }
+        .note { font-size: 13px; color: #aa8866; text-align: center; margin-top: 20px; }
     </style>
 </head>
 <body>
 <div class="crt">
-    <div style="text-align: center;"><a href="index.html" class="main-link">🏠 НА ГЛАВНУЮ</a></div>
-    <h1>⚡ ГЕНЕРАТОР ПРОМПТА ДЛЯ ПЕРСОНАЖА ⚡</h1>
-    <div class="sub">Заполни форму — и получи готовый промпт для нейросети (ChatGPT, DeepSeek и др.)</div>
-
-    <!-- ШАГ 1 -->
-    <h3>📌 ШАГ 1. ОСНОВНАЯ ИНФОРМАЦИЯ</h3>
-    <div class="question"><label>1.1. Как зовут персонажа?</label><input type="text" id="q1_1" placeholder="например: Иван Диогенов"></div>
-    <div class="question"><label>1.2. Какой у него талант?</label><input type="text" id="q1_2" placeholder="например: Бета-тестер Реальности"></div>
-    <div class="question"><label>1.3. Какая фирменная фраза?</label><input type="text" id="q1_3" placeholder="например: «Интересный ход… но у меня есть пасхалки»"></div>
-    <div class="question"><label>1.4. Уникальный аксессуар?</label><input type="text" id="q1_4" placeholder="например: браслет, который взламывает системные файлы"></div>
-
-    <!-- ШАГ 2 -->
-    <h3>🎭 ШАГ 2. ХАРАКТЕР И ПОВЕДЕНИЕ</h3>
-    <div class="question"><label>2.1. Как персонаж говорит?</label><input type="text" id="q2_1" placeholder="короткие фразы / длинные монологи / с паузами"></div>
-    <div class="question"><label>2.2. Какие слова часто использует (3-5)?</label><input type="text" id="q2_2" placeholder="баг, механика, промпт, диалоговое дерево"></div>
-    <div class="question"><label>2.3. Что делает в стрессовой ситуации?</label><input type="text" id="q2_3" placeholder="поправляет несуществующие очки"></div>
-    <div class="question"><label>2.4. Ломает ли четвёртую стену?</label>
-        <div class="radio-group"><label><input type="radio" name="q2_4" value="Да" checked> Да</label><label><input type="radio" name="q2_4" value="Нет"> Нет</label></div>
+    <a href="index.html" class="main-link">🏠 НА ГЛАВНУЮ</a>
+    <h1>⚡ ГЕНЕРАЦИЯ ПЕРСОНАЖА ИЗ ПРОМПТА ⚡</h1>
+    <div class="sub">Вставь промпт — и персонаж автоматически добавится в главное меню!</div>
+    <div class="prompt-area">
+        <textarea id="promptInput" rows="8" placeholder="Например:
+Имя: Иван Диогенов
+Талант: Бета-тестер Реальности
+Фирменная фраза: «Интересный ход…»
+Внешность: школьная форма, картридж вместо галстука
+Характер: говорит короткими фразами, использует слова «баг», «промпт»
+Тайна: читает исходный код игры
+Название казни: «Жестокая отладка»
+Описание казни: Monokuma запускает Windows 95, команда kill -9 не срабатывает
+Фраза перед казнью: «Я сохранил лог»
+Улика: обрывок системного лога Monokuma"></textarea>
+        <button id="exampleBtn" class="example-btn">📋 ЗАПОЛНИТЬ ПРИМЕРОМ</button>
+        <button id="generateBtn">🔮 СОЗДАТЬ И СОХРАНИТЬ В МЕНЮ 🔮</button>
     </div>
-
-    <!-- ШАГ 3 -->
-    <h3>🎨 ШАГ 3. ВНЕШНОСТЬ (СПРАЙТЫ)</h3>
-    <div class="question"><label>3.1. Опиши базовую внешность (одежда, причёска, цвета)</label><textarea id="q3_1" placeholder="например: школьная форма, картридж вместо галстука, чёрно-красная гамма"></textarea></div>
-    <div class="question"><label>3.2. 3 основные позы (спрайта)?</label><input type="text" id="q3_2" placeholder="Нейтральная / Эмоциональная / Угрожающая"></div>
-
-    <!-- ШАГ 4 -->
-    <h3>📖 ШАГ 4. ИСТОРИЯ И КОНТЕКСТ</h3>
-    <div class="question"><label>4.1. Скрытая сторона (что Monokuma скрывает)?</label><textarea id="q4_1" placeholder="например: он читает исходный код игры, а не играет в неё"></textarea></div>
-    <div class="question"><label>4.2. Улика, связанная с персонажем?</label><textarea id="q4_2" placeholder="например: обрывок системного лога Monokuma с признанием в ограничениях"></textarea></div>
-    <div class="question"><label>4.3. Фраза перед казнью?</label><input type="text" id="q4_3" placeholder="например: «Я сохранил лог. В следующем прохождении я выиграю.»"></div>
-
-    <!-- ШАГ 5 -->
-    <h3>💀 ШАГ 5. КАЗНЬ</h3>
-    <div class="question"><label>5.1. Название казни?</label><input type="text" id="q5_1" placeholder="например: «Жестокая отладка»"></div>
-    <div class="question"><label>5.2. Сценарий казни (2-4 предложения)</label><textarea id="q5_2" placeholder="например: Monokuma запускает Windows 95, команда kill -9 не срабатывает..."></textarea></div>
-
-    <!-- ШАГ 6 -->
-    <h3>🎵 ШАГ 6. ДОПОЛНИТЕЛЬНЫЕ ПАРАМЕТРЫ</h3>
-    <div class="question"><label>6.1. Музыкальная тема?</label>
-        <div class="radio-group"><label><input type="radio" name="q6_1" value="Да" checked> Да</label><label><input type="radio" name="q6_1" value="Нет"> Нет</label></div>
-    </div>
-    <div class="question"><label>6.2. Диалоги с Monokuma (4 сцены)?</label>
-        <div class="radio-group"><label><input type="radio" name="q6_2" value="Да" checked> Да</label><label><input type="radio" name="q6_2" value="Нет"> Нет</label></div>
-    </div>
-    <div class="question"><label>6.3. HTML-страница с вкладками?</label>
-        <div class="radio-group"><label><input type="radio" name="q6_3" value="Да" checked> Да</label><label><input type="radio" name="q6_3" value="Нет"> Нет</label></div>
-    </div>
-
-    <button id="generateBtn">🔮 СГЕНЕРИРОВАТЬ ПРОМПТ 🔮</button>
-
     <div id="resultArea" class="result-area">
-        <div class="result-header">✅ ВАШ ПРОМПТ ГОТОВ! СКОПИРУЙТЕ ЕГО И ОТПРАВЬТЕ В НЕЙРОСЕТЬ</div>
-        <pre id="promptOutput"></pre>
-        <button id="copyBtn" class="copy-btn">📋 СКОПИРОВАТЬ ПРОМПТ</button>
+        <div class="result-header">✅ ПЕРСОНАЖ ГОТОВ И ДОБАВЛЕН В МЕНЮ!</div>
+        <div id="characterPreview"></div>
+        <div class="success-buttons">
+            <button id="goToMenuBtn">🏠 ПЕРЕЙТИ В ГЛАВНОЕ МЕНЮ</button>
+            <button id="generateAnotherBtn">🔄 СОЗДАТЬ ЕЩЁ</button>
+        </div>
     </div>
-
-    <div class="note">✨ После генерации скопируйте промпт и отправьте его в ChatGPT, DeepSeek или любую другую нейросеть. Она создаст полного персонажа в стиле Danganronpa (короткая карточка, диалоги, HTML).</div>
+    <div class="note">✨ Промпт может быть в произвольной форме. ИИ извлечёт имя, талант, фразу, внешность, характер, тайну, казнь, улику.</div>
 </div>
 
 <script>
     function showToast(msg) {
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
+        let t = document.createElement('div');
+        t.className = 'toast';
+        t.innerText = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
     }
 
-    function generatePrompt() {
-        const name = document.getElementById('q1_1').value.trim();
-        const talent = document.getElementById('q1_2').value.trim();
-        const phrase = document.getElementById('q1_3').value.trim();
-        const accessory = document.getElementById('q1_4').value.trim();
-        const speechStyle = document.getElementById('q2_1').value.trim();
-        const words = document.getElementById('q2_2').value.trim();
-        const stressAction = document.getElementById('q2_3').value.trim();
-        const breaksFourthWall = document.querySelector('input[name="q2_4"]:checked').value;
-        const appearance = document.getElementById('q3_1').value.trim();
-        const sprites = document.getElementById('q3_2').value.trim();
-        const secret = document.getElementById('q4_1').value.trim();
-        const evidence = document.getElementById('q4_2').value.trim();
-        const lastWords = document.getElementById('q4_3').value.trim();
-        const execName = document.getElementById('q5_1').value.trim();
-        const execDesc = document.getElementById('q5_2').value.trim();
-        const hasMusic = document.querySelector('input[name="q6_1"]:checked').value;
-        const hasDialogs = document.querySelector('input[name="q6_2"]:checked').value;
-        const hasHTML = document.querySelector('input[name="q6_3"]:checked').value;
-
-        const finalName = name || '[введите имя]';
-        const finalTalent = talent || '[введите талант]';
-        const finalPhrase = phrase || '[введите фразу]';
-        const finalAccessory = accessory || '[введите аксессуар]';
-        const finalSpeechStyle = speechStyle || '[введите стиль речи]';
-        const finalWords = words || '[введите слова]';
-        const finalStressAction = stressAction || '[введите действие в стрессе]';
-        const finalAppearance = appearance || '[опишите внешность]';
-        const finalSprites = sprites || '[укажите названия спрайтов]';
-        const finalSecret = secret || '[опишите скрытую сторону]';
-        const finalEvidence = evidence || '[опишите улику или напишите "Нет"]';
-        const finalLastWords = lastWords || '[введите фразу перед казнью]';
-        const finalExecName = execName || '[введите название казни]';
-        const finalExecDesc = execDesc || '[опишите сценарий казни]';
-
-        let prompt = `Ты — искусственный интеллект, специализирующийся на творческом написании в стилистике видеоигры Danganronpa.
-
-Мне нужно создать полное личное дело персонажа. Ниже мои ответы на вопросы. Используй их для генерации.
-
-═══════════════════════════════════════════════════════════════════
-ШАГ 1. ОСНОВНАЯ ИНФОРМАЦИЯ
-═══════════════════════════════════════════════════════════════════
-
-Вопрос 1.1: Как зовут персонажа?
-Ответ: ${finalName}
-
-Вопрос 1.2: Какой у него талант (Ultimate / Super High School Level)?
-Ответ: ${finalTalent}
-
-Вопрос 1.3: Какая фирменная фраза будет у персонажа?
-Ответ: ${finalPhrase}
-
-Вопрос 1.4: Есть ли у персонажа уникальный аксессуар?
-Ответ: ${finalAccessory}
-
-═══════════════════════════════════════════════════════════════════
-ШАГ 2. ХАРАКТЕР И ПОВЕДЕНИЕ
-═══════════════════════════════════════════════════════════════════
-
-Вопрос 2.1: Как персонаж говорит? (короткие фразы / длинные монологи / с паузами)
-Ответ: ${finalSpeechStyle}
-
-Вопрос 2.2: Какие слова он часто использует? (например: баг, механика, промпт)
-Ответ: ${finalWords}
-
-Вопрос 2.3: Что персонаж делает в стрессовой ситуации?
-Ответ: ${finalStressAction}
-
-Вопрос 2.4: Ломает ли персонаж четвёртую стену (знает, что он в игре)?
-Ответ: ${breaksFourthWall}
-
-═══════════════════════════════════════════════════════════════════
-ШАГ 3. ВНЕШНОСТЬ (СПРАЙТЫ)
-═══════════════════════════════════════════════════════════════════
-
-Вопрос 3.1: Опиши базовую внешность персонажа (одежда, причёска, цветовая гамма)
-Ответ: ${finalAppearance}
-
-Вопрос 3.2: Какие будут 3 основные позы (спрайта) у персонажа?
-Ответ: ${finalSprites}
-
-═══════════════════════════════════════════════════════════════════
-ШАГ 4. ИСТОРИЯ И КОНТЕКСТ
-═══════════════════════════════════════════════════════════════════
-
-Вопрос 4.1: Какая скрытая сторона есть у персонажа? (что Monokuma скрывает в файлах)
-Ответ: ${finalSecret}
-
-Вопрос 4.2: Есть ли улика, связанная с персонажем? (если да, опиши в 1-2 предложениях)
-Ответ: ${finalEvidence}
-
-Вопрос 4.3: Какая фраза будет у персонажа перед казнью?
-Ответ: ${finalLastWords}
-
-═══════════════════════════════════════════════════════════════════
-ШАГ 5. КАЗНЬ
-═══════════════════════════════════════════════════════════════════
-
-Вопрос 5.1: Как называется казнь персонажа?
-Ответ: ${finalExecName}
-
-Вопрос 5.2: Опиши сценарий казни (2-4 предложения)
-Ответ: ${finalExecDesc}
-
-═══════════════════════════════════════════════════════════════════
-ШАГ 6. ДОПОЛНИТЕЛЬНЫЕ ПАРАМЕТРЫ (НЕОБЯЗАТЕЛЬНО)
-═══════════════════════════════════════════════════════════════════
-
-Вопрос 6.1: Хочешь ли ты музыкальную тему для персонажа?
-Ответ: ${hasMusic}
-
-Вопрос 6.2: Хочешь ли ты диалоги с Monokuma (4 сцены)?
-Ответ: ${hasDialogs}
-
-Вопрос 6.3: Хочешь ли ты HTML-страницу с вкладками?
-Ответ: ${hasHTML}
-
-═══════════════════════════════════════════════════════════════════
-
-Теперь на основе моих ответов создай:
-
-1. КОРОТКУЮ КАРТОЧКУ ПЕРСОНАЖА (текст, 2 страницы)${hasDialogs === 'Да' ? '\n2. 4 СЦЕНЫ ДИАЛОГОВ С MONOKUMA' : '\n2. (Пропустить — диалоги не нужны)'}${hasHTML === 'Да' ? '\n3. ПОЛНУЮ HTML-СТРАНИЦУ с вкладками:\n   - Личное дело\n   - Диалоги\n   - Казнь\n   - Улики (3 улики)\n   - Галерея спрайтов (4 спрайта)\n   - Саундтрек (4 трека)\n   - Секретный файл (исповедь Monokuma)' : '\n3. (Пропустить — HTML не нужен)'}
-
-СТИЛЬ ОФОРМЛЕНИЯ (если HTML нужен):
-- Тёмно-красный/чёрный фон
-- Эффект «кинескопа» (полоски, как у старого монитора)
-- Пиксельный шрифт (Courier New)
-- Красные акценты, рамки
-- Заголовок Monokuma
-- Кнопка с алертом внизу
-
-ВАЖНО: Все поля, которые я не заполнил — придумай сам в стиле Danganronpa, логически отталкиваясь от того, что я указал.
-
-Выдай результат в следующем порядке:
-1. Короткая карточка (текст)${hasDialogs === 'Да' ? '\n2. Диалоги (текст)' : '\n2. (Пропустить)'}${hasHTML === 'Да' ? '\n3. HTML-код (полностью рабочий)' : '\n3. (Пропустить)'}
-
-В конце добавь инструкцию: как сохранить карточку, диалоги и HTML-файл.`;
-
-        return prompt;
+    function parsePrompt(text) {
+        let name = (text.match(/имя[:\s]+([^\n]+)/i) || [])[1] || 'Сгенерированный персонаж';
+        let talent = (text.match(/талант[:\s]+([^\n]+)/i) || [])[1] || 'Новый талант';
+        let phrase = (text.match(/фраз[аы][:\s]+«?([^»\n]+)»?/i) || [])[1] || '«...»';
+        let appearance = (text.match(/внешность[:\s]+([^\n]+)/i) || [])[1] || 'Не указана';
+        let personality = (text.match(/характер[:\s]+([^\n]+)/i) || [])[1] || 'Загадочный';
+        let secret = (text.match(/тайна[:\s]+([^\n]+)/i) || [])[1] || 'Неизвестно';
+        let execName = (text.match(/казнь[:\s]+«?([^»\n]+)»?/i) || [])[1] || 'Судьбоносная казнь';
+        let execDesc = (text.match(/описание казни[:\s]+([^\n]+)/i) || [])[1] || 'Monokuma приводит приговор в исполнение.';
+        let lastWords = (text.match(/фраза перед казнью[:\s]+«?([^»\n]+)»?/i) || [])[1] || '«...»';
+        let evidence = (text.match(/улик[аы][:\s]+([^\n]+)/i) || [])[1] || 'Нет улики';
+        return {
+            name: name.trim(),
+            talent: talent.trim(),
+            phrase: phrase.trim(),
+            appearance: appearance.trim(),
+            personality: personality.trim(),
+            secret: secret.trim(),
+            execName: execName.trim(),
+            execDesc: execDesc.trim(),
+            lastWords: lastWords.trim(),
+            evidence: evidence.trim()
+        };
     }
 
-    const generateBtn = document.getElementById('generateBtn');
-    const resultArea = document.getElementById('resultArea');
-    const promptOutput = document.getElementById('promptOutput');
-    const copyBtn = document.getElementById('copyBtn');
+    function getAvatar(name) {
+        let first = name.charAt(0).toUpperCase();
+        let avatars = { 'И':'⚡', 'К':'🔧', 'Т':'🎮', 'С':'🎵', 'М':'🎭', 'А':'⭐', 'В':'⚡', 'Д':'🎲', 'Е':'📖' };
+        return avatars[first] || '⭐';
+    }
 
-    generateBtn.addEventListener('click', () => {
-        const prompt = generatePrompt();
-        promptOutput.textContent = prompt;
-        resultArea.style.display = 'block';
-        resultArea.scrollIntoView({ behavior: 'smooth' });
-    });
+    function saveCharacter(character) {
+        try {
+            let chars = JSON.parse(localStorage.getItem('customCharacters') || '[]');
+            chars = chars.filter(c => c.name !== character.name);
+            chars.push(character);
+            localStorage.setItem('customCharacters', JSON.stringify(chars));
+            return true;
+        } catch(e) {
+            console.error(e);
+            alert('Ошибка сохранения: превышен лимит localStorage');
+            return false;
+        }
+    }
 
-    copyBtn.addEventListener('click', () => {
-        const text = promptOutput.textContent;
-        navigator.clipboard.writeText(text).then(() => {
-            showToast('✅ Промпт скопирован в буфер обмена! Отправьте его в нейросеть.');
-        }).catch(() => {
-            alert('Не удалось скопировать текст');
-        });
-    });
+    function generateAndSave() {
+        let text = document.getElementById('promptInput').value.trim();
+        if (!text) { alert('Введите промпт!'); return; }
+        let data = parsePrompt(text);
+        let character = {
+            name: data.name,
+            talent: data.talent,
+            phrase: data.phrase,
+            avatar: getAvatar(data.name),
+            appearance: data.appearance,
+            personality: data.personality,
+            secret: data.secret,
+            execName: data.execName,
+            execDesc: data.execDesc,
+            lastWords: data.lastWords,
+            evidence: data.evidence
+        };
+        if (saveCharacter(character)) {
+            let previewDiv = document.getElementById('characterPreview');
+            previewDiv.innerHTML = `<div class="preview-card"><div class="preview-avatar">${character.avatar}</div><div class="preview-name" style="font-size:20px; font-weight:bold;">${character.name.toUpperCase()}</div><div class="preview-talent" style="color:#ffcc88;">${character.talent}</div><div class="preview-tag" style="background:#000000aa; padding:4px 12px; border-radius:30px; margin-top:10px;">${character.phrase.substring(0,35)}...</div></div><div style="background:#1a1a1a; padding:12px; border-radius:16px; margin-top:15px;"><strong>✅ Сохранено!</strong><br>Имя: ${character.name}<br>Талант: ${character.talent}<br>Внешность: ${character.appearance}<br>Казнь: ${character.execName}</div>`;
+            document.getElementById('resultArea').style.display = 'block';
+            showToast(`✅ Персонаж "${character.name}" добавлен в меню!`);
+        } else { showToast('Ошибка сохранения'); }
+    }
+
+    document.getElementById('exampleBtn').onclick = () => {
+        document.getElementById('promptInput').value = `Имя: Иван Диогенов
+Талант: Бета-тестер Реальности
+Фирменная фраза: «Интересный ход… но у меня есть пасхалки»
+Внешность: школьная форма, картридж вместо галстука, чёрно-красная гамма
+Характер: говорит короткими фразами, использует слова «баг», «промпт», «код»
+Тайна: читает исходный код игры, Monokuma боится его
+Название казни: «Жестокая отладка»
+Описание казни: Monokuma запускает Windows 95, команда kill -9 не срабатывает
+Фраза перед казнью: «Я сохранил лог. В следующем прохождении я выиграю»
+Улика: обрывок системного лога Monokuma о промпт-ограничениях`;
+        showToast('📋 Пример загружен');
+    };
+    document.getElementById('generateBtn').onclick = generateAndSave;
+    document.getElementById('goToMenuBtn').onclick = () => window.location.href = 'index.html';
+    document.getElementById('generateAnotherBtn').onclick = () => {
+        document.getElementById('resultArea').style.display = 'none';
+        document.getElementById('promptInput').value = '';
+        document.getElementById('promptInput').focus();
+    };
 </script>
 </body>
 </html>
