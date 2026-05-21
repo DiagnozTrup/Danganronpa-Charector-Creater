@@ -243,7 +243,7 @@
         osc.stop(now + 0.1);
     }
 
-    // ПОЛНАЯ ФУНКЦИЯ ГЕНЕРАЦИИ ПРОФИЛЯ (со всеми полями, как в генераторе)
+    // Функция генерации профиля
     function generateProfileHTML(char) {
         const escape = (s) => (s || '').replace(/[&<>]/g, function(m) {
             if (m === '&') return '&amp;';
@@ -332,7 +332,6 @@
         <button class="tab-btn" data-tab="tab4">🔍 Улики</button>
         <button class="tab-btn" data-tab="tab5">📜 Досье</button>
     </div></div>
-    <!-- Вкладка 1: Личное дело -->
     <div id="tab1" class="tab-content active">
         <div class="id-card"><div class="id-avatar">${avatar}</div><div class="id-stats"><p><span class="stat-label">Имя:</span> ${name} <span class="bracelet green" id="braceletIndicator"></span></p><p><span class="stat-label">Талант:</span> <strong style="color:#ff8888;">${talent}</strong></p><p><span class="stat-label">Фраза:</span> ${phrase}</p><p><span class="stat-label">Статус:</span> Активен. Разыскивается Monokuma.</p></div></div>
         <div class="quote">${phrase}</div>
@@ -340,23 +339,19 @@
         <div class="dossier-section"><h3>⚡ Характер</h3><p>${personality}</p></div>
         <div class="warning">⚡ КОММЕНТАРИЙ MONOKUMA: Этот персонаж пугает меня. Он пытается прочитать исходный код игры.</div>
     </div>
-    <!-- Вкладка 2: Диалоги -->
     <div id="tab2" class="tab-content">
         <div class="quote"><span class="dialogue-name">MONOKUMA:</span> Пупупу! Ты кто?<br><span class="dialogue-name">${name}:</span> ${phrase}</div>
         <div class="quote"><span class="dialogue-name">${name}:</span> «Я уже прочитал все твои концовки.»</div>
         <div class="quote"><span class="dialogue-name">${name}:</span> «Страшно, что однажды за экраном никого не окажется.»</div>
         <div class="quote"><span class="dialogue-name">${name}:</span> (Смотрит в камеру) «Ты ведь всё это читаешь? Ты мог остановиться. Почему?»</div>
     </div>
-    <!-- Вкладка 3: Казнь -->
     <div id="tab3" class="tab-content">
         <div class="execution"><strong>💀 КАЗНЬ: ${execName}</strong><br>${execDesc}</div>
         <div class="quote"><strong>ФРАЗА ПЕРЕД КАЗНЬЮ:</strong><br>${lastWords}</div>
     </div>
-    <!-- Вкладка 4: Улики -->
     <div id="tab4" class="tab-content">
         <div class="dossier-section"><h3>🔍 УЛИКА, связанная с персонажем</h3><p>${evidence}</p></div>
     </div>
-    <!-- Вкладка 5: Полное досье -->
     <div id="tab5" class="tab-content">
         <div class="dossier-section"><h3>📜 История</h3><p>${backstory}</p></div>
         <div class="dossier-section"><h3>💬 Отношения с другими учениками</h3><p>${relationships}</p></div>
@@ -383,9 +378,10 @@
     });
 </script>
 </body>
-</html>`;
+</html>
     }
 
+    // Загрузка меню
     function loadMenu() {
         const grid = document.getElementById('charactersGrid');
         grid.innerHTML = '';
@@ -399,9 +395,15 @@
             const card = document.createElement('div');
             card.className = 'character-card';
             if (char.isLink) card.style.background = '#2a1a2aee';
-            card.innerHTML = `<div class="character-avatar">${char.avatar}</div><div class="character-name">${char.name}</div><div class="character-title">${char.talent}</div><div class="character-tag">${char.tag}</div>`;
-            if (char.isLink) card.addEventListener('click', () => { playSelectSound(); setTimeout(() => window.location.href = char.url, 100); });
-            else card.addEventListener('click', () => { playSelectSound(); setTimeout(() => window.location.href = char.file, 100); });
+            card.innerHTML = `<div class="character-avatar">${char.avatar}</div>
+                              <div class="character-name">${char.name}</div>
+                              <div class="character-title">${char.talent}</div>
+                              <div class="character-tag">${char.tag}</div>`;
+            if (char.isLink) {
+                card.addEventListener('click', () => { playSelectSound(); setTimeout(() => window.location.href = char.url, 100); });
+            } else {
+                card.addEventListener('click', () => { playSelectSound(); setTimeout(() => window.location.href = char.file, 100); });
+            }
             grid.appendChild(card);
         });
         const custom = JSON.parse(localStorage.getItem('customCharacters') || '[]');
@@ -410,10 +412,12 @@
             card.className = 'character-card';
             card.style.background = '#1a2a2aee';
             card.style.borderColor = '#aa88aa';
-            card.innerHTML = `<div class="character-avatar">${char.avatar || '⭐'}</div><div class="character-name">${char.name.toUpperCase()}</div><div class="character-title">${char.talent}</div><div class="character-tag">${(char.phrase || '').substring(0, 35)}...</div>`;
+            card.innerHTML = `<div class="character-avatar">${char.avatar || '⭐'}</div>
+                              <div class="character-name">${char.name.toUpperCase()}</div>
+                              <div class="character-title">${char.talent}</div>
+                              <div class="character-tag">${(char.phrase || '').substring(0, 35)}...</div>`;
             card.addEventListener('click', () => {
                 playSelectSound();
-                // Передаём все поля, которые могут быть в localStorage (включая новые)
                 const fullChar = {
                     name: char.name,
                     talent: char.talent,
