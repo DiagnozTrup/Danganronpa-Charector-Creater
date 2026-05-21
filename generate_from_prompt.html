@@ -198,20 +198,19 @@
         let evidence = (text.match(/улик[аы][:\s]+([^\n]+)/i) || [])[1] || 'Нет улики';
         return { name: name.trim(), talent: talent.trim(), phrase: phrase.trim(), appearance: appearance.trim(), personality: personality.trim(), secret: secret.trim(), execName: execName.trim(), execDesc: execDesc.trim(), lastWords: lastWords.trim(), evidence: evidence.trim() };
     }
-    function generateCharacterHTML(data) {
-        let { name, talent, phrase, appearance, personality, secret, execName, execDesc, lastWords, evidence } = data;
+    function generateProfileHTML(char) {
         return `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>${name}</title><style>body{background:#1a0000;font-family:'Courier New';padding:20px;}.crt{max-width:1000px;margin:auto;background:#0a0a0a;border:8px solid #3a1a1a;padding:20px;}.tabs{display:flex;gap:5px;flex-wrap:wrap;}.tab-btn{background:#2a0a0a;border:none;color:#aa7777;padding:10px;cursor:pointer;}.tab-btn.active{background:#4a1a1a;color:#ff5555;}.tab-content{display:none;}.tab-content.active{display:block;}.id-card{background:#111;border:2px solid #333;padding:15px;display:flex;gap:15px;}.id-avatar{width:70px;height:70px;border:2px solid #d42e2e;display:flex;align-items:center;justify-content:center;font-size:30px;}.quote{border-left:4px solid #ff4444;background:#181010;padding:10px;margin:10px 0;}.execution{background:#1a0000;border:2px solid #aa2222;padding:10px;}button{background:#2a0a0a;border:1px solid #aa4444;color:#ffaaaa;padding:10px;width:100%;margin-top:15px;}</style></head>
+<html><head><meta charset="UTF-8"><title>${char.name}</title><style>body{background:#1a0000;font-family:'Courier New';padding:20px;}.crt{max-width:1000px;margin:auto;background:#0a0a0a;border:8px solid #3a1a1a;padding:20px;}.tabs{display:flex;gap:5px;flex-wrap:wrap;}.tab-btn{background:#2a0a0a;border:none;color:#aa7777;padding:10px;cursor:pointer;}.tab-btn.active{background:#4a1a1a;color:#ff5555;}.tab-content{display:none;}.tab-content.active{display:block;}.id-card{background:#111;border:2px solid #333;padding:15px;display:flex;gap:15px;}.id-avatar{width:70px;height:70px;border:2px solid #d42e2e;display:flex;align-items:center;justify-content:center;font-size:30px;}.quote{border-left:4px solid #ff4444;background:#181010;padding:10px;margin:10px 0;}.execution{background:#1a0000;border:2px solid #aa2222;padding:10px;}button{background:#2a0a0a;border:1px solid #aa4444;color:#ffaaaa;padding:10px;width:100%;margin-top:15px;}</style></head>
 <body><div class="crt">
 <div class="tabs"><button class="tab-btn active" data-tab="tab1">📁 Личное дело</button><button class="tab-btn" data-tab="tab2">🎭 Диалоги</button><button class="tab-btn" data-tab="tab3">💀 Казнь</button><button class="tab-btn" data-tab="tab4">🔍 Улики</button><button class="tab-btn" data-tab="tab5">🖼️ Галерея</button><button class="tab-btn" data-tab="tab6">🎵 Саундтрек</button><button class="tab-btn" data-tab="tab7">📜 Секретный файл</button></div>
-<div id="tab1" class="tab-content active"><div class="id-card"><div class="id-avatar">⭐</div><div><p><strong>Имя:</strong> ${name}</p><p><strong>Талант:</strong> ${talent}</p><p><strong>Фраза:</strong> ${phrase}</p></div></div><div class="quote">${phrase}</div><div class="quote"><strong>Внешность:</strong> ${appearance}</div><div class="quote"><strong>Характер:</strong> ${personality}</div><div class="execution">⚡ СЕКРЕТ: ${secret}</div></div>
-<div id="tab2" class="tab-content"><div class="quote">MONOKUMA: Пупупу! Ты кто?<br>${name}: ${phrase}</div></div>
-<div id="tab3" class="tab-content"><div class="execution"><strong>${execName}</strong><br>${execDesc}</div><div class="quote">${lastWords}</div></div>
-<div id="tab4" class="tab-content"><div class="quote"><strong>Улика:</strong> ${evidence}</div></div>
+<div id="tab1" class="tab-content active"><div class="id-card"><div class="id-avatar">⭐</div><div><p><strong>Имя:</strong> ${char.name}</p><p><strong>Талант:</strong> ${char.talent}</p><p><strong>Фраза:</strong> ${char.phrase}</p></div></div><div class="quote">${char.phrase}</div><div class="quote"><strong>Внешность:</strong> ${char.appearance}</div><div class="quote"><strong>Характер:</strong> ${char.personality}</div><div class="execution">⚡ СЕКРЕТ: ${char.secret}</div></div>
+<div id="tab2" class="tab-content"><div class="quote">MONOKUMA: Пупупу! Ты кто?<br>${char.name}: ${char.phrase}</div></div>
+<div id="tab3" class="tab-content"><div class="execution"><strong>${char.execName}</strong><br>${char.execDesc}</div><div class="quote">${char.lastWords}</div></div>
+<div id="tab4" class="tab-content"><div class="quote"><strong>Улика:</strong> ${char.evidence}</div></div>
 <div id="tab5" class="tab-content"><div class="quote">Нейтральный спрайт: спокойная поза.<br>Эмоциональный спрайт: наклон вперёд.</div></div>
 <div id="tab6" class="tab-content"><div class="quote">Основная тема: загадочная мелодия.</div></div>
 <div id="tab7" class="tab-content"><div class="execution">Секретный файл: Monokuma боится этого персонажа.</div></div>
-<footer style="text-align:center; margin-top:20px;">⬤ DR: СОЗДАНО ИЗ ПРОМПТА</footer>
+<footer style="text-align:center;">⬤ DR: СОЗДАНО ИЗ ПРОМПТА</footer>
 </div><script>
 const btns=document.querySelectorAll('.tab-btn');
 const contents=document.querySelectorAll('.tab-content');
@@ -224,23 +223,35 @@ btns.forEach(btn=>{btn.addEventListener('click',()=>{let target=btn.getAttribute
         return avatars[first] || '⭐';
     }
     function saveCharacter(character) {
-        let chars = JSON.parse(localStorage.getItem('customCharacters') || '[]');
-        chars = chars.filter(c => c.name !== character.name);
-        chars.push(character);
-        localStorage.setItem('customCharacters', JSON.stringify(chars));
-        return true;
+        try {
+            let chars = JSON.parse(localStorage.getItem('customCharacters') || '[]');
+            chars = chars.filter(c => c.name !== character.name);
+            chars.push(character);
+            localStorage.setItem('customCharacters', JSON.stringify(chars));
+            return true;
+        } catch(e) {
+            console.error('Ошибка сохранения в localStorage', e);
+            alert('Ошибка сохранения: превышен лимит localStorage или другие проблемы');
+            return false;
+        }
     }
     function generateAndSave() {
         let text = document.getElementById('promptInput').value.trim();
         if (!text) { alert('Введите промпт!'); return; }
         let data = parsePrompt(text);
-        let html = generateCharacterHTML(data);
         let character = {
             name: data.name,
             talent: data.talent,
             phrase: data.phrase,
-            htmlContent: html,
-            avatar: getAvatar(data.name)
+            avatar: getAvatar(data.name),
+            // сохраним дополнительные поля для полноты (они не будут храниться в localStorage, но нужны для генерации HTML)
+            appearance: data.appearance,
+            personality: data.personality,
+            secret: data.secret,
+            execName: data.execName,
+            execDesc: data.execDesc,
+            lastWords: data.lastWords,
+            evidence: data.evidence
         };
         if (saveCharacter(character)) {
             let previewDiv = document.getElementById('characterPreview');
