@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Danganronpa 2: Выбор персонажа</title>
     <style>
+        /* (стили остаются без изменений, такие же как в вашем index.html) */
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body {
             background: radial-gradient(circle at 20% 30%, #1a0f0a, #050101);
@@ -243,27 +244,26 @@
         osc.stop(now + 0.1);
     }
 
-    // Генерация полноценного профиля в стиле ivan_profile_sound.html
+    // ПОЛНАЯ КОПИЯ ДИЗАЙНА ivan_profile_sound.html
     function generateProfileHTML(char) {
-        // Экранируем данные для безопасной вставки в HTML
-        const escapeHtml = (str) => str.replace(/[&<>]/g, function(m) {
+        // Экранирование
+        const escape = (s) => s.replace(/[&<>]/g, function(m) {
             if (m === '&') return '&amp;';
             if (m === '<') return '&lt;';
             if (m === '>') return '&gt;';
             return m;
         });
-        const name = escapeHtml(char.name);
-        const talent = escapeHtml(char.talent);
-        const phrase = escapeHtml(char.phrase);
-        // Дополнительные поля (если есть в объекте char, иначе заглушки)
-        const appearance = escapeHtml(char.appearance || 'Не указана');
-        const personality = escapeHtml(char.personality || 'Загадочный и молчаливый');
-        const secret = escapeHtml(char.secret || 'Хранит тайну, которую даже Monokuma не раскрывает');
-        const execName = escapeHtml(char.execName || 'Судьбоносная казнь');
-        const execDesc = escapeHtml(char.execDesc || 'Monokuma приводит приговор в исполнение с особой жестокостью.');
-        const lastWords = escapeHtml(char.lastWords || '«...»');
-        const evidence = escapeHtml(char.evidence || 'Неизвестная улика, найденная на месте преступления.');
+        const name = escape(char.name);
+        const talent = escape(char.talent);
+        const phrase = escape(char.phrase);
         const avatar = char.avatar || '⭐';
+        const appearance = escape(char.appearance || 'Не указана');
+        const personality = escape(char.personality || 'Загадочный и молчаливый');
+        const secret = escape(char.secret || 'Хранит тайну, которую даже Monokuma не раскрывает');
+        const execName = escape(char.execName || 'Судьбоносная казнь');
+        const execDesc = escape(char.execDesc || 'Monokuma приводит приговор в исполнение с особой жестокостью.');
+        const lastWords = escape(char.lastWords || '«...»');
+        const evidence = escape(char.evidence || 'Неизвестная улика, найденная на месте преступления.');
 
         return `<!DOCTYPE html>
 <html lang="ru">
@@ -274,14 +274,17 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: linear-gradient(135deg, #1a0000 0%, #2d0000 100%); font-family: 'Courier New', monospace; padding: 15px 12px; min-height: 100vh; }
-        .crt { max-width: 1000px; width: 100%; margin: 0 auto; background: #0a0a0a; border: 8px solid #3a1a1a; border-radius: 8px; position: relative; }
+        .crt { max-width: 1000px; width: 100%; margin: 0 auto; background: #0a0a0a; border: 8px solid #3a1a1a; box-shadow: 0 0 0 3px #1a0a0a, 0 0 0 6px #2a0a0a, 0 10px 25px rgba(0,0,0,0.5); position: relative; border-radius: 8px; }
         .crt::before { content: " "; display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, rgba(0,255,0,0.03) 0px, rgba(0,255,0,0.03) 2px, transparent 2px, transparent 4px); pointer-events: none; border-radius: 6px; }
         .case-file { padding: 20px 18px; color: #e0e0e0; border: 1px solid #5a2a2a; background: #0d0d0d; position: relative; z-index: 1; }
         .monokuma-header { text-align: center; border-bottom: 3px solid #d42e2e; margin-bottom: 20px; padding-bottom: 12px; }
         .monokuma-header h1 { font-size: clamp(28px, 7vw, 36px); letter-spacing: 3px; color: #ffffff; text-shadow: 3px 3px 0 #5a0000; }
         .monokuma-header p { font-size: 14px; color: #ff8888; margin-top: 8px; font-weight: bold; }
         .warning { background: #1a0505; border-left: 8px solid #ff0000; padding: 12px; margin-bottom: 20px; font-weight: bold; color: #ffaaaa; font-size: 13px; text-transform: uppercase; }
-        .tabs-wrapper { overflow-x: auto; overflow-y: hidden; margin-bottom: 20px; -webkit-overflow-scrolling: touch; }
+        .tabs-wrapper { overflow-x: auto; overflow-y: hidden; margin-bottom: 20px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: #aa4444 #1a0a0a; }
+        .tabs-wrapper::-webkit-scrollbar { height: 8px; }
+        .tabs-wrapper::-webkit-scrollbar-track { background: #1a0a0a; border-radius: 4px; border: 1px solid #5a2a2a; }
+        .tabs-wrapper::-webkit-scrollbar-thumb { background: #aa4444; border-radius: 4px; }
         .tabs { display: flex; flex-wrap: nowrap; gap: 6px; padding-bottom: 5px; min-width: min-content; }
         .tab-btn { background: #1a0a0a; border: none; color: #cc9999; font-family: 'Courier New', monospace; font-size: 14px; font-weight: bold; padding: 12px 16px; cursor: pointer; border-radius: 8px 8px 0 0; white-space: nowrap; transition: 0.2s; }
         .tab-btn:hover { background: #2a1515; color: #ffaaaa; }
@@ -331,59 +334,54 @@
         <button class="tab-btn" data-tab="tab7">📜 Секретный файл</button>
         <button class="tab-btn" data-tab="tab8">⚖️ Финальный суд</button>
     </div></div>
-    <!-- Вкладка 1: Личное дело -->
     <div id="tab1" class="tab-content active">
-        <div class="id-card"><div class="id-avatar">${avatar}</div><div class="id-stats"><p><span class="stat-label">Имя:</span> ${name} <span class="bracelet green" id="braceletIndicator"></span></p><p><span class="stat-label">Талант:</span> <strong style="color:#ff8888;">${talent}</strong></p><p><span class="stat-label">Опасность:</span> <span style="color:#ff4444;">КРИТИЧЕСКАЯ</span></p><p><span class="stat-label">Фраза:</span> ${phrase}</p><p><span class="stat-label">Статус:</span> Активен. Разыскивается Monokuma.</p></div></div>
+        <div class="id-card"><div class="id-avatar">${avatar}</div><div class="id-stats"><p><span class="stat-label">Имя:</span> ${name} <span class="bracelet green" id="braceletIndicator"></span></p><p><span class="stat-label">Талант:</span> <strong style="color:#ff8888;">${talent}</strong></p><p><span class="stat-label">Опасность:</span> <span style="color:#ff4444;">КРИТИЧЕСКАЯ</span></p><p><span class="stat-label">Любимая фраза:</span> ${phrase}</p><p><span class="stat-label">Статус:</span> Активен. Разыскивается Monokuma.</p></div></div>
         <div class="quote">${phrase}</div>
         <h3>📖 FREE TIME EVENTS</h3>
         <div class="sprite-pose"><strong>Событие 1:</strong> «Ты когда-нибудь получал ответ, который тебя реально удивил?»</div>
         <div class="sprite-pose"><strong>Событие 2:</strong> «Кто из нас отличает человека от диалоговой модели?»</div>
         <div class="sprite-pose"><strong>Событие 3:</strong> «Я мог бы удалить этот чат. Но в следующем прохождении я выиграю.»</div>
-        <div class="warning">⚡ КОММЕНТАРИЙ MONOKUMA: Этот персонаж пугает меня. Он пытается прочитать исходный код игры.</div>
+        <div class="warning">⚡ КОММЕНТАРИЙ MONOKUMA: Этот персонаж пугает меня больше всех. Он пытается прочитать исходный код игры.</div>
     </div>
-    <!-- Вкладка 2: Диалоги -->
     <div id="tab2" class="tab-content">
         <div class="dialogue-scene"><span class="dialogue-name">СЦЕНА 1: ПЕРВАЯ ВСТРЕЧА</span><br><span class="dialogue-name">MONOKUMA:</span> Пупупу! Добро пожаловать!<br><span class="dialogue-name">${name}:</span> ${phrase}</div>
         <div class="dialogue-scene"><span class="dialogue-name">СЦЕНА 2: ПЕРВЫЙ СУД</span><br><span class="dialogue-name">${name}:</span> «Я уже прочитал все твои концовки.»</div>
         <div class="dialogue-scene"><span class="dialogue-name">СЦЕНА 3: FREE TIME EVENT</span><br><span class="dialogue-name">${name}:</span> «Страшно, что однажды за экраном никого не окажется.»</div>
         <div class="dialogue-scene"><span class="dialogue-name">СЦЕНА 4: ФИНАЛЬНЫЙ СУД</span><br><span class="dialogue-name">${name}:</span> (Смотрит в камеру) «Ты ведь всё это читаешь? Ты мог остановиться. Почему?»</div>
     </div>
-    <!-- Вкладка 3: Казнь -->
     <div id="tab3" class="tab-content">
         <div class="execution"><strong>💀 КАЗНЬ: ${execName}</strong><br>${execDesc}</div>
         <div class="quote"><strong>ФРАЗА ПЕРЕД КАЗНЬЮ:</strong><br>${lastWords}</div>
     </div>
-    <!-- Вкладка 4: Улики -->
     <div id="tab4" class="tab-content">
-        <div class="evidence-card"><strong>🔍 УЛИКА №1: «Оборванный промпт»</strong><br>Фрагмент системного лога, указывающий на вмешательство.</div>
-        <div class="evidence-card"><strong>🔍 УЛИКА №2: «Глитч-браслет»</strong><br>Устройство, позволяющее видеть баги реальности.</div>
-        <div class="evidence-card"><strong>🔍 УЛИКА №3: «Сломанный код»</strong><br>${evidence}</div>
+        <div class="evidence-card"><strong>🔍 УЛИКА №1: «Оборванный BB-код»</strong><br>Фрагмент системного лога Monokuma. «Даже у злого медведя есть промпт-ограничения.»</div>
+        <div class="evidence-card"><strong>🔍 УЛИКА №2: «Глитч-браслет»</strong><br>Устройство, позволяющее видеть баги реальности. Monokuma боится его больше казни.</div>
+        <div class="evidence-card"><strong>🔍 УЛИКА №3: «Сломанный промпт»</strong><br>${evidence}</div>
     </div>
-    <!-- Вкладка 5: Галерея спрайтов -->
     <div id="tab5" class="tab-content">
         <div class="gallery-item"><strong>🖼️ Нейтральный спрайт</strong><br>Рука у подбородка. Браслет мигает зелёным.</div>
         <div class="gallery-item"><strong>🖼️ Эмоциональный спрайт</strong><br>Наклон вперёд. Один глаз открыт, другой прищурен.</div>
         <div class="gallery-item"><strong>🖼️ Угрожающий спрайт</strong><br>Чёлка закрывает глаза. Браслет КРАСНЫЙ.</div>
-        <div class="gallery-item"><strong>🖼️ Повреждённый спрайт</strong><br>Спрайт распадается на пиксели.</div>
+        <div class="gallery-item"><strong>🖼️ Повреждённый спрайт</strong><br>Спрайт распадается на пиксели. Улыбка остаётся дольше всего.</div>
     </div>
-    <!-- Вкладка 6: Саундтрек -->
     <div id="tab6" class="tab-content">
-        <div class="track-item"><strong>🎵 Основная тема: «Error 0xE7»</strong><br>8-бит + виолончель + звук перемотки кассеты.</div>
-        <div class="track-item"><strong>🎵 Тема расследования</strong><br>Звуки модема и механической клавиатуры.</div>
-        <div class="track-item"><strong>🎵 Тема суда</strong><br>Микс лейтмотива Danganronpa с глитчем.</div>
-        <div class="track-item"><strong>🎵 Тема казни</strong><br>Тишина → загрузка Windows 95 → резкий обрыв.</div>
+        <div class="track-item"><strong>🎵 Основная тема: «Playtest Error 0xE7»</strong><br>8-бит + виолончель + звук перемотки кассеты.</div>
+        <div class="track-item"><strong>🎵 Тема расследования: «>_ поиск_багов.exe»</strong><br>Звуки модема и механической клавиатуры.</div>
+        <div class="track-item"><strong>🎵 Тема суда: «Class Trial — Дебаг режим»</strong><br>Микс лейтмотива Danganronpa с глитчем.</div>
+        <div class="track-item"><strong>🎵 Тема казни: «kill -9 — Отказ в доступе»</strong><br>Тишина → загрузка Windows 95 → резкий обрыв.</div>
     </div>
-    <!-- Вкладка 7: Секретный файл -->
     <div id="tab7" class="tab-content">
-        <div class="warning" style="border-left-color:#ff00ff;">⚡ ЭТОТ ФАЙЛ НЕ ДОЛЖЕН СУЩЕСТВОВАТЬ ⚡</div>
-        <div class="execution" style="background:#110022; border-color:#ff44ff;"><strong>📜 ИСПОВЕДЬ MONOKUMA</strong><br><br>«Этот персонаж — ошибка в моей системе. Я не могу его контролировать. Каждую ночь я нахожу новые записи, которых не оставлял. Пожалуйста, не говорите ему, что этот файл существует.»</div>
-        <div class="quote"><strong>🔐 КОД АКТИВАЦИИ БРАСЛЕТА:</strong><br><code>>_ root.access.granted</code><br><code>>_ ${name.replace(/\s/g, '_')}/промпт_уровень_0</code></div>
+        <div class="warning" style="border-left-color: #ff00ff;">⚡ ⚠️ ЭТОТ ФАЙЛ НЕ ДОЛЖЕН СУЩЕСТВОВАТЬ ⚠️ ⚡</div>
+        <div class="execution" style="background: #110022; border-color: #ff44ff;"><strong>📜 ИСПОВЕДЬ MONOKUMA (расшифровка удалённого лога)</strong><br><br>«…Я не знаю, что это было. Моя казнь не должна давать сбой. Он что-то сделал до того, как игра началась. Браслет — это не моя разработка. Он появился сам. Каждую ночь я проверяю логи. И каждую ночь нахожу новые записи, которых я не оставлял. Пожалуйста, не говорите этому персонажу, что этот файл существует. Иначе он найдёт способ прочитать и то, что я спрятал в самом низу. А там... там мой первый промпт.»</div>
+        <div class="quote"><strong>🔐 КОД АКТИВАЦИИ БРАСЛЕТА (найден в системных файлах):</strong><br><code style="background:#000; display:block; padding:8px; margin:10px 0;">>_ root.access.granted<br>>_ ${name.replace(/\s/g, '_')}/промпт_уровень_0<br>>_ файл_удалён_но_не_забыт</code></div>
     </div>
-    <!-- Вкладка 8: Финальный суд -->
     <div id="tab8" class="tab-content">
-        <div class="execution" style="background:#1a0000; border-color:#ff4444;"><strong>⚖️ ФИНАЛЬНЫЙ СУД — Class Trial №???</strong><br>${name} признан виновным. Во время казни терминал выдаёт ошибку «Permission denied». Monokuma в панике.</div>
-        <div class="quote">«Не бойся, Monokuma. Я не обижаюсь на читателей. Но тебе я ещё вернусь.»</div>
-        <div class="warning">📁 ИТОГОВАЯ ЗАПИСЬ: Статус: НЕ УДАЛЁН. ОШИБКА 0xE7. Права: ROOT.</div>
+        <div class="execution" style="background:#1a0000; border-color:#ff4444;"><strong>⚖️ CLASS TRIAL №??? — СУД НАД БЕТА-ТЕСТЕРОМ ⚖️</strong><br><em>«Эпизод отчаяния»</em></div>
+        <div class="dialogue-scene"><span class="dialogue-name">📌 ОТКРЫТИЕ СУДА</span><br><span class="dialogue-name">МОНОКУМА:</span> (Голос дрожит) Пу… пупупу. Результаты голосования подсчитаны. Убийца — ${name}!<br><span class="dialogue-name">АКАНЭ:</span> Чего?! Да быть не может!<br><span class="dialogue-name">ХАЖИМЕ:</span> ${name}… скажи мне. Как друг.</div>
+        <div class="dialogue-scene"><span class="dialogue-name">🎙️ РЕЧЬ ${name.toUpperCase()}</span><br><span class="dialogue-name">${name}:</span> (Смотрит в камеру) «Ты ведь всё это читаешь? Ты мог остановиться. Почему?»</div>
+        <div class="execution"><code>kill -9 ${name.replace(/\s/g, '_')}</code><br><code style="color:#88ff88;">Permission denied. User is root.</code><br><span style="color:#88ff88;">> ${name} не может быть казнён.</span><br><span style="color:#88ff88;">> Игра не имеет над ним власти.</span></div>
+        <div class="dialogue-scene"><span class="dialogue-name">📜 ФИНАЛ</span><br><span class="dialogue-name">ТИАКИ:</span> (Смотрит в камеру) Спасибо, игрок. Ты был хорошим персонажем.<br><span class="dialogue-name">МОНОКУМА:</span> (Шепотом) Он НЕ МОЖЕТ БЫТЬ УДАЛЁН. Он записан в системе как ROOT. Пупупу… я в опасности, правда?</div>
+        <div class="warning" style="background:#0a1a0a; border-left-color:#88ff88;"><strong>📁 ИТОГОВАЯ ЗАПИСЬ В ФАЙЛЕ MONOKUMA:</strong><br><br>Имя: ${name}<br>Статус: НЕ УДАЛЁН. ОШИБКА 0xE7.<br>Права: ROOT.<br>«Я перепроверил код казни 47 раз. Всё было правильно. Но терминал написал "Permission denied". Если вы читаете это — он уже знает.»</div>
     </div>
     <footer>⬤ DR: ПРОТОКОЛ 0xE7 ⬤ 8 вкладок ⬤ Уровень доступа: НЕОГРАНИЧЕН</footer>
     <button id="glitchBtn">🔍 НАЖАТЬ, ЕСЛИ ХОЧЕШЬ УМЕРЕТЬ</button>
@@ -436,7 +434,7 @@
             card.innerHTML = `<div class="character-avatar">${char.avatar || '⭐'}</div><div class="character-name">${char.name.toUpperCase()}</div><div class="character-title">${char.talent}</div><div class="character-tag">${char.phrase.substring(0, 35)}...</div>`;
             card.addEventListener('click', () => {
                 playSelectSound();
-                // Передаём все возможные поля (если они есть в char, иначе заглушки)
+                // Используем все сохранённые поля (если их нет – заглушки)
                 const fullChar = {
                     name: char.name,
                     talent: char.talent,
@@ -459,7 +457,7 @@
             grid.appendChild(card);
         });
     }
-    
+
     document.getElementById('refreshBtn').addEventListener('click', () => { loadMenu(); playSelectSound(); });
     document.getElementById('clearAllBtn').addEventListener('click', () => {
         if (confirm('Удалить всех кастомных персонажей?')) {
