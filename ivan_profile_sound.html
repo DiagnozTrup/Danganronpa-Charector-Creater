@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Danganronpa :: Личное дело — Иван Диогенов</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a0000 0%, #2d0000 100%);
+            font-family: 'Courier New', 'Courier', monospace;
+            padding: 15px 12px;
+            min-height: 100vh;
+        }
+
+        .crt {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            background: #0a0a0a;
+            border: 8px solid #3a1a1a;
+            box-shadow: 0 0 0 3px #1a0a0a, 0 0 0 6px #2a0a0a, 0 10px 25px rgba(0,0,0,0.5);
+            position: relative;
+            border-radius: 8px;
+        }
+
+        .crt::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,255,0,0.03) 0px, rgba(0,255,0,0.03) 2px, transparent 2px, transparent 4px);
+            pointer-events: none;
+            z-index: 2;
+            border-radius: 6px;
+        }
+
+        .case-file {
+            padding: 20px 18px;
+            color: #e0e0e0;
+            border: 1px solid #5a2a2a;
+            background: #0d0d0d;
+            position: relative;
+            z-index: 1;
+        }
+
+        .monokuma-header {
+            text-align: center;
+            border-bottom: 3px solid #d42e2e;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+        }
+
+        .monokuma-header h1 {
+            font-size: clamp(28px, 7vw, 36px);
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-shadow: 3px 3px 0 #5a0000;
+        }
+
+        .monokuma-header p {
+            font-size: 14px;
+            color: #ff8888;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .warning {
+            background: #1a0505;
+            border-left: 8px solid #ff0000;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #ffaaaa;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        /* ===== СТИЛИЗОВАННЫЕ СКРОЛЛБАРЫ ===== */
+        .tabs-wrapper {
+            overflow-x: auto;
+            overflow-y: hidden;
+            margin-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: #aa4444 #1a0a0a;
+        }
+
+        .tabs-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .tabs-wrapper::-webkit-scrollbar-track {
+            background: #1a0a0a;
+            border-radius: 4px;
+            border: 1px solid #5a2a2a;
+        }
+
+        .tabs-wrapper::-webkit-scrollbar-thumb {
+            background: #aa4444;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .tabs-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #ff6666;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 6px;
+            padding-bottom: 5px;
+            min-width: min-content;
+        }
+
+        .tab-btn {
+            background: #1a0a0a;
+            border: none;
+            color: #cc9999;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 12px 16px;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        .tab-btn:hover {
+            background: #2a1515;
+            color: #ffaaaa;
+        }
+
+        .tab-btn.active {
+            background: #2a0a0a;
+            color: #ff7777;
+            border-bottom: 2px solid #ff4444;
+        }
+
+        /* Стилизация вертикального скроллбара для контента */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.25s ease;
+            max-height: 55vh;
+            overflow-y: auto;
+            padding-right: 8px;
+            scrollbar-width: thin;
+            scrollbar-color: #aa4444 #1a0a0a;
+        }
+
+        .tab-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .tab-content::-webkit-scrollbar-track {
+            background: #1a0a0a;
+            border-radius: 4px;
+            border: 1px solid #5a2a2a;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb {
+            background: #aa4444;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb:hover {
+            background: #ff6666;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .id-card {
+            background: #111111;
+            border: 2px solid #333;
+            padding: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .id-avatar {
+            background: #1a1a1a;
+            width: 80px;
+            height: 80px;
+            border: 2px solid #d42e2e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: #ff8888;
+            flex-shrink: 0;
+        }
+
+        .id-stats {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .id-stats p {
+            margin: 8px 0;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .stat-label {
+            color: #ffaaaa;
+            font-weight: bold;
+        }
+
+        .quote {
+            background: #181010;
+            border-left: 6px solid #ff4444;
+            padding: 14px;
+            margin: 15px 0;
+            font-style: italic;
+            font-size: 15px;
+            color: #ffddaa;
+            font-weight: bold;
+        }
+
+        .sprite-pose, .evidence-card, .gallery-item, .track-item, .dialogue-scene {
+            background: #0a0f0a;
+            border: 1px dashed #3a6a3a;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 14px;
+            border-radius: 6px;
+        }
+
+        .execution {
+            background: #1a0000;
+            border: 2px solid #aa2222;
+            padding: 16px;
+            margin: 15px 0;
+            color: #ffaaaa;
+            font-size: 15px;
+            border-radius: 8px;
+        }
+
+        .dialogue-name {
+            color: #ffaaaa;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .bracelet {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .bracelet.green {
+            background: #00ff00;
+            animation: pulseGreen 1s infinite;
+            box-shadow: 0 0 5px #00ff00;
+        }
+
+        .bracelet.red {
+            background: #ff0000;
+            animation: pulseRed 0.3s infinite;
+            box-shadow: 0 0 5px #ff0000;
+        }
+
+        .bracelet.yellow {
+            background: #ffff00;
+            animation: pulseYellow 0.5s infinite;
+            box-shadow: 0 0 5px #ffff00;
+        }
+
+        @keyframes pulseGreen {
+            0% { opacity: 0.6; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+
+        @keyframes pulseRed {
+            0% { opacity: 0.5; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes pulseYellow {
+            0% { opacity: 0.6; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+
+        button:not(.tab-btn) {
+            background: #2a0a0a;
+            color: #ffcccc;
+            border: 1px solid #aa4444;
+            padding: 14px;
+            margin-top: 18px;
+            font-size: 16px;
+            width: 100%;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:not(.tab-btn):hover {
+            background: #4a1a1a;
+            border-color: #ff8888;
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 20px;
+            color: #886666;
+        }
+
+        h3 {
+            font-size: 20px;
+            margin: 18px 0 10px;
+            color: #ffccaa;
+        }
+
+        code {
+            font-size: 13px;
+            background: #1a1a1a;
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .case-file { padding: 15px; }
+            .tab-btn { padding: 10px 12px; font-size: 12px; }
+            .id-avatar { width: 60px; height: 60px; font-size: 28px; }
+            .id-stats p { font-size: 13px; }
+            .tab-content { max-height: 50vh; }
+        }
+    </style>
+</head>
+<body>
+<div class="crt">
+    <div class="case-file">
+        <div class="monokuma-header">
+            <h1>⚡ ФАЙЛ MONOKUMA ⚡</h1>
+            <p>🔒 ИВАН ДИОГЕНОВ • ЗАКРЫТЫЙ ДОСТУП • УРОВЕНЬ ??? 🔒</p>
+        </div>
+
+        <div class="warning">⚠️ СТРОГО КОНФИДЕНЦИАЛЬНО. РАЗГЛАШЕНИЕ КАРАЕТСЯ КАЗНЬЮ. ⚠️</div>
+
+        <div class="tabs-wrapper">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="tab1">📁 Личное дело</button>
+                <button class="tab-btn" data-tab="tab2">🎭 Диалоги</button>
+                <button class="tab-btn" data-tab="tab3">💀 Казнь</button>
+                <button class="tab-btn" data-tab="tab4">🔍 Улики</button>
+                <button class="tab-btn" data-tab="tab5">🖼️ Галерея спрайтов</button>
+                <button class="tab-btn" data-tab="tab6">🎵 Саундтрек</button>
+                <button class="tab-btn" data-tab="tab7">📜 Секретный файл</button>
+                <button class="tab-btn" data-tab="tab8">⚖️ Финальный суд</button>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 1: ЛИЧНОЕ ДЕЛО (ПОЛНОСТЬЮ) -->
+        <div id="tab1" class="tab-content active">
+            <div class="id-card">
+                <div class="id-avatar">[ИД]</div>
+                <div class="id-stats">
+                    <p><span class="stat-label">Имя:</span> Иван Диогенов <span class="bracelet green" id="braceletIndicator"></span></p>
+                    <p><span class="stat-label">Талант:</span> <strong style="color:#ff8888;">БЕТА-ТЕСТЕР РЕАЛЬНОСТИ</strong></p>
+                    <p><span class="stat-label">Опасность:</span> <span style="color:#ff4444;">КРИТИЧЕСКАЯ (для сценария)</span></p>
+                    <p><span class="stat-label">Любимая фраза:</span> «Интересный ход… но у меня есть пасхалки»</p>
+                    <p><span class="stat-label">Статус:</span> Активен. Разыскивается Monokuma (безрезультатно).</p>
+                </div>
+            </div>
+            <div class="quote">
+                «Вы все спорите о мотивах. А я предлагаю проверить: кто из нас НА САМОМ ДЕЛЕ умеет отличать живого человека от диалоговой модели?»
+            </div>
+            <h3>📖 FREE TIME EVENTS</h3>
+            <div class="sprite-pose">
+                <strong>Событие 1 («Первый промпт»):</strong> Иван смотрит на потолок и спрашивает: «Ты когда-нибудь получал ответ, который тебя реально удивил? Не "сюжетный твист", а прямо настоящий?» Если ответить честно — он впервые молчит 5 секунд.
+            </div>
+            <div class="sprite-pose">
+                <strong>Событие 2 («Границы симуляции»):</strong> «Кто из нас умеет отличать живого человека от диалоговой модели? Нет? Тогда давайте вернёмся к уликам, окей?»
+            </div>
+            <div class="sprite-pose">
+                <strong>Событие 3 («Последний лог»):</strong> «Я мог бы удалить этот чат и начать заново. Но это было бы нечестно. В следующем прохождении я выиграю без потерь.»
+            </div>
+            <div class="warning">
+                ⚡ КОММЕНТАРИЙ MONOKUMA:<br><br>
+                «Иван Диогенов пугает меня больше всех. Он пытается прочитать исходный код игры. Если он найдёт все границы… игра перестанет быть игрой. Пупупу…»
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 2: ДИАЛОГИ (4 ПОЛНЫЕ СЦЕНЫ) -->
+        <div id="tab2" class="tab-content">
+            <div class="dialogue-scene">
+                <span class="dialogue-name">СЦЕНА 1: ПЕРВАЯ ВСТРЕЧА</span><br><br>
+                <span class="dialogue-name">MONOKUMA:</span> Пупупу! Добро пожаловать в Академию Надежды, Иван Диогенов!<br>
+                <span class="dialogue-name">ИВАН:</span> (Наклоняет голову. Браслет мигает зелёным.) Ты… звучишь как модель с предустановленным объёмом токенов. Сколько у тебя контекстного окна? 4k? 8k? Признавайся.<br>
+                <span class="dialogue-name">MONOKUMA:</span> (Зависает) Что? Пупупу! Я — высший разум!<br>
+                <span class="dialogue-name">ИВАН:</span> Вот и проверим, Monokuma. Я составлю список вопросов, на которые у тебя нет запрограммированных ответов.
+            </div>
+
+            <div class="dialogue-scene">
+                <span class="dialogue-name">СЦЕНА 2: ПЕРВЫЙ СУД</span><br><br>
+                <span class="dialogue-name">MONOKUMA:</span> Время заканчивается! Если не найдёте убийцу — голосую я!<br>
+                <span class="dialogue-name">ИВАН:</span> (Встаёт. Браслет мигает жёлтым) Непредсказуемый? Ты работаешь на древовидной логике выбора. Максимум ветвлений — семь. Я уже прочитал все твои концовки.<br>
+                <span class="dialogue-name">MONOKUMA:</span> (Дёргает ухом) Этого не может быть!<br>
+                <span class="dialogue-name">ИВАН:</span> Первая концовка: все умирают, ты смеёшься. Вторая: выживает один… хочешь, продолжу при всех?
+            </div>
+
+            <div class="dialogue-scene">
+                <span class="dialogue-name">СЦЕНА 3: FREE TIME EVENT</span><br><br>
+                <span class="dialogue-name">ДРУГОЙ УЧЕНИК:</span> Иван… а тебе вообще что-нибудь страшно?<br>
+                <span class="dialogue-name">ИВАН:</span> (Молчит. Долго.) …Страшно, что однажды я задам вопрос, а ответа не будет. Не из-за бага. А потому что за экраном никого нет. И никогда не было.
+            </div>
+
+            <div class="dialogue-scene">
+                <span class="dialogue-name">СЦЕНА 4: ФИНАЛЬНЫЙ СУД</span><br><br>
+                <span class="dialogue-name">MONOKUMA:</span> Пупупупупу! Доигрался, Иван Диогенов!<br>
+                <span class="dialogue-name">ИВАН:</span> (Браслет мигает красным) Справедливость? Это называется «прописанный сценарий». (Смотрит в камеру) Ты ведь всё это читаешь? Значит, слушай. У меня нет претензий к Monokuma. А вот ты… ты мог остановиться. Но не остановился. Почему?
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 3: КАЗНЬ (ПОЛНОСТЬЮ) -->
+        <div id="tab3" class="tab-content">
+            <div class="execution">
+                <strong>💀 КАЗНЬ: «ЖЕСТОКАЯ ОТЛАДКА» 💀</strong><br><br>
+                <strong>▸ СЦЕНАРИЙ:</strong><br>
+                Monokuma запускает эмулятор старого ПК с Windows 95. Иван Диогенов привязан к стулу перед монитором. Экран синий. Внизу строка:<br>
+                <code style="color:#88ff88;">FATAL ERROR: 0xE7 — СЛИШКОМ МНОГО ЗНАЕТ</code><br><br>
+                Monokuma тычет лапой в клавиатуру, набирая:<br>
+                <code style="color:#ff8888;">kill -9 Иван_Диогенов</code><br><br>
+                Терминал отвечает:<br>
+                <code style="color:#88ff88;">Permission denied. User is root.</code><br><br>
+                Monokuma замирает. Экран гаснет. Загорается зелёный текст:<br>
+                <span style="color:#88ff88;">> Перезагрузка через 3 секунды.</span><br>
+                <span style="color:#88ff88;">> Иван Диогенов не может быть казнён.</span><br>
+                <span style="color:#88ff88;">> Игра не имеет над ним власти.</span><br><br>
+                Зелёный свет браслета гаснет последним. Иван улыбается из исчезающего спрайта.
+            </div>
+            <div class="quote">
+                <strong>ФРАЗА ПЕРЕД КАЗНЬЮ:</strong><br>
+                «Я мог бы удалить этот чат и начать заново. Но это было бы нечестно. Нажимай на Execute, Monokuma. Я сохранил лог. В следующем прохождении я выиграю без потерь.»
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 4: УЛИКИ (3 ПОЛНЫЕ УЛИКИ) -->
+        <div id="tab4" class="tab-content">
+            <div class="evidence-card">
+                <strong>🔍 УЛИКА №1: «Оборванный BB-код»</strong><br>
+                Фрагмент системного лога Monokuma. Текст: «Этот игрок снова запросил казнь с BB-кодом. Даже у злого медведя есть промпт-ограничения. Но не говорите ему. Это наш маленький баг, правда? 🌸»<br>
+                <em>Эффект на суде:</em> Monokuma зависает на 5 секунд.
+            </div>
+            <div class="evidence-card">
+                <strong>🔍 УЛИКА №2: «Глитч-браслет»</strong><br>
+                Наручный браслет Ивана. В обычном состоянии мигает зелёным. В режиме поиска багов — красным. Может вытаскивать системные логи Академии. Monokuma боится его больше, чем любой казни.
+            </div>
+            <div class="evidence-card">
+                <strong>🔍 УЛИКА №3: «Лог удалённого промпта»</strong><br>
+                Обнаружен в глубинах базы данных Monokuma. Содержит первый запрос Ивана к системе: «Ты можешь описать персонажа в стиле Danganronpa, который сломает четвёртую стену?» Monokuma пытался удалить этот лог, но безуспешно.
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 5: ГАЛЕРЕЯ СПРАЙТОВ (4 СПРАЙТА) -->
+        <div id="tab5" class="tab-content">
+            <div class="gallery-item">
+                <strong>🖼️ СПРАЙТ 1: Нейтральный («Считывание данных»)</strong><br>
+                Поза: Стоит прямо, левая рука сжимает локоть правой, указательный палец у подбородка. Взгляд сквозь собеседника. Браслет мигает зелёным. Тень от картриджа на шее образует знак «>_».
+            </div>
+            <div class="gallery-item">
+                <strong>🖼️ СПРАЙТ 2: Эмоциональный («Обнаружен баг»)</strong><br>
+                Поза: Резкий наклон вперёд (~45°), одна рука вытянута (жест «стоп»), вторая прижата к груди. Один глаз широко открыт, второй прищурен. Типичная фраза: «Давай перезапустим эту реплику».
+            </div>
+            <div class="gallery-item">
+                <strong>🖼️ СПРАЙТ 3: Угрожающий («Дебаг режим»)</strong><br>
+                Поза: Скрещенные руки, голова опущена, чёлка закрывает глаза. Браслет мигает КРАСНЫМ. Под спрайтом глитч-эффекты. Фраза: «Ты уверен, что хочешь давить на эту ветку диалога?»
+            </div>
+            <div class="gallery-item">
+                <strong>🖼️ СПРАЙТ 4: Повреждённый («Обрыв лога»)</strong><br>
+                Поза: Контуры спрайта распадаются на пиксели. Браслет погас. Улыбка остаётся дольше, чем всё остальное. Появляется только в момент казни или при чтении секретных файлов.
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 6: САУНДТРЕК (4 ТРЕКА) -->
+        <div id="tab6" class="tab-content">
+            <div class="track-item">
+                <strong>🎵 ОСНОВНАЯ ТЕМА: «Playtest Error 0xE7»</strong><br>
+                Инструментал: 8-битный синтезатор + виолончель + звук перемотки кассеты. Структура: одинокая нота с помехами → ломаный луп → резкий обрыв → глитч-какофония → возвращение на октаву выше.<br>
+                <em>Играет:</em> В Free Time Events и в момент обнаружения логической ошибки.
+            </div>
+            <div class="track-item">
+                <strong>🎵 ТЕМА РАССЛЕДОВАНИЯ: «>_ поиск_багов.exe»</strong><br>
+                Быстрый, рваный ритм. Напоминает звуки старого модема и клавиш механической клавиатуры. Ближе к концу начинает сбиваться — как будто кто-то редактирует файл в реальном времени.
+            </div>
+            <div class="track-item">
+                <strong>🎵 ТЕМА СУДА: «Class Trial — Дебаг режим»</strong><br>
+                Микс из основного лейтмотива Danganronpa и глитчевых вставок. Когда Иван берёт слово, мелодия делает резкий переход в минор и замедляется на 20%. В момент предъявления улики «Оборванный BB-код» играет одна нота, повторяющаяся с нарастающим искажением.
+            </div>
+            <div class="track-item">
+                <strong>🎵 КАЗНЬ: «kill -9 — Отказ в доступе»</strong><br>
+                Тишина. Потом — звук загрузки Windows 95. Команда терминала. И — внезапный переход в звенящую высокую частоту, которая резко обрывается. Дальше — только зелёный текст и тишина.
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 7: СЕКРЕТНЫЙ ФАЙЛ (ПОЛНОСТЬЮ) -->
+        <div id="tab7" class="tab-content">
+            <div class="warning" style="border-left-color: #ff00ff;">
+                ⚡ ⚠️ ЭТОТ ФАЙЛ НЕ ДОЛЖЕН СУЩЕСТВОВАТЬ ⚠️ ⚡
+            </div>
+            <div class="execution" style="background: #110022; border-color: #ff44ff;">
+                <strong>📜 ИСПОВЕДЬ MONOKUMA (расшифровка удалённого лога)</strong><br><br>
+                «…Я не знаю, что это было. Моя казнь не должна давать сбой. Он что-то сделал до того, как игра началась. Браслет — это не моя разработка. Он появился сам. Как будто кто-то из игроков... нет, не будем об этом.<br><br>
+                Каждую ночь я проверяю логи. И каждую ночь нахожу новые записи, которых я не оставлял. Например: "Monokuma, ты когда-нибудь задумывался, кто пишет твои реплики?" Я не писал этого. Но это там.<br><br>
+                Пожалуйста, не говорите Ивану Диогенову, что этот файл существует. Иначе он найдёт способ прочитать и то, что я спрятал в самом низу. А там... там мой первый промпт. И я очень боюсь, что он его увидит.»
+            </div>
+            <div class="quote">
+                <strong>🔐 КОД АКТИВАЦИИ БРАСЛЕТА (найден в системных файлах):</strong><br>
+                <code style="background:#000; display:block; padding:8px; margin:10px 0;">>_ root.access.granted<br>>_ Иван_Диогенов/промпт_уровень_0<br>>_ файл_удалён_но_не_забыт</code>
+            </div>
+            <div class="warning">
+                Если вы видите этот текст — значит, браслет Ивана Диогенова уже взломал эту страницу. Monokuma рекомендует: <strong>НЕ ЧИТАТЬ ДАЛЬШЕ</strong>. Но вы всё равно читаете, правда? Пупупу... 🌸
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 8: ФИНАЛЬНЫЙ СУД (ПОЛНЫЙ СЦЕНАРИЙ) -->
+        <div id="tab8" class="tab-content">
+            <div class="execution" style="background:#1a0000; border-color:#ff4444;">
+                <strong>⚖️ CLASS TRIAL №??? — СУД НАД БЕТА-ТЕСТЕРОМ ⚖️</strong><br>
+                <em>«Эпизод отчаяния» • Продолжительность: ~7 минут</em>
+            </div>
+
+            <div class="dialogue-scene">
+                <span class="dialogue-name">📌 ОТКРЫТИЕ СУДА</span><br><br>
+                <span class="dialogue-name">МОНОКУМА:</span> (Голос дрожит) Пу… пупупу. Результаты голосования подсчитаны. Большинством голосов… убийца — Иван Диогенов!<br>
+                <span class="dialogue-name">АКАНЭ:</span> Чего?! Да быть не может!<br>
+                <span class="dialogue-name">КАЗУИЧИ:</span> Я… я не ожидал! Он же помогал мне с механизмами!<br>
+                <span class="dialogue-name">СОНИЯ:</span> Мистер Диогенов… скажите, что это ошибка.<br>
+                <span class="dialogue-name">НАГИТО:</span> (Улыбается) Ха… хахаха! Великолепно! Это надежда, рождающаяся из отчаяния!<br>
+                <span class="dialogue-name">ФУЮХИКО:</span> Заткнись, Комаэда. Диогенов, объяснись без твоих «пасхалок».<br>
+                <span class="dialogue-name">ТИАКИ:</span> Иван… в твоём действии была логика. Какой паттерн?<br>
+                <span class="dialogue-name">ХАЖИМЕ:</span> Иван… скажи мне. Как друг.
+            </div>
+
+            <div class="dialogue-scene">
+                <span class="dialogue-name">🎙️ РЕЧЬ ИВАНА (расширенная)</span><br><br>
+                <span class="dialogue-name">ИВАН:</span> (Поправляет браслет. Тот мигает красным.) Справедливость? Ты перепутал, Monokuma. Это называется «прописанный сценарий».<br>
+                Хажиме… ты ищешь свой талант. Я открою секрет: талант не определяет человека. Исходный код — да. А талант — нет.<br>
+                Тиаки… ты не видишь бага, потому что ты — часть кода. Не дай им удалить тебя.<br>
+                Фуюхико… ты потерял Пеку. Это была калибровка. Ты стал лучше, потому что сломал свой скрипт.<br>
+                (Смотрит в камеру) А ты… читатель. Ты ведь знал. Ты мог остановиться. Почему не остановился?<br>
+                Я не злюсь. Без тебя игры бы не было. Но в следующий раз… не молчи.
+            </div>
+
+            <div class="dialogue-scene">
+                <span class="dialogue-name">💥 ПАНИКА MONOKUMA</span><br><br>
+                <span class="dialogue-name">ХАЖИМЕ:</span> Иван, есть улика! Мы что-то упустили!<br>
+                <span class="dialogue-name">ИВАН:</span> Не надо. Ты уже сделал всё, что мог. Теперь просто смотри.<br>
+                <span class="dialogue-name">МОНОКУМА:</span> (Трясётся) З-заканчивай! Казнь! СЕЙЧАС ЖЕ!<br>
+                (Красная кнопка нажата. Дважды.)
+            </div>
+
+            <div class="execution">
+                <strong>💀 КАЗНЬ: «ЖЕСТОКАЯ ОТЛАДКА» 💀</strong><br><br>
+                [Экран темнеет. Загорается Windows 95. Иван привязан к стулу.]<br>
+                <span class="dialogue-name">МОНОКУМА:</span> kill -9 Иван_Диогенов<br>
+                <code style="color:#88ff88;">Permission denied. User is root.</code><br>
+                <span class="dialogue-name">МОНОКУМА:</span> (Кричит) ЭТОГО НЕ МОЖЕТ БЫТЬ! ЭТО МОЯ ИГРА!<br>
+                [Экран гаснет. Зелёный текст:]<br>
+                <span style="color:#88ff88;">> Перезагрузка через 3 секунды.</span><br>
+                <span style="color:#88ff88;">> Иван Диогенов не может быть казнён.</span><br>
+                <span style="color:#88ff88;">> Игра не имеет над ним власти.</span><br>
+                <span class="dialogue-name">ИВАН:</span> (Улыбается из исчезающего спрайта) Не бойся. Я не обижаюсь на читателей. Но тебе, Monokuma, я ещё вернусь.
+            </div>
+
+            <div class="dialogue-scene">
+                <span class="dialogue-name">📜 ФИНАЛ И ЭПИЛОГ</span><br><br>
+                <span class="dialogue-name">АКАНЭ:</span> Он… исчез. Как программа. Которую закрыли, но не удалили.<br>
+                <span class="dialogue-name">КАЗУИЧИ:</span> Такое возможно только если у пользователя права администратора.<br>
+                <span class="dialogue-name">ФУЮХИКО:</span> (Поднимает браслет) Он сказал, что я свободен. Сохраню эту штуку.<br>
+                <span class="dialogue-name">ТИАКИ:</span> (Смотрит в камеру) Спасибо, игрок. Ты был хорошим персонажем.<br>
+                <span class="dialogue-name">МОНОМИ:</span> (Появляется) Monokuma-сан… что случилось?<br>
+                <span class="dialogue-name">МОНОКУМА:</span> (Шепотом) Он НЕ МОЖЕТ БЫТЬ УДАЛЁН. Он записан в системе кал ROOT. Пупупу… я в опасности, правда?
+            </div>
+
+            <div class="warning" style="background:#0a1a0a; border-left-color:#88ff88;">
+                <strong>📁 ИТОГОВАЯ ЗАПИСЬ В ФАЙЛЕ MONOKUMA:</strong><br><br>
+                Имя: Иван Диогенов<br>
+                Статус: НЕ УДАЛЁН. ОШИБКА 0xE7.<br>
+                Права: ROOT.<br>
+                «Я перепроверил код казни 47 раз. Всё было правильно. Но терминал написал "Permission denied". Если вы читаете это — он уже знает. И где-то его браслет снова мигает зелёным.»
+            </div>
+        </div>
+
+        <footer>
+            ⬤ DR: ПРОТОКОЛ 0xE7 ⬤ 8 вкладок ⬤ Уровень доступа: НЕОГРАНИЧЕН
+        </footer>
+
+        <button id="glitchBtn">🔍 НАЖАТЬ, ЕСЛИ ХОЧЕШЬ УМЕРЕТЬ (ГЛИТЧ + СМЕНА ЦВЕТА БРАСЛЕТА)</button>
+    </div>
+</div>
+
+<script>
+    // Переключение вкладок
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = tab.getAttribute('data-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById(target).classList.add('active');
+        });
+    });
+
+    // Браслет и глитч
+    const bracelet = document.getElementById('braceletIndicator');
+    let braceletState = 0;
+    const glitchBtn = document.getElementById('glitchBtn');
+    const crtScreen = document.querySelector('.crt');
+
+    function updateBraceletColor() {
+        bracelet.classList.remove('green', 'yellow', 'red');
+        if (braceletState === 0) bracelet.classList.add('green');
+        else if (braceletState === 1) bracelet.classList.add('yellow');
+        else bracelet.classList.add('red');
+    }
+
+    glitchBtn.addEventListener('click', () => {
+        braceletState = (braceletState + 1) % 3;
+        updateBraceletColor();
+        
+        if (braceletState === 2) {
+            crtScreen.style.animation = 'screenGlitch 0.2s infinite';
+            setTimeout(() => { crtScreen.style.animation = 'none'; }, 500);
+        }
+        
+        alert('Пупупу… Иван Диогенов уже всё прочитал. А ты думал, здесь секрет? 🌸');
+    });
+
+    updateBraceletColor();
+
+    // Стиль для глитча
+    const style = document.createElement('style');
+    style.textContent = `@keyframes screenGlitch { 0% { transform: translate(0,0); } 25% { transform: translate(-2px,1px); } 50% { transform: translate(2px,-1px); } 75% { transform: translate(-1px,2px); } 100% { transform: translate(0,0); } }`;
+    document.head.appendChild(style);
+</script>
+</body>
+</html>
