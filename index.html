@@ -418,5 +418,30 @@
     document.body.addEventListener('click', function() { initAudio(); }, { once: true });
     loadMenu();
 </script>
+    <!-- Фоновая музыка (автовоспроизведение может быть заблокировано браузером, добавлена кнопка) -->
+<audio id="bgMusic" loop preload="auto">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    Ваш браузер не поддерживает аудио.
+</audio>
+<div style="position: fixed; bottom: 20px; left: 20px; z-index: 999;">
+    <button id="musicToggle" style="background: #2a1a1a; border: 2px solid #aa6644; color: #ffccaa; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-family: monospace;">🔊 Музыка вкл</button>
+</div>
+<script>
+    const music = document.getElementById('bgMusic');
+    const toggleBtn = document.getElementById('musicToggle');
+    let musicPlaying = false;
+    // Попытка автовоспроизведения (может не сработать)
+    music.play().then(() => { musicPlaying = true; toggleBtn.textContent = '🔇 Музыка выкл'; }).catch(() => {});
+    toggleBtn.addEventListener('click', () => {
+        if (musicPlaying) {
+            music.pause();
+            toggleBtn.textContent = '🔊 Музыка вкл';
+        } else {
+            music.play();
+            toggleBtn.textContent = '🔇 Музыка выкл';
+        }
+        musicPlaying = !musicPlaying;
+    });
+</script>
 </body>
 </html>
