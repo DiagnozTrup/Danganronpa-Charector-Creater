@@ -284,7 +284,7 @@
     <h1>⚡ СОЗДАЙ СВОЕГО ПЕРСОНАЖА ⚡</h1>
     <div class="sub">20 вопросов – твои ответы определят роль, талант, характер и судьбу</div>
 
-    <!-- 20 вопросов -->
+    <!-- 20 вопросов (без изменений) -->
     <div class="question"><label>1. Имя персонажа:</label><input type="text" id="name" placeholder="например: Иван Диогенов"></div>
     <div class="question"><label>2. Талант (Ultimate):</label><input type="text" id="talent" placeholder="например: Стратег, Детектив, Боец"></div>
     <div class="question"><label>3. Любимый цвет:</label><select id="color"><option value="red">Красный</option><option value="black">Чёрный</option><option value="blue">Синий</option><option value="green">Зелёный</option><option value="purple">Фиолетовый</option><option value="white">Белый</option></select></div>
@@ -463,7 +463,16 @@
         ];
 
         const secretFile = `«Ой-ой-ой... ${name} оказался сложнее. Его тайна — ${secret}. Пупупу... Надо быть осторожнее.»`;
-        const finalTrial = `${name} признан ${role === 'Убийца' ? 'убийцей' : (role === 'Жертва' ? 'невиновным, но мёртвым' : 'выжившим')}. Monokuma в ярости.`;
+        
+        // ===== ИСПРАВЛЕННЫЙ ФИНАЛЬНЫЙ СУД =====
+        let monokumaReaction = '';
+        if (role === 'Убийца') monokumaReaction = 'Monokuma довольно смеётся.';
+        else if (role === 'Жертва') monokumaReaction = 'Monokuma в ярости.';
+        else monokumaReaction = 'Monokuma злится, но вынужден отпустить выжившего.';
+        
+        const finalTrial = `${name} признан ${role === 'Убийца' ? 'убийцей' : (role === 'Жертва' ? 'невиновным, но мёртвым' : 'выжившим')}. ${role === 'Убийца' ? 'Казнь проведена.' : (role === 'Жертва' ? 'Настоящий убийца скрылся.' : 'Ученики аплодируют.')} ${monokumaReaction}`;
+        // =====================================
+
         const backstory = `${name} вырос в ${color === 'red' ? 'семье военных' : 'обычной семье'}. С детства проявлял ${talent}. Любит ${hobby}.`;
         const relationships = `Monokuma: ${monokumaFeel}. Другие ученики: ${value === 'честность' ? 'ценят честность' : 'уважают силу'}. ${moral === 'добро' ? 'Всегда готов помочь.' : 'Думает о себе.'}`;
         const skills = `${talent}, ${hobby}, ${secretHobby}. Умеет готовить ${food}.`;
