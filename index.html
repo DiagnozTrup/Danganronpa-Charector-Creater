@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Выбор персонажа</title>
+    <title>Danganronpa 2: Выбор персонажа</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body {
@@ -251,7 +251,6 @@
         });
     }
 
-    // Компактная и надёжная генерация эталонного профиля
     function buildProfileHTML(char) {
         var name = escapeHtml(char.name);
         var talent = escapeHtml(char.talent);
@@ -275,144 +274,90 @@
         var soundtrack = char.soundtrack || [];
         var secretFile = escapeHtml(char.secretFile || 'Нет файла');
         var finalTrial = escapeHtml(char.finalTrial || 'Не описан');
+        var visualPrompt = char.visualPrompt || 'Промпт не указан';
 
-        // Генерация через массив и join – без огромной строки
-        var html = [];
-        html.push('<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>Danganronpa :: ' + name + '</title>');
-        html.push('<style>');
-        html.push('*{margin:0;padding:0;box-sizing:border-box;}body{background:linear-gradient(135deg,#1a0000,#2d0000);font-family:"Courier New",monospace;padding:15px 12px;min-height:100vh;}');
-        html.push('.crt{max-width:1000px;width:100%;margin:0 auto;background:#0a0a0a;border:8px solid #3a1a1a;border-radius:8px;position:relative;}');
-        html.push('.crt::before{content:" ";display:block;position:absolute;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,rgba(0,255,0,0.03) 0px,rgba(0,255,0,0.03) 2px,transparent 2px,transparent 4px);pointer-events:none;border-radius:6px;}');
-        html.push('.case-file{padding:20px 18px;color:#e0e0e0;border:1px solid #5a2a2a;background:#0d0d0d;position:relative;z-index:1;}');
-        html.push('.monokuma-header{text-align:center;border-bottom:3px solid #d42e2e;margin-bottom:20px;padding-bottom:12px;}');
-        html.push('.monokuma-header h1{font-size:clamp(28px,7vw,36px);letter-spacing:3px;color:#ffffff;text-shadow:3px 3px 0 #5a0000;}');
-        html.push('.monokuma-header p{font-size:14px;color:#ff8888;margin-top:8px;font-weight:bold;}');
-        html.push('.warning{background:#1a0505;border-left:8px solid #ff0000;padding:12px;margin-bottom:20px;font-weight:bold;color:#ffaaaa;font-size:13px;text-transform:uppercase;}');
-        html.push('.tabs-wrapper{overflow-x:auto;overflow-y:hidden;margin-bottom:20px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#aa4444 #1a0a0a;}');
-        html.push('.tabs-wrapper::-webkit-scrollbar{height:8px;}');
-        html.push('.tabs-wrapper::-webkit-scrollbar-track{background:#1a0a0a;border-radius:4px;border:1px solid #5a2a2a;}');
-        html.push('.tabs-wrapper::-webkit-scrollbar-thumb{background:#aa4444;border-radius:4px;}');
-        html.push('.tabs{display:flex;flex-wrap:nowrap;gap:6px;padding-bottom:5px;min-width:min-content;}');
-        html.push('.tab-btn{background:#1a0a0a;border:none;color:#cc9999;font-family:"Courier New",monospace;font-size:14px;font-weight:bold;padding:12px 16px;cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap;transition:0.2s;}');
-        html.push('.tab-btn:hover{background:#2a1515;color:#ffaaaa;}');
-        html.push('.tab-btn.active{background:#2a0a0a;color:#ff7777;border-bottom:2px solid #ff4444;}');
-        html.push('.tab-content{display:none;animation:fadeIn 0.25s ease;max-height:55vh;overflow-y:auto;padding-right:8px;scrollbar-width:thin;scrollbar-color:#aa4444 #1a0a0a;}');
-        html.push('.tab-content::-webkit-scrollbar{width:8px;}');
-        html.push('.tab-content::-webkit-scrollbar-track{background:#1a0a0a;border-radius:4px;border:1px solid #5a2a2a;}');
-        html.push('.tab-content::-webkit-scrollbar-thumb{background:#aa4444;border-radius:4px;}');
-        html.push('.tab-content::-webkit-scrollbar-thumb:hover{background:#ff6666;}');
-        html.push('.tab-content.active{display:block;}');
-        html.push('@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}');
-        html.push('.id-card{background:#111111;border:2px solid #333;padding:18px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:15px;}');
-        html.push('.id-avatar{background:#1a1a1a;width:80px;height:80px;border:2px solid #d42e2e;display:flex;align-items:center;justify-content:center;font-size:36px;color:#ff8888;flex-shrink:0;}');
-        html.push('.id-stats{flex:1;min-width:160px;}');
-        html.push('.id-stats p{margin:8px 0;font-size:15px;line-height:1.5;}');
-        html.push('.stat-label{color:#ffaaaa;font-weight:bold;}');
-        html.push('.quote{background:#181010;border-left:6px solid #ff4444;padding:14px;margin:15px 0;font-style:italic;font-size:15px;color:#ffddaa;font-weight:bold;}');
-        html.push('.sprite-pose,.evidence-card,.gallery-item,.track-item,.dialogue-scene{background:#0a0f0a;border:1px dashed #3a6a3a;padding:12px;margin:10px 0;font-size:14px;border-radius:6px;}');
-        html.push('.execution{background:#1a0000;border:2px solid #aa2222;padding:16px;margin:15px 0;color:#ffaaaa;font-size:15px;border-radius:8px;}');
-        html.push('.dialogue-name{color:#ffaaaa;font-weight:bold;}');
-        html.push('.bracelet{display:inline-block;width:14px;height:14px;border-radius:50%;margin-left:8px;vertical-align:middle;}');
-        html.push('.bracelet.green{background:#00ff00;animation:pulseGreen 1s infinite;box-shadow:0 0 5px #00ff00;}');
-        html.push('.bracelet.red{background:#ff0000;animation:pulseRed 0.3s infinite;box-shadow:0 0 5px #ff0000;}');
-        html.push('.bracelet.yellow{background:#ffff00;animation:pulseYellow 0.5s infinite;box-shadow:0 0 5px #ffff00;}');
-        html.push('@keyframes pulseGreen{0%{opacity:0.6;transform:scale(0.9);}100%{opacity:1;transform:scale(1.1);}}');
-        html.push('@keyframes pulseRed{0%{opacity:0.5;transform:scale(0.8);}100%{opacity:1;transform:scale(1.2);}}');
-        html.push('@keyframes pulseYellow{0%{opacity:0.6;transform:scale(0.9);}100%{opacity:1;transform:scale(1.1);}}');
-        html.push('button:not(.tab-btn){background:#2a0a0a;color:#ffcccc;border:1px solid #aa4444;padding:14px;margin-top:18px;font-size:16px;width:100%;border-radius:8px;cursor:pointer;font-weight:bold;transition:0.2s;}');
-        html.push('button:not(.tab-btn):hover{background:#4a1a1a;border-color:#ff8888;color:white;}');
-        html.push('footer{text-align:center;font-size:12px;margin-top:20px;color:#886666;}');
-        html.push('h3{font-size:20px;margin:18px 0 10px;color:#ffccaa;}');
-        html.push('code{font-size:13px;background:#1a1a1a;padding:3px 6px;border-radius:4px;}');
-        html.push('@media (max-width:600px){.case-file{padding:15px;}.tab-btn{padding:10px 12px;font-size:12px;}.id-avatar{width:60px;height:60px;font-size:28px;}.id-stats p{font-size:13px;}.tab-content{max-height:50vh;}}');
-        html.push('</style></head><body><div class="crt"><div class="case-file">');
-        html.push('<div class="monokuma-header"><h1>⚡ ФАЙЛ MONOKUMA ⚡</h1><p>🔒 ' + name + ' • ЗАКРЫТЫЙ ДОСТУП 🔒</p></div>');
-        html.push('<div class="warning">⚠️ СТРОГО КОНФИДЕНЦИАЛЬНО. РАЗГЛАШЕНИЕ КАРАЕТСЯ КАЗНЬЮ. ⚠️</div>');
-        html.push('<div class="tabs-wrapper"><div class="tabs">');
-        html.push('<button class="tab-btn active" data-tab="tab1">📁 Личное дело</button>');
-        html.push('<button class="tab-btn" data-tab="tab2">🎭 Диалоги</button>');
-        html.push('<button class="tab-btn" data-tab="tab3">💀 Казнь</button>');
-        html.push('<button class="tab-btn" data-tab="tab4">🔍 Улики</button>');
-        html.push('<button class="tab-btn" data-tab="tab5">🖼️ Галерея</button>');
-        html.push('<button class="tab-btn" data-tab="tab6">🎵 Саундтрек</button>');
-        html.push('<button class="tab-btn" data-tab="tab7">📜 Секретный файл</button>');
-        html.push('<button class="tab-btn" data-tab="tab8">⚖️ Финальный суд</button>');
-        html.push('</div></div>');
-        // Вкладка 1
-        html.push('<div id="tab1" class="tab-content active">');
-        html.push('<div class="id-card"><div class="id-avatar">' + avatar + '</div><div class="id-stats">');
-        html.push('<p><span class="stat-label">Имя:</span> ' + name + ' <span class="bracelet green" id="braceletIndicator"></span></p>');
-        html.push('<p><span class="stat-label">Талант:</span> <strong style="color:#ff8888;">' + talent + '</strong></p>');
-        html.push('<p><span class="stat-label">Роль:</span> ' + role + '</p>');
-        html.push('<p><span class="stat-label">Фраза:</span> ' + phrase + '</p>');
-        html.push('<p><span class="stat-label">Статус:</span> Активен. Разыскивается Monokuma.</p></div></div>');
-        html.push('<div class="quote">' + phrase + '</div>');
-        html.push('<h3>📖 FREE TIME EVENTS</h3>');
-        for (var i = 0; i < freeTimeEvents.length; i++) {
-            html.push('<div class="sprite-pose">✨ ' + escapeHtml(freeTimeEvents[i]) + '</div>');
-        }
-        html.push('<div class="warning">⚡ КОММЕНТАРИЙ MONOKUMA: ' + secret + '</div>');
-        html.push('</div>');
-        // Вкладка 2
-        html.push('<div id="tab2" class="tab-content">');
-        for (var d = 0; d < dialogues.length; d++) {
-            var parts = dialogues[d].split('\n');
-            var title = parts[0] || 'СЦЕНА';
-            var text = parts.slice(1).join('\n') || dialogues[d];
-            html.push('<div class="dialogue-scene"><span class="dialogue-name">' + escapeHtml(title) + '</span><br>' + escapeHtml(text) + '</div>');
-        }
-        html.push('</div>');
-        // Вкладка 3
-        html.push('<div id="tab3" class="tab-content">');
-        html.push('<div class="execution"><strong>💀 КАЗНЬ: ' + execName + '</strong><br>' + execDesc + '</div>');
-        html.push('<div class="quote"><strong>ФРАЗА ПЕРЕД КАЗНЬЮ:</strong><br>' + lastWords + '</div>');
-        html.push('</div>');
-        // Вкладка 4
-        html.push('<div id="tab4" class="tab-content">');
-        for (var e = 0; e < evidencesList.length; e++) {
-            html.push('<div class="evidence-card"><strong>🔍 ' + escapeHtml(evidencesList[e]) + '</strong></div>');
-        }
-        html.push('</div>');
-        // Вкладка 5
-        html.push('<div id="tab5" class="tab-content">');
-        html.push('<div class="gallery-item"><strong>🖼️ Нейтральный спрайт</strong><br>Спокойная поза, рука у подбородка.</div>');
-        html.push('<div class="gallery-item"><strong>🖼️ Эмоциональный спрайт</strong><br>Наклон вперёд.</div>');
-        html.push('<div class="gallery-item"><strong>🖼️ Угрожающий спрайт</strong><br>Чёлка закрывает глаза. Браслет КРАСНЫЙ.</div>');
-        html.push('<div class="gallery-item"><strong>🖼️ Повреждённый спрайт</strong><br>Спрайт распадается на пиксели.</div>');
-        html.push('</div>');
-        // Вкладка 6
-        html.push('<div id="tab6" class="tab-content">');
-        for (var t = 0; t < soundtrack.length; t++) {
-            html.push('<div class="track-item">🎵 ' + escapeHtml(soundtrack[t]) + '</div>');
-        }
-        html.push('</div>');
-        // Вкладка 7
-        html.push('<div id="tab7" class="tab-content">');
-        html.push('<div class="warning" style="border-left-color:#ff00ff;">⚡ ЭТОТ ФАЙЛ НЕ ДОЛЖЕН СУЩЕСТВОВАТЬ</div>');
-        html.push('<div class="execution" style="background:#110022;border-color:#ff44ff;">' + secretFile + '</div>');
-        html.push('<div class="quote"><strong>🔐 КОД АКТИВАЦИИ БРАСЛЕТА:</strong><br><code>>_ root.access.granted<br>>_ ' + name.replace(/\s/g, '_') + '/промпт_уровень_0</code></div>');
-        html.push('</div>');
-        // Вкладка 8
-        html.push('<div id="tab8" class="tab-content">');
-        html.push('<div class="execution" style="background:#1a0000;border-color:#ff4444;"><strong>⚖️ ФИНАЛЬНЫЙ СУД</strong><br>' + finalTrial + '</div>');
-        html.push('</div>');
-        html.push('<footer>⬤ DR: ПРОТОКОЛ 0xE7 ⬤ 8 вкладок ⬤ Уровень доступа: НЕОГРАНИЧЕН</footer>');
-        html.push('<button id="glitchBtn">🔍 НАЖАТЬ, ЕСЛИ ХОЧЕШЬ УМЕРЕТЬ</button>');
-        html.push('</div></div>');
-        html.push('<script>');
-        html.push('var tabs=document.querySelectorAll(".tab-btn");var contents=document.querySelectorAll(".tab-content");');
-        html.push('tabs.forEach(function(t){t.addEventListener("click",function(){var target=t.getAttribute("data-tab");');
-        html.push('tabs.forEach(function(btn){btn.classList.remove("active");});');
-        html.push('contents.forEach(function(c){c.classList.remove("active");});');
-        html.push('t.classList.add("active");document.getElementById(target).classList.add("active");});});');
-        html.push('var bracelet=document.getElementById("braceletIndicator");var bstate=0;');
-        html.push('document.getElementById("glitchBtn").addEventListener("click",function(){bstate=(bstate+1)%3;');
-        html.push('bracelet.classList.remove("green","red","yellow");if(bstate===0)bracelet.classList.add("green");');
-        html.push('else if(bstate===1)bracelet.classList.add("yellow");else bracelet.classList.add("red");');
-        html.push('alert("Пупупу... ' + name + ' уже всё прочитал.");});');
-        html.push('<\/script>');
-        html.push('</body></html>');
-        return html.join('');
+        var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + name + '</title><style>' +
+            '*{margin:0;padding:0;box-sizing:border-box;}body{background:linear-gradient(135deg,#1a0000,#2d0000);font-family:"Courier New",monospace;padding:15px 12px;min-height:100vh;}' +
+            '.crt{max-width:1000px;width:100%;margin:0 auto;background:#0a0a0a;border:8px solid #3a1a1a;border-radius:8px;position:relative;}' +
+            '.crt::before{content:" ";display:block;position:absolute;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,rgba(0,255,0,0.03) 0px,rgba(0,255,0,0.03) 2px,transparent 2px,transparent 4px);pointer-events:none;border-radius:6px;}' +
+            '.case-file{padding:20px 18px;color:#e0e0e0;border:1px solid #5a2a2a;background:#0d0d0d;position:relative;z-index:1;}' +
+            '.monokuma-header{text-align:center;border-bottom:3px solid #d42e2e;margin-bottom:20px;padding-bottom:12px;}' +
+            '.monokuma-header h1{font-size:clamp(28px,7vw,36px);letter-spacing:3px;color:#ffffff;text-shadow:3px 3px 0 #5a0000;}' +
+            '.monokuma-header p{font-size:14px;color:#ff8888;margin-top:8px;font-weight:bold;}' +
+            '.warning{background:#1a0505;border-left:8px solid #ff0000;padding:12px;margin-bottom:20px;font-weight:bold;color:#ffaaaa;font-size:13px;text-transform:uppercase;}' +
+            '.tabs-wrapper{overflow-x:auto;overflow-y:hidden;margin-bottom:20px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#aa4444 #1a0a0a;}' +
+            '.tabs-wrapper::-webkit-scrollbar{height:8px;}' +
+            '.tabs-wrapper::-webkit-scrollbar-track{background:#1a0a0a;border-radius:4px;border:1px solid #5a2a2a;}' +
+            '.tabs-wrapper::-webkit-scrollbar-thumb{background:#aa4444;border-radius:4px;}' +
+            '.tabs{display:flex;flex-wrap:nowrap;gap:6px;padding-bottom:5px;min-width:min-content;}' +
+            '.tab-btn{background:#1a0a0a;border:none;color:#cc9999;font-family:"Courier New",monospace;font-size:14px;font-weight:bold;padding:12px 16px;cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap;transition:0.2s;}' +
+            '.tab-btn:hover{background:#2a1515;color:#ffaaaa;}' +
+            '.tab-btn.active{background:#2a0a0a;color:#ff7777;border-bottom:2px solid #ff4444;}' +
+            '.tab-content{display:none;animation:fadeIn 0.25s ease;max-height:55vh;overflow-y:auto;padding-right:8px;scrollbar-width:thin;scrollbar-color:#aa4444 #1a0a0a;}' +
+            '.tab-content::-webkit-scrollbar{width:8px;}' +
+            '.tab-content::-webkit-scrollbar-track{background:#1a0a0a;border-radius:4px;border:1px solid #5a2a2a;}' +
+            '.tab-content::-webkit-scrollbar-thumb{background:#aa4444;border-radius:4px;}' +
+            '.tab-content::-webkit-scrollbar-thumb:hover{background:#ff6666;}' +
+            '.tab-content.active{display:block;}' +
+            '@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}' +
+            '.id-card{background:#111111;border:2px solid #333;padding:18px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:15px;}' +
+            '.id-avatar{background:#1a1a1a;width:80px;height:80px;border:2px solid #d42e2e;display:flex;align-items:center;justify-content:center;font-size:36px;color:#ff8888;flex-shrink:0;}' +
+            '.id-stats{flex:1;min-width:160px;}' +
+            '.id-stats p{margin:8px 0;font-size:15px;line-height:1.5;}' +
+            '.stat-label{color:#ffaaaa;font-weight:bold;}' +
+            '.quote{background:#181010;border-left:6px solid #ff4444;padding:14px;margin:15px 0;font-style:italic;font-size:15px;color:#ffddaa;font-weight:bold;}' +
+            '.sprite-pose,.evidence-card,.gallery-item,.track-item,.dialogue-scene{background:#0a0f0a;border:1px dashed #3a6a3a;padding:12px;margin:10px 0;font-size:14px;border-radius:6px;}' +
+            '.execution{background:#1a0000;border:2px solid #aa2222;padding:16px;margin:15px 0;color:#ffaaaa;font-size:15px;border-radius:8px;}' +
+            '.bracelet{display:inline-block;width:14px;height:14px;border-radius:50%;margin-left:8px;vertical-align:middle;}' +
+            '.bracelet.green{background:#00ff00;animation:pulseGreen 1s infinite;box-shadow:0 0 5px #00ff00;}' +
+            '.bracelet.red{background:#ff0000;animation:pulseRed 0.3s infinite;box-shadow:0 0 5px #ff0000;}' +
+            '.bracelet.yellow{background:#ffff00;animation:pulseYellow 0.5s infinite;box-shadow:0 0 5px #ffff00;}' +
+            '@keyframes pulseGreen{0%{opacity:0.6;transform:scale(0.9);}100%{opacity:1;transform:scale(1.1);}}' +
+            '@keyframes pulseRed{0%{opacity:0.5;transform:scale(0.8);}100%{opacity:1;transform:scale(1.2);}}' +
+            '@keyframes pulseYellow{0%{opacity:0.6;transform:scale(0.9);}100%{opacity:1;transform:scale(1.1);}}' +
+            'button:not(.tab-btn){background:#2a0a0a;color:#ffcccc;border:1px solid #aa4444;padding:14px;margin-top:18px;font-size:16px;width:100%;border-radius:8px;cursor:pointer;font-weight:bold;transition:0.2s;}' +
+            'button:not(.tab-btn):hover{background:#4a1a1a;border-color:#ff8888;color:white;}' +
+            'footer{text-align:center;font-size:12px;margin-top:20px;color:#886666;}' +
+            '@media (max-width:600px){.case-file{padding:15px;}.tab-btn{padding:10px 12px;font-size:12px;}.id-avatar{width:60px;height:60px;font-size:28px;}.id-stats p{font-size:13px;}.tab-content{max-height:50vh;}}' +
+            '</style></head><body><div class="crt"><div class="case-file">' +
+            '<div class="monokuma-header"><h1>⚡ ФАЙЛ MONOKUMA ⚡</h1><p>🔒 ' + name + ' • ЗАКРЫТЫЙ ДОСТУП 🔒</p></div>' +
+            '<div class="warning">⚠️ СТРОГО КОНФИДЕНЦИАЛЬНО. РАЗГЛАШЕНИЕ КАРАЕТСЯ КАЗНЬЮ. ⚠️</div>' +
+            '<div class="tabs-wrapper"><div class="tabs">' +
+            '<button class="tab-btn active" data-tab="tab1">📁 Личное дело</button>' +
+            '<button class="tab-btn" data-tab="tab2">🎭 Диалоги</button>' +
+            '<button class="tab-btn" data-tab="tab3">💀 Казнь</button>' +
+            '<button class="tab-btn" data-tab="tab4">🔍 Улики</button>' +
+            '<button class="tab-btn" data-tab="tab5">🖼️ Галерея</button>' +
+            '<button class="tab-btn" data-tab="tab6">🎵 Саундтрек</button>' +
+            '<button class="tab-btn" data-tab="tab7">📜 Секретный файл</button>' +
+            '<button class="tab-btn" data-tab="tab8">⚖️ Финальный суд</button>' +
+            '</div></div>' +
+            '<div id="tab1" class="tab-content active"><div class="id-card"><div class="id-avatar">' + avatar + '</div><div class="id-stats"><p><span class="stat-label">Имя:</span> ' + name + ' <span class="bracelet green" id="braceletIndicator"></span></p><p><span class="stat-label">Талант:</span> <strong style="color:#ff8888;">' + talent + '</strong></p><p><span class="stat-label">Роль:</span> ' + role + '</p><p><span class="stat-label">Фраза:</span> ' + phrase + '</p><p><span class="stat-label">Статус:</span> Активен. Разыскивается Monokuma.</p></div></div><div class="quote">' + phrase + '</div><h3>📖 FREE TIME EVENTS</h3>' + freeTimeEvents.map(ev => '<div class="sprite-pose">✨ ' + escapeHtml(ev) + '</div>').join('') + '<div class="warning">⚡ КОММЕНТАРИЙ MONOKUMA: ' + secret + '</div></div>' +
+            '<div id="tab2" class="tab-content">' + dialogues.map(d => '<div class="dialogue-scene"><span class="dialogue-name">' + escapeHtml(d.split('\n')[0]) + '</span><br>' + escapeHtml(d.substring(d.indexOf('\n')+1)) + '</div>').join('') + '</div>' +
+            '<div id="tab3" class="tab-content"><div class="execution"><strong>💀 КАЗНЬ: ' + execName + '</strong><br>' + execDesc + '</div><div class="quote"><strong>ФРАЗА ПЕРЕД КАЗНЬЮ:</strong><br>' + lastWords + '</div></div>' +
+            '<div id="tab4" class="tab-content">' + evidencesList.map(e => '<div class="evidence-card"><strong>🔍 ' + escapeHtml(e) + '</strong></div>').join('') + '</div>' +
+            '<div id="tab5" class="tab-content">' +
+            '<div class="gallery-item"><strong>🖼️ Нейтральный спрайт</strong><br>Спокойная поза, рука у подбородка.</div>' +
+            '<div class="gallery-item"><strong>🖼️ Эмоциональный спрайт</strong><br>Наклон вперёд.</div>' +
+            '<div class="gallery-item"><strong>🖼️ Угрожающий спрайт</strong><br>Чёлка закрывает глаза. Браслет КРАСНЫЙ.</div>' +
+            '<div class="gallery-item"><strong>🖼️ Повреждённый спрайт</strong><br>Спрайт распадается на пиксели.</div>' +
+            '<div class="gallery-item"><strong>🎨 ПРОМПТ ДЛЯ ВИЗУАЛИЗАЦИИ</strong><br>' +
+            '<div class="prompt-text" style="background:#1a1a1a; padding:10px; border-radius:12px; font-family:monospace; white-space:pre-wrap; border-left:3px solid #ffaa66;">' + escapeHtml(visualPrompt) + '</div>' +
+            '<button class="copy-prompt-btn" style="margin-top:10px; background:#1a3a1a; border:1px solid #66aa66; color:#ffccaa; padding:6px 12px; border-radius:30px; cursor:pointer; font-weight:bold;">📋 КОПИРОВАТЬ ПРОМПТ</button>' +
+            '</div></div>' +
+            '<div id="tab6" class="tab-content">' + soundtrack.map(t => '<div class="track-item">🎵 ' + escapeHtml(t) + '</div>').join('') + '</div>' +
+            '<div id="tab7" class="tab-content"><div class="warning" style="border-left-color:#ff00ff;">⚡ ЭТОТ ФАЙЛ НЕ ДОЛЖЕН СУЩЕСТВОВАТЬ</div><div class="execution" style="background:#110022;border-color:#ff44ff;">' + secretFile + '</div><div class="quote"><strong>🔐 КОД АКТИВАЦИИ БРАСЛЕТА:</strong><br><code>>_ root.access.granted<br>>_ ' + name.replace(/\s/g, '_') + '/промпт_уровень_0</code></div></div>' +
+            '<div id="tab8" class="tab-content"><div class="execution" style="background:#1a0000;border-color:#ff4444;"><strong>⚖️ ФИНАЛЬНЫЙ СУД</strong><br>' + finalTrial + '</div></div>' +
+            '<footer>⬤ DR: ПРОТОКОЛ 0xE7 ⬤ 8 вкладок ⬤ Уровень доступа: НЕОГРАНИЧЕН</footer>' +
+            '<button id="glitchBtn">🔍 НАЖАТЬ, ЕСЛИ ХОЧЕШЬ УМЕРЕТЬ</button>' +
+            '</div></div><script>' +
+            'var tabs=document.querySelectorAll(".tab-btn");var contents=document.querySelectorAll(".tab-content");' +
+            'tabs.forEach(function(t){t.addEventListener("click",function(){var target=t.getAttribute("data-tab");tabs.forEach(function(btn){btn.classList.remove("active");});contents.forEach(function(c){c.classList.remove("active");});t.classList.add("active");document.getElementById(target).classList.add("active");});});' +
+            'var bracelet=document.getElementById("braceletIndicator");var bstate=0;' +
+            'document.getElementById("glitchBtn").addEventListener("click",function(){bstate=(bstate+1)%3;bracelet.classList.remove("green","red","yellow");if(bstate===0)bracelet.classList.add("green");else if(bstate===1)bracelet.classList.add("yellow");else bracelet.classList.add("red");alert("Пупупу... ' + name + ' уже всё прочитал.");});' +
+            'document.querySelectorAll(".copy-prompt-btn").forEach(function(btn){btn.addEventListener("click",function(){var promptDiv=this.previousElementSibling;var text=promptDiv.innerText;navigator.clipboard.writeText(text);alert("✅ Промпт скопирован!");});});' +
+            '<\/script></body></html>';
+        return html;
     }
 
     function loadMenu() {
@@ -468,7 +413,8 @@
                         evidencesList: charData.evidencesList || [],
                         soundtrack: charData.soundtrack || [],
                         secretFile: charData.secretFile || '',
-                        finalTrial: charData.finalTrial || ''
+                        finalTrial: charData.finalTrial || '',
+                        visualPrompt: charData.visualPrompt || ''
                     };
                     var html = buildProfileHTML(full);
                     var blob = new Blob([html], { type: 'text/html' });
