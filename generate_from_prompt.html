@@ -204,6 +204,27 @@
             animation: fadeOut 3s forwards;
             box-shadow: 0 0 12px #88ff88;
         }
+        .prompt-box {
+            background: #0a0a0a;
+            border: 2px solid #ffaa66;
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .prompt-box h3 {
+            color: #ffcc88;
+            margin-bottom: 15px;
+        }
+        .prompt-text {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 16px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            font-size: 14px;
+            color: #f0e0d0;
+            border-left: 4px solid #ffaa66;
+        }
         @keyframes fadeOut {
             0% { opacity: 1; transform: translateY(0); }
             70% { opacity: 1; }
@@ -266,28 +287,37 @@
     <!-- 20 вопросов -->
     <div class="question"><label>1. Имя персонажа:</label><input type="text" id="name" placeholder="например: Иван Диогенов"></div>
     <div class="question"><label>2. Талант (Ultimate):</label><input type="text" id="talent" placeholder="например: Стратег, Детектив, Боец"></div>
-    <div class="question"><label>3. Любимый цвет:</label><select id="color"><option value="red">Красный – страсть и решимость</option><option value="black">Чёрный – тайна и элегантность</option><option value="blue">Синий – холодный ум</option><option value="green">Зелёный – гармония</option><option value="purple">Фиолетовый – загадочность</option><option value="white">Белый – чистота и правда</option></select></div>
-    <div class="question"><label>4. Любимая еда:</label><input type="text" id="food" placeholder="например: пицца, рамэн, донатс"></div>
-    <div class="question"><label>5. Хобби:</label><input type="text" id="hobby" placeholder="например: чтение, спорт, рисование"></div>
-    <div class="question"><label>6. Сильная черта характера:</label><select id="strength"><option value="ум">Острый ум</option><option value="сила">Физическая сила</option><option value="харизма">Харизма</option><option value="креативность">Креативность</option><option value="терпение">Терпение</option><option value="хитрость">Хитрость</option></select></div>
-    <div class="question"><label>7. Стиль речи:</label><select id="speech"><option value="короткий">Коротко, по делу</option><option value="длинный">Длинные монологи</option><option value="загадочный">Загадочно, с намёками</option><option value="ироничный">Ироничный, с сарказмом</option><option value="тихий">Тихий, почти шёпот</option></select></div>
-    <div class="question"><label>8. Отношение к Monokuma:</label><select id="monokuma"><option value="страх">Боюсь, но не подаю виду</option><option value="ненависть">Ненавижу, хочу уничтожить</option><option value="интерес">Интересуюсь его тайнами</option><option value="равнодушие">Мне всё равно</option><option value="манипуляция">Пытаюсь манипулировать им</option></select></div>
-    <div class="question"><label>9. Внешность (кратко):</label><textarea id="look" rows="2" placeholder="например: высокий, светлые волосы, очки"></textarea></div>
-    <div class="question"><label>10. Тайна (что скрываешь?):</label><textarea id="secret" rows="2" placeholder="например: тёмное прошлое, запрещённый предмет"></textarea></div>
+    <div class="question"><label>3. Любимый цвет:</label><select id="color"><option value="red">Красный</option><option value="black">Чёрный</option><option value="blue">Синий</option><option value="green">Зелёный</option><option value="purple">Фиолетовый</option><option value="white">Белый</option></select></div>
+    <div class="question"><label>4. Любимая еда:</label><input type="text" id="food" placeholder="например: пицца"></div>
+    <div class="question"><label>5. Хобби:</label><input type="text" id="hobby" placeholder="например: чтение"></div>
+    <div class="question"><label>6. Сильная черта:</label><select id="strength"><option value="ум">Острый ум</option><option value="сила">Физическая сила</option><option value="харизма">Харизма</option><option value="креативность">Креативность</option><option value="терпение">Терпение</option><option value="хитрость">Хитрость</option></select></div>
+    <div class="question"><label>7. Стиль речи:</label><select id="speech"><option value="короткий">Коротко, по делу</option><option value="длинный">Длинные монологи</option><option value="загадочный">Загадочно</option><option value="ироничный">Ироничный</option><option value="тихий">Тихий</option></select></div>
+    <div class="question"><label>8. Отношение к Monokuma:</label><select id="monokuma"><option value="страх">Боюсь, но не подаю виду</option><option value="ненависть">Ненавижу</option><option value="интерес">Интересуюсь</option><option value="равнодушие">Мне всё равно</option><option value="манипуляция">Пытаюсь манипулировать</option></select></div>
+    <div class="question"><label>9. Внешность (кратко):</label><textarea id="look" rows="2" placeholder="например: высокий, светлые волосы"></textarea></div>
+    <div class="question"><label>10. Тайна:</label><textarea id="secret" rows="2" placeholder="например: тёмное прошлое"></textarea></div>
     <div class="question"><label>11. Любимое время суток:</label><select id="time"><option value="утро">Утро</option><option value="день">День</option><option value="вечер">Вечер</option><option value="ночь">Ночь</option></select></div>
-    <div class="question"><label>12. Что ты ценишь в людях больше всего?</label><select id="value"><option value="честность">Честность</option><option value="сила">Силу</option><option value="ум">Ум</option><option value="верность">Верность</option><option value="хитрость">Хитрость</option><option value="доброта">Доброту</option></select></div>
-    <div class="question"><label>13. Твой самый большой страх:</label><input type="text" id="fear" placeholder="например: потерять близких"></div>
-    <div class="question"><label>14. Какое у тебя хобби, о котором никто не знает?</label><input type="text" id="secretHobby" placeholder="например: коллекционирование марок"></div>
-    <div class="question"><label>15. Ты скорее...</label><select id="moral"><option value="добро">Поможешь другу, даже рискуя собой</option><option value="зло">Спасёшь себя, даже если придётся предать</option><option value="нейтрал">Поступлю по обстоятельствам</option><option value="расчёт">Помогу, но с выгодой для себя</option></select></div>
-    <div class="question"><label>16. Что ты обычно делаешь в одиночестве?</label><input type="text" id="alone" placeholder="например: читаю, тренируюсь"></div>
-    <div class="question"><label>17. Твоя самая заметная привычка:</label><input type="text" id="habit" placeholder="например: крутить волосы, поправлять галстук"></div>
-    <div class="question"><label>18. Какую роль ты предпочёл бы в группе?</label><select id="roleGroup"><option value="лидер">Лидер</option><option value="аналитик">Аналитик</option><option value="боец">Боец</option><option value="тыл">Поддержка</option><option value="шпион">Шпион/диверсант</option></select></div>
-    <div class="question"><label>19. Твой любимый предмет в школе:</label><input type="text" id="subject" placeholder="например: история, физика"></div>
-    <div class="question"><label>20. Как ты поступишь, если увидишь, что кто-то совершает преступление?</label><select id="crime"><option value="сообщу">Сообщу Monokuma или другим</option><option value="остановлю">Попытаюсь остановить сам</option><option value="скрою">Скрою, если это выгодно</option><option value="использую">Использую это как рычаг давления</option></select></div>
+    <div class="question"><label>12. Что ценишь в людях?</label><select id="value"><option value="честность">Честность</option><option value="сила">Силу</option><option value="ум">Ум</option><option value="верность">Верность</option><option value="хитрость">Хитрость</option><option value="доброта">Доброту</option></select></div>
+    <div class="question"><label>13. Самый большой страх:</label><input type="text" id="fear" placeholder="например: темнота"></div>
+    <div class="question"><label>14. Тайное хобби:</label><input type="text" id="secretHobby" placeholder="например: коллекционирование"></div>
+    <div class="question"><label>15. Ты скорее...</label><select id="moral"><option value="добро">Поможешь другу</option><option value="зло">Спасёшь себя</option><option value="нейтрал">Поступлю по обстоятельствам</option><option value="расчёт">Помогу с выгодой</option></select></div>
+    <div class="question"><label>16. Что делаешь в одиночестве?</label><input type="text" id="alone" placeholder="например: читаю"></div>
+    <div class="question"><label>17. Привычка:</label><input type="text" id="habit" placeholder="например: поправлять галстук"></div>
+    <div class="question"><label>18. Роль в группе:</label><select id="roleGroup"><option value="лидер">Лидер</option><option value="аналитик">Аналитик</option><option value="боец">Боец</option><option value="тыл">Поддержка</option><option value="шпион">Шпион</option></select></div>
+    <div class="question"><label>19. Любимый предмет в школе:</label><input type="text" id="subject" placeholder="например: история"></div>
+    <div class="question"><label>20. Реакция на преступление:</label><select id="crime"><option value="сообщу">Сообщу</option><option value="остановлю">Остановлю</option><option value="скрою">Скрою</option><option value="использую">Использую</option></select></div>
 
     <button id="generateBtn">✨ СОЗДАТЬ УНИКАЛЬНОГО ПЕРСОНАЖА ✨</button>
-    <div id="resultArea" class="result-area"><div class="result-header">✅ ПЕРСОНАЖ СОЗДАН</div><div id="characterPreview"></div><div class="success-buttons"><button id="goToMenuBtn">🏠 В МЕНЮ</button><button id="generateAnotherBtn">🔄 ЕЩЁ</button></div></div>
-    <div class="note">✨ Роль (убийца/жертва/выживший) вычисляется на основе всех ответов. Каждый персонаж уникален.</div>
+    <div id="resultArea" class="result-area">
+        <div class="result-header">✅ ПЕРСОНАЖ СОЗДАН</div>
+        <div id="characterPreview"></div>
+        <div id="visualPromptBox" class="prompt-box" style="margin-top: 20px;"></div>
+        <div class="success-buttons">
+            <button id="goToMenuBtn">🏠 В МЕНЮ</button>
+            <button id="generateAnotherBtn">🔄 ЕЩЁ</button>
+            <button id="copyPromptBtn">📋 СКОПИРОВАТЬ ПРОМПТ</button>
+        </div>
+    </div>
+    <div class="note">✨ Генерируются диалоги, Free Time Events, улики, саундтрек, секретный файл, финальный суд и промпт для визуальной карточки.</div>
 </div>
 
 <script>
@@ -347,122 +377,120 @@
 
         const answers = { strength, moral, monokumaFeel, crime, roleGroup, value };
         const fate = determineFate(answers);
+        let role = (fate === 'killer') ? 'Убийца' : (fate === 'victim' ? 'Жертва' : 'Выживший');
 
-        // Фирменная фраза (без мета-отсылок)
+        // Фирменная фраза
         let phrase = '';
-        if(color === 'red') phrase = `«${food} — моя страсть, а ${hobby} — моё призвание. Не путайся под ногами.»`;
+        if(color === 'red') phrase = `«${food} — моя страсть, а ${hobby} — моё призвание.»`;
         else if(color === 'black') phrase = `«В тени я вижу то, что другие не замечают. Например, твой страх перед ${food}.»`;
-        else if(color === 'blue') phrase = `«Логика и ${hobby} — вот ключ к победе. А ${food} — приятный бонус.»`;
+        else if(color === 'blue') phrase = `«Логика и ${hobby} — вот ключ к победе.»`;
         else if(color === 'green') phrase = `«Природа и ${hobby} дают мне силу. Но ${food} — моя слабость.»`;
-        else if(color === 'purple') phrase = `«Загадки и ${hobby} — моя стихия. ${food} — лишь отвлекающий манёвр.»`;
+        else if(color === 'purple') phrase = `«Загадки и ${hobby} — моя стихия.»`;
         else phrase = `«Чистота и правда — вот моё оружие. ${food} и ${hobby} помогают мне.»`;
 
         // Внешность
         let appearance = customLook;
         if (!appearance) {
-            const looks = {
-                red: `Яркая красная одежда, дерзкий взгляд, часто поправляет волосы.`,
-                black: `Всё чёрное, скрытный стиль, носит перчатки.`,
-                blue: `Синяя униформа, очки, всегда с блокнотом.`,
-                green: `Спокойный природный образ, любит ${hobby}.`,
-                purple: `Фиолетовая шляпа и плащ, загадочный акцент.`,
-                white: `Безупречный белый костюм, стремится к идеалу.`
-            };
-            appearance = looks[color] || `Необычный стиль, выделяется среди других.`;
+            const looks = { red: 'Яркая красная одежда, дерзкий взгляд.', black: 'Всё чёрное, скрытный стиль.', blue: 'Синяя униформа, очки.', green: 'Спокойный природный образ.', purple: 'Фиолетовая шляпа и плащ.', white: 'Безупречный белый костюм.' };
+            appearance = looks[color] || 'Необычный стиль.';
         }
-        appearance += ` Любит ${time}, ценит в людях ${value}. Его привычка — ${habit}. В одиночестве ${alone}.`;
+        appearance += ` Любит ${time}, ценит ${value}. Привычка — ${habit}. В одиночестве ${alone}.`;
 
         // Характер
         let personality = '';
-        if(speech === 'короткий') personality = `Говорит рублеными фразами, не терпит пустословия. ${strength==='ум'?'Анализирует всё вокруг.':strength==='сила'?'Решает проблемы кулаками.':strength==='харизма'?'Всегда знает, что сказать.':'Креативен и нестандартен.'}`;
-        else if(speech === 'длинный') personality = `Обожает долгие монологи, любит поучать. ${strength==='харизма'?'Его слушают с открытым ртом.':'Его трудно перебить.'}`;
-        else if(speech === 'загадочный') personality = `Говорит загадками, делает паузы для эффекта. ${strength==='креативность'?'Его идеи пугают.':'Всегда оставляет загадку.'}`;
-        else if(speech === 'ироничный') personality = `Говорит с иронией, часто использует сарказм. ${strength==='ум'?'Остроумен и язвителен.':'Скрывает доброту за насмешками.'}`;
-        else personality = `Говорит тихо, почти шёпотом. ${strength==='хитрость'?'Его тихий голос скрывает опасные мысли.':'Заставляет других напряжённо вслушиваться.'}`;
+        if(speech === 'короткий') personality = `Говорит рублеными фразами, не терпит пустословия. ${strength==='ум'?'Анализирует всё.':strength==='сила'?'Решает проблемы кулаками.':strength==='харизма'?'Всегда знает, что сказать.':'Креативен.'}`;
+        else if(speech === 'длинный') personality = `Обожает долгие монологи. ${strength==='харизма'?'Его слушают.':'Его трудно перебить.'}`;
+        else if(speech === 'загадочный') personality = `Говорит загадками. ${strength==='креативность'?'Идеи пугают.':'Всегда оставляет загадку.'}`;
+        else if(speech === 'ироничный') personality = `Говорит с иронией. ${strength==='ум'?'Остроумен.':'Скрывает доброту за насмешками.'}`;
+        else personality = `Говорит тихо, почти шёпотом. ${strength==='хитрость'?'Скрывает опасные мысли.':'Заставляет вслушиваться.'}`;
 
         // Тайна
         if (!secret) {
-            if(monokumaFeel === 'страх') secret = `Боится, что Monokuma найдёт в его комнате улики прошлого преступления. Его тайное хобби — ${secretHobby}.`;
-            else if(monokumaFeel === 'ненависть') secret = `Планирует взорвать всю Академию вместе с Monokuma. Уже спрятал взрывчатку. Его тайное хобби — ${secretHobby}.`;
-            else if(monokumaFeel === 'интерес') secret = `Изучает тёмную историю Академии, нашёл старые протоколы экспериментов. А ещё ${secretHobby}.`;
-            else if(monokumaFeel === 'манипуляция') secret = `Пытается манипулировать Monokuma, собирая компромат на него. Тайно ${secretHobby}.`;
-            else secret = `Хранит дневник, в котором описаны его страхи. Самый большой страх — ${fear}. Также он тайно ${secretHobby}.`;
+            if(monokumaFeel === 'страх') secret = `Боится, что Monokuma найдёт улики. Тайное хобби — ${secretHobby}.`;
+            else if(monokumaFeel === 'ненависть') secret = `Планирует взорвать Академию. Тайное хобби — ${secretHobby}.`;
+            else if(monokumaFeel === 'интерес') secret = `Изучает тёмную историю Академии. А ещё ${secretHobby}.`;
+            else if(monokumaFeel === 'манипуляция') secret = `Пытается манипулировать Monokuma. Тайно ${secretHobby}.`;
+            else secret = `Хранит дневник, где описаны страхи. Самый большой страх — ${fear}. Также ${secretHobby}.`;
         }
 
-        // Судьба и казнь
-        let role='', execName='', execDesc='', lastWords='', evidence='';
+        // Казнь
+        let execName='', execDesc='', lastWords='', evidence='';
         if(fate === 'killer') {
-            role = 'Убийца';
-            execName = `${speech === 'короткий' ? 'Кровавая расплата' : (speech === 'длинный' ? 'Монолог смерти' : (speech === 'загадочный' ? 'Лабиринт отчаяния' : (speech === 'ироничный' ? 'Саркастичный финал' : 'Тихая смерть')))}`;
-            execDesc = `Monokuma заставляет ${name} сражаться со своими страхами. В конце концов, ${speech === 'короткий' ? 'он принимает смерть молча' : (speech === 'длинный' ? 'произносит прощальную речь' : (speech === 'загадочный' ? 'исчезает в неизвестности' : (speech === 'ироничный' ? 'уходит с усмешкой' : 'умирает без единого звука')))}. ${strength === 'креативность' ? 'Но перед этим успевает оставить зашифрованное послание.' : ''} ${strength === 'хитрость' ? 'Он долго готовил эту казнь, но она обернулась против него.' : ''}`;
-            lastWords = `«${phrase} Я не жалею ни о чём. Такова плата за отчаяние.»`;
-            evidence = `На месте преступления найдена улика, связанная с ${hobby} и ${secretHobby}.`;
+            execName = `${speech === 'короткий' ? 'Кровавая расплата' : (speech === 'длинный' ? 'Монолог смерти' : 'Лабиринт отчаяния')}`;
+            execDesc = `Monokuma заставляет ${name} сражаться со своими страхами. ${speech === 'короткий' ? 'Он принимает смерть молча.' : (speech === 'длинный' ? 'Произносит прощальную речь.' : 'Исчезает в неизвестности.')}`;
+            lastWords = `«${phrase} Я не жалею ни о чём.»`;
+            evidence = `Улика связана с ${hobby} и ${secretHobby}.`;
         } else if(fate === 'victim') {
-            role = 'Жертва';
             execName = `Несчастный случай`;
-            execDesc = `${name} найден мёртвым в своей комнате. Причина смерти – ${hobby.toLowerCase()} пошло не так. ${monokumaFeel === 'ненависть' ? 'Рядом обнаружена записка с угрозами от Monokuma.' : ''} ${moral === 'добро' ? 'Он пытался защитить другого ученика.' : ''}`;
-            lastWords = `«Я не хотел... это всё из-за ${food}...»`;
-            evidence = `Предсмертная записка, в которой упоминается ${monokumaFeel === 'страх' ? 'Monokuma' : 'некто в тени'}. Также найдены следы ${secretHobby}.`;
+            execDesc = `${name} найден мёртвым. Причина – ${hobby} пошло не так.`;
+            lastWords = `«Я не хотел... это из-за ${food}...»`;
+            evidence = `Предсмертная записка, связанная с ${monokumaFeel}.`;
         } else {
-            role = 'Выживший';
             execName = `Побег из ада`;
-            execDesc = `${name} использует своё ${strength}, чтобы сбежать из игровой зоны, оставив Monokuma в бешенстве. ${hobby} и ${food} помогают ему в этом. ${roleGroup === 'лидер' ? 'Он уводит за собой других.' : roleGroup === 'шпион' ? 'Он использует украденные данные, чтобы выбраться.' : 'Он действует в одиночку.'}`;
-            lastWords = `«Я выжил, чтобы рассказать правду. И ${food} мне в этом помогло!»`;
+            execDesc = `${name} использует ${strength}, чтобы сбежать. ${hobby} и ${food} помогают.`;
+            lastWords = `«Я выжил, чтобы рассказать правду.»`;
             evidence = `Пустой дневник и билет на эвакуацию.`;
         }
 
-        // Динамические диалоги (4 сцены)
+        // Диалоги (4 сцены)
         const dialogues = [
-            `СЦЕНА 1: ПЕРВАЯ ВСТРЕЧА\nMONOKUMA: Пупупу! Ты, должно быть, ${name}? Я наслышан о твоём таланте — ${talent}.\n${name}: (Холодно смотрит) ${phrase}\nMONOKUMA: ...Ты странный. Мне это нравится.`,
-            `СЦЕНА 2: КЛАССНЫЙ СУД\nMONOKUMA: Время истекает! Если вы не укажете на убийцу, я проголосую за всех!\n${name}: Спокойно. Улики говорят сами за себя. ${strength === 'ум' ? 'Смотрите на детали.' : (strength === 'сила' ? 'Достаточно одного удара.' : 'Следуйте за мной.')}\nMONOKUMA: ...Ты уверен? Ну-ну, посмотрим.`,
-            `СЦЕНА 3: FREE TIME EVENT\nДРУГОЙ УЧЕНИК: Эй, ${name}, а ты никогда не боишься?\n${name}: (Пауза) ...Страх — это ${fear}. Но я привык. ${alone} помогает мне забыть.\nДРУГОЙ УЧЕНИК: ...Понятно. Ты сильный.`,
-            `СЦЕНА 4: ФИНАЛЬНЫЙ СУД\nMONOKUMA: Итак, ${name}, твоя судьба решена! Ты ${role}. Последнее слово?\n${name}: (Смотрит в глаза Monokuma) ${lastWords}\nMONOKUMA: ...Пупупу... Это было... неожиданно.`
+            `СЦЕНА 1: ПЕРВАЯ ВСТРЕЧА\nMONOKUMA: Ты, должно быть, ${name}? Талант — ${talent}.\n${name}: ${phrase}\nMONOKUMA: ...Ты странный.`,
+            `СЦЕНА 2: КЛАССНЫЙ СУД\nMONOKUMA: Время истекает!\n${name}: Улики говорят сами за себя.\nMONOKUMA: ...Ты уверен?`,
+            `СЦЕНА 3: FREE TIME EVENT\nДРУГОЙ УЧЕНИК: Эй, ${name}, ты боишься?\n${name}: Страх — это ${fear}. Но я привык.\nДРУГОЙ УЧЕНИК: Понятно.`,
+            `СЦЕНА 4: ФИНАЛЬНЫЙ СУД\nMONOKUMA: Твоя судьба решена! Ты ${role}.\n${name}: ${lastWords}\nMONOKUMA: ...Пупупу...`
         ];
 
-        // Free Time Events (3 уникальных)
+        // Free Time Events
         const freeTimeEvents = [
-            `«${name} размышляет о своём любимом ${subject}.»`,
-            `«${name} предлагает разделить ${food}. Это странно, но приятно.»`,
-            `«${name} молча смотрит на ${habit}. Кажется, он/она что-то задумал(а).»`
+            `«${name} размышляет о ${subject}.»`,
+            `«${name} предлагает разделить ${food}.»`,
+            `«${name} молча смотрит на ${habit}.»`
         ];
 
-        // Улики (3 штуки)
+        // Улики (3)
         const evidencesList = [
-            `Улика №1: «Записка на стене» — На стене комнаты ${name} найдены странные надписи, связанные с ${hobby}.`,
-            `Улика №2: «Остатки ${food}» — На месте происшествия обнаружены остатки ${food}, что указывает на присутствие ${name}.`,
-            `Улика №3: «Скрытый дневник» — В тайнике найден дневник, где ${name} записывал свои наблюдения о ${secretHobby}.`
+            `Улика №1: Записка на стене, связанная с ${hobby}.`,
+            `Улика №2: Остатки ${food} на месте преступления.`,
+            `Улика №3: Скрытый дневник о ${secretHobby}.`
         ];
 
-        // Саундтрек (4 трека)
+        // Саундтрек
         const soundtrack = [
-            `Основная тема: «${name} no Kage» — микс джаза и 8-бита, повторяющийся мотив загадки.`,
-            `Тема расследования: «Mystery Chord» — нервные струнные, прерываемые ударами фортепиано.`,
-            `Тема суда: «Trial of ${name}» — быстрый темп, смешение электроники и оркестра.`,
-            `Тема казни: «Fateful End» — жёсткие басы, резкие обрывы, в конце — затихающий синтезатор.`
+            `Основная тема: «${name} no Kage» — джаз и 8-бит.`,
+            `Тема расследования: «Mystery Chord» — нервные струнные.`,
+            `Тема суда: «Trial of ${name}» — быстрый темп.`,
+            `Тема казни: «Fateful End» — жёсткие басы.`
         ];
 
-        // Секретный файл (исповедь Monokuma)
-        const secretFile = `«Ой-ой-ой... ${name} оказался сложнее, чем я думал. Его тайна — ${secret}. Я даже не знал, что такое возможно в моей игре. Пупупу... Надо быть осторожнее. Следующий файл я спрячу надёжнее.»`;
-
-        // Финальный суд
-        const finalTrial = `${name} признан ${role === 'Убийца' ? 'убийцей' : (role === 'Жертва' ? 'невиновным, но мёртвым' : 'выжившим')}. ${role === 'Убийца' ? 'Казнь проведена.' : (role === 'Жертва' ? 'Настоящий убийца скрылся.' : 'Ученики аплодируют.')} Monokuma в ярости.`;
-
-        // История, отношения, навыки
-        const backstory = `${name} вырос в ${color === 'red' ? 'семье военных' : color === 'black' ? 'аристократической семье' : color === 'white' ? 'семье священников' : 'обычной семье'}. С детства проявлял ${talent.toLowerCase()} и мечтал использовать это для борьбы с отчаянием. Однажды случайно ${hobby} изменило его жизнь. Его любимый школьный предмет — ${subject}. ${crime === 'скрою' ? 'Он уже сталкивался с преступлениями и предпочитает молчать.' : crime === 'остановлю' ? 'Он всегда ввязывается в драки, защищая слабых.' : 'Он знает цену правосудию.'}`;
-        const relationships = `Monokuma: ${monokumaFeel === 'страх' ? 'боится, но притворяется смелым' : monokumaFeel === 'ненависть' ? 'открытый враг' : monokumaFeel === 'интерес' ? 'тайный исследователь' : monokumaFeel === 'манипуляция' ? 'пытается переиграть' : 'равнодушен'}. Другие ученики: ${value === 'честность' ? 'ценят его за правдивость' : (value === 'сила' ? 'уважают его физическую мощь' : (value === 'ум' ? 'прислушиваются к его советам' : (value === 'верность' ? 'доверяют ему' : (value === 'хитрость' ? 'побаиваются его' : 'считают его добрым'))))}. ${moral === 'добро' ? 'Он всегда готов прийти на помощь.' : (moral === 'зло' ? 'Он думает только о себе.' : (moral === 'расчёт' ? 'Он помогает, когда это выгодно.' : 'Он поступает по обстоятельствам.'))}`;
-        const skills = `${talent}, ${hobby}, ${secretHobby}, ${strength}. Также умеет готовить ${food}.`;
-        const weaknesses = `Не переносит ${speech === 'короткий' ? 'длинных объяснений' : 'молчания'}. Боится ${fear}. Может проявить ${moral === 'добро' ? 'излишнюю доверчивость' : (moral === 'зло' ? 'жестокость' : (moral === 'расчёт' ? 'цинизм' : 'нерешительность'))}.`;
-
-        // Аватар
+        const secretFile = `«Ой-ой-ой... ${name} оказался сложнее. Его тайна — ${secret}. Пупупу... Надо быть осторожнее.»`;
+        const finalTrial = `${name} признан ${role === 'Убийца' ? 'убийцей' : (role === 'Жертва' ? 'невиновным, но мёртвым' : 'выжившим')}. Monokuma в ярости.`;
+        const backstory = `${name} вырос в ${color === 'red' ? 'семье военных' : 'обычной семье'}. С детства проявлял ${talent}. Любит ${hobby}.`;
+        const relationships = `Monokuma: ${monokumaFeel}. Другие ученики: ${value === 'честность' ? 'ценят честность' : 'уважают силу'}. ${moral === 'добро' ? 'Всегда готов помочь.' : 'Думает о себе.'}`;
+        const skills = `${talent}, ${hobby}, ${secretHobby}. Умеет готовить ${food}.`;
+        const weaknesses = `Боится ${fear}. Не переносит ${speech === 'короткий' ? 'длинных объяснений' : 'молчания'}.`;
         const avatar = color === 'red' ? '🔥' : (color === 'black' ? '🖤' : (color === 'blue' ? '💧' : (color === 'green' ? '🍃' : (color === 'purple' ? '🔮' : '🤍'))));
+
+        // Промпт для визуализации
+        const visualPrompt = `Создай изображение персонажа в стиле Danganronpa.
+Имя: ${name}
+Талант: ${talent}
+Роль: ${role}
+Внешность: ${appearance}
+Характер: ${personality}
+Любимая еда: ${food}
+Хобби: ${hobby}
+Цветовая гамма: ${color}
+Фирменная фраза: ${phrase}
+Эмодзи: ${avatar}
+Фон: тёмная школа, мониторы, красные акценты.
+Стиль: пиксель-арт, аниме, высокое разрешение.`;
 
         return {
             name, talent, phrase, avatar, appearance, personality, secret,
             execName, execDesc, lastWords, evidence, role,
             backstory, relationships, skills, weaknesses,
             dialogues, freeTimeEvents, evidencesList, soundtrack, secretFile, finalTrial,
-            // дополнительные поля
-            monokumaFeel, fear, food, hobby, secretHobby, habit, alone, subject, crime, strength, speech, value, moral, roleGroup, time, color
+            visualPrompt
         };
     }
 
@@ -477,7 +505,6 @@
         const char = generateCharacter();
         if(!char) return;
         saveToLocalStorage(char);
-        // Показать предпросмотр
         const previewDiv = document.getElementById('characterPreview');
         previewDiv.innerHTML = `
             <div class="preview-card">
@@ -488,22 +515,25 @@
             </div>
             <div class="dossier">
                 <div class="dossier-header"><h2>📁 ДОСЬЕ ПЕРСОНАЖА</h2></div>
-                <div class="dossier-section"><h3>Основная информация</h3><p>Имя: ${char.name}<br>Талант: ${char.talent}<br>Роль: ${char.role}<br>Фирменная фраза: ${char.phrase}</p></div>
+                <div class="dossier-section"><h3>Основная информация</h3><p>Имя: ${char.name}<br>Талант: ${char.talent}<br>Роль: ${char.role}<br>Фраза: ${char.phrase}</p></div>
                 <div class="dossier-section"><h3>Внешность</h3><p>${char.appearance}</p></div>
                 <div class="dossier-section"><h3>Характер</h3><p>${char.personality}</p></div>
                 <div class="dossier-section"><h3>История</h3><p>${char.backstory}</p></div>
-                <div class="dossier-section"><h3>Отношения с другими</h3><p>${char.relationships}</p></div>
-                <div class="dossier-section"><h3>Навыки и слабости</h3><p>${char.skills}<br><strong>Слабости:</strong> ${char.weaknesses}</p></div>
+                <div class="dossier-section"><h3>Отношения</h3><p>${char.relationships}</p></div>
+                <div class="dossier-section"><h3>Навыки и слабости</h3><p>${char.skills}<br>Слабости: ${char.weaknesses}</p></div>
                 <div class="dossier-section"><h3>Тайна</h3><p>${char.secret}</p></div>
-                <div class="dossier-section"><h3>Судьба / Казнь</h3><p>${char.execName}<br>${char.execDesc}<br><strong>Последние слова:</strong> ${char.lastWords}<br><strong>Улика:</strong> ${char.evidence}</p></div>
-                <div class="dossier-section"><h3>Диалоги (пример)</h3><p>${char.dialogues[0]}<br><br>${char.dialogues[1]}<br><br>${char.dialogues[2]}</p></div>
+                <div class="dossier-section"><h3>Судьба / Казнь</h3><p>${char.execName}<br>${char.execDesc}<br>Последние слова: ${char.lastWords}<br>Улика: ${char.evidence}</p></div>
+                <div class="dossier-section"><h3>Диалоги</h3><p>${char.dialogues.map(d => d.replace(/\n/g, '<br>')).join('<br><br>')}</p></div>
                 <div class="dossier-section"><h3>Free Time Events</h3><p>${char.freeTimeEvents.join('<br>')}</p></div>
-                <div class="dossier-section"><h3>Список улик</h3><p>${char.evidencesList.join('<br>')}</p></div>
+                <div class="dossier-section"><h3>Улики</h3><p>${char.evidencesList.join('<br>')}</p></div>
                 <div class="dossier-section"><h3>Саундтрек</h3><p>${char.soundtrack.join('<br>')}</p></div>
-                <div class="dossier-section"><h3>Секретный файл Monokuma</h3><p>${char.secretFile}</p></div>
+                <div class="dossier-section"><h3>Секретный файл</h3><p>${char.secretFile}</p></div>
                 <div class="dossier-section"><h3>Финальный суд</h3><p>${char.finalTrial}</p></div>
             </div>
         `;
+        const promptBox = document.getElementById('visualPromptBox');
+        promptBox.innerHTML = `<h3>🎨 ПРОМПТ ДЛЯ ВИЗУАЛЬНОЙ КАРТОЧКИ</h3><div class="prompt-text">${char.visualPrompt.replace(/\n/g, '<br>')}</div><button id="copyPromptBtnInline" style="margin-top:15px; padding:10px; background:#1a3a1a;">📋 КОПИРОВАТЬ</button>`;
+        document.getElementById('copyPromptBtnInline').onclick = () => { navigator.clipboard.writeText(char.visualPrompt); showToast('Промпт скопирован!'); };
         document.getElementById('resultArea').style.display = 'block';
         showToast(`✅ "${char.name}" добавлен в меню!`);
     }
@@ -523,7 +553,7 @@
         document.getElementById('moral').selectedIndex = 0;
         document.getElementById('roleGroup').selectedIndex = 0;
         document.getElementById('crime').selectedIndex = 0;
-        showToast('🔄 Форма очищена');
+        showToast('Форма очищена');
     };
 </script>
 </body>
