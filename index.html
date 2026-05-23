@@ -430,8 +430,11 @@
     const music = document.getElementById('bgMusic');
     const toggleBtn = document.getElementById('musicToggle');
     let musicPlaying = false;
-    // Попытка автовоспроизведения (может не сработать)
-    music.play().then(() => { musicPlaying = true; toggleBtn.textContent = '🔇 Музыка выкл'; }).catch(() => {});
+    music.volume = 0.3;
+    music.play().then(() => {
+        musicPlaying = true;
+        toggleBtn.textContent = '🔇 Музыка выкл';
+    }).catch(() => console.log('Автовоспроизведение заблокировано, нажмите кнопку'));
     toggleBtn.addEventListener('click', () => {
         if (musicPlaying) {
             music.pause();
