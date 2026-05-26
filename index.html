@@ -277,7 +277,7 @@
     var finalTrial = escapeHtml(char.finalTrial || 'Не описан');
     var visualPrompt = char.visualPrompt || 'Промпт не указан';
 
-    // Определяем класс стиля в зависимости от роли
+    // Определяем класс и дополнительные стили в зависимости от роли
     var roleClass = '';
     var additionalStyles = '';
     if (role === 'Убийца') {
@@ -288,7 +288,7 @@
             .killer-theme .quote, .killer-theme .execution { border-left-color: #ff4444; background: #2a0505; }
             .killer-theme .tab-btn.active { background: #4a1a1a; color: #ff8888; }
             .killer-theme .warning { background: #2a0505; border-left-color: #ff0000; }
-            /* Пиксельные пятна крови */
+            /* Пиксельные капли крови (SVG) */
             .killer-theme .crt::after {
                 content: "";
                 position: absolute;
@@ -296,10 +296,18 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background-image: radial-gradient(circle at 20% 30%, rgba(255,0,0,0.15) 1px, transparent 1px);
-                background-size: 12px 12px;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect x='10' y='30' width='6' height='12' fill='%23ff0000' opacity='0.5'/%3E%3Crect x='50' y='80' width='4' height='8' fill='%23ff0000' opacity='0.6'/%3E%3Crect x='120' y='20' width='8' height='16' fill='%23ff0000' opacity='0.4'/%3E%3Crect x='170' y='150' width='5' height='10' fill='%23ff0000' opacity='0.7'/%3E%3Crect x='30' y='180' width='7' height='14' fill='%23ff0000' opacity='0.5'/%3E%3Crect x='90' y='140' width='9' height='18' fill='%23ff0000' opacity='0.6'/%3E%3Crect x='150' y='60' width='4' height='8' fill='%23ff0000' opacity='0.8'/%3E%3Crect x='70' y='50' width='6' height='12' fill='%23ff0000' opacity='0.4'/%3E%3C/svg%3E");
+                background-repeat: repeat;
+                background-size: 200px 200px;
                 pointer-events: none;
                 z-index: 3;
+                opacity: 0.8;
+                animation: bloodDrip 4s infinite;
+            }
+            @keyframes bloodDrip {
+                0% { opacity: 0.6; }
+                50% { opacity: 0.9; }
+                100% { opacity: 0.6; }
             }
         `;
     } else if (role === 'Жертва') {
@@ -310,7 +318,7 @@
             .victim-theme .quote, .victim-theme .execution { border-left-color: #3399ff; background: #051520; }
             .victim-theme .tab-btn.active { background: #1a3a5a; color: #aaddff; }
             .victim-theme .warning { background: #051520; border-left-color: #2266cc; }
-            /* Эффект разбитого экрана */
+            /* Реалистичные трещины на экране (SVG) */
             .victim-theme .crt::after {
                 content: "";
                 position: absolute;
@@ -318,23 +326,24 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: repeating-linear-gradient(45deg, rgba(0,150,255,0.1) 0px, rgba(0,150,255,0.1) 2px, transparent 2px, transparent 8px),
-                            repeating-linear-gradient(135deg, rgba(0,100,200,0.08) 0px, rgba(0,100,200,0.08) 3px, transparent 3px, transparent 12px);
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cpath d='M50,50 L80,80 L70,110 L120,140 L100,180 L150,220 L130,280 L180,300' stroke='%234488ff' stroke-width='2.5' fill='none' opacity='0.7' stroke-dasharray='3 3'/%3E%3Cpath d='M300,80 L270,110 L290,150 L250,190 L280,240 L240,290 L270,350' stroke='%234488ff' stroke-width='2' fill='none' opacity='0.6' stroke-dasharray='4 2'/%3E%3Cpath d='M200,20 L180,60 L210,90 L190,130 L230,170 L200,220 L250,260' stroke='%234488ff' stroke-width='1.8' fill='none' opacity='0.8'/%3E%3Cpath d='M10,350 L40,320 L35,290 L70,260 L55,230 L90,200 L85,170' stroke='%234488ff' stroke-width='1.5' fill='none' opacity='0.5'/%3E%3C/svg%3E");
+                background-repeat: repeat;
+                background-size: 400px 400px;
                 pointer-events: none;
                 z-index: 3;
-                animation: crackGlitch 2s infinite;
+                animation: crackGlitch 2.5s infinite;
             }
             @keyframes crackGlitch {
-                0% { opacity: 0.3; transform: translate(0,0); }
-                20% { opacity: 0.6; transform: translate(-2px,1px); }
-                40% { opacity: 0.2; transform: translate(2px,-1px); }
-                60% { opacity: 0.5; transform: translate(-1px,2px); }
-                80% { opacity: 0.3; transform: translate(1px,-2px); }
-                100% { opacity: 0.3; transform: translate(0,0); }
+                0% { opacity: 0.4; transform: translate(0,0); }
+                10% { opacity: 0.7; transform: translate(-2px,1px); }
+                20% { opacity: 0.3; transform: translate(2px,-1px); }
+                30% { opacity: 0.8; transform: translate(-1px,2px); }
+                40% { opacity: 0.5; transform: translate(1px,-2px); }
+                50% { opacity: 0.7; transform: translate(0,0); }
+                100% { opacity: 0.4; transform: translate(0,0); }
             }
         `;
     } else {
-        // Выживший – без изменений, но добавим класс для единообразия
         roleClass = 'survivor-theme';
         additionalStyles = ``;
     }
@@ -422,7 +431,7 @@
         'document.querySelectorAll(".copy-prompt-btn").forEach(function(btn){btn.addEventListener("click",function(){var promptDiv=this.previousElementSibling;var text=promptDiv.innerText;navigator.clipboard.writeText(text);alert("✅ Промпт скопирован!");});});' +
         '<\/script></body></html>';
     return html;
-    }
+}
 
     function loadMenu() {
         var grid = document.getElementById('charactersGrid');
