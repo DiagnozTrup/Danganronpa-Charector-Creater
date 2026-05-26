@@ -253,112 +253,175 @@
     }
 
     function buildProfileHTML(char) {
-        var name = escapeHtml(char.name);
-        var talent = escapeHtml(char.talent);
-        var phrase = escapeHtml(char.phrase);
-        var avatar = char.avatar || '⭐';
-        var role = escapeHtml(char.role || 'Не определена');
-        var appearance = escapeHtml(char.appearance || 'Не указана');
-        var personality = escapeHtml(char.personality || 'Загадочный');
-        var secret = escapeHtml(char.secret || 'Хранит тайну');
-        var execName = escapeHtml(char.execName || 'Судьбоносная казнь');
-        var execDesc = escapeHtml(char.execDesc || 'Описание казни');
-        var lastWords = escapeHtml(char.lastWords || '«...»');
-        var evidence = escapeHtml(char.evidence || 'Неизвестная улика');
-        var backstory = escapeHtml(char.backstory || 'Неизвестна');
-        var relationships = escapeHtml(char.relationships || 'Не определены');
-        var skills = escapeHtml(char.skills || 'Неизвестно');
-        var weaknesses = escapeHtml(char.weaknesses || 'Неизвестно');
-        var dialogues = char.dialogues || [];
-        var freeTimeEvents = char.freeTimeEvents || [];
-        var evidencesList = char.evidencesList || [];
-        var soundtrack = char.soundtrack || [];
-        var secretFile = escapeHtml(char.secretFile || 'Нет файла');
-        var finalTrial = escapeHtml(char.finalTrial || 'Не описан');
-        var visualPrompt = char.visualPrompt || 'Промпт не указан';
+    var name = escapeHtml(char.name);
+    var talent = escapeHtml(char.talent);
+    var phrase = escapeHtml(char.phrase);
+    var avatar = char.avatar || '⭐';
+    var role = escapeHtml(char.role || 'Не определена');
+    var appearance = escapeHtml(char.appearance || 'Не указана');
+    var personality = escapeHtml(char.personality || 'Загадочный');
+    var secret = escapeHtml(char.secret || 'Хранит тайну');
+    var execName = escapeHtml(char.execName || 'Судьбоносная казнь');
+    var execDesc = escapeHtml(char.execDesc || 'Описание казни');
+    var lastWords = escapeHtml(char.lastWords || '«...»');
+    var evidence = escapeHtml(char.evidence || 'Неизвестная улика');
+    var backstory = escapeHtml(char.backstory || 'Неизвестна');
+    var relationships = escapeHtml(char.relationships || 'Не определены');
+    var skills = escapeHtml(char.skills || 'Неизвестно');
+    var weaknesses = escapeHtml(char.weaknesses || 'Неизвестно');
+    var dialogues = char.dialogues || [];
+    var freeTimeEvents = char.freeTimeEvents || [];
+    var evidencesList = char.evidencesList || [];
+    var soundtrack = char.soundtrack || [];
+    var secretFile = escapeHtml(char.secretFile || 'Нет файла');
+    var finalTrial = escapeHtml(char.finalTrial || 'Не описан');
+    var visualPrompt = char.visualPrompt || 'Промпт не указан';
 
-        var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + name + '</title><style>' +
-            '*{margin:0;padding:0;box-sizing:border-box;}body{background:linear-gradient(135deg,#1a0000,#2d0000);font-family:"Courier New",monospace;padding:15px 12px;min-height:100vh;}' +
-            '.crt{max-width:1000px;width:100%;margin:0 auto;background:#0a0a0a;border:8px solid #3a1a1a;border-radius:8px;position:relative;}' +
-            '.crt::before{content:" ";display:block;position:absolute;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,rgba(0,255,0,0.03) 0px,rgba(0,255,0,0.03) 2px,transparent 2px,transparent 4px);pointer-events:none;border-radius:6px;}' +
-            '.case-file{padding:20px 18px;color:#e0e0e0;border:1px solid #5a2a2a;background:#0d0d0d;position:relative;z-index:1;}' +
-            '.monokuma-header{text-align:center;border-bottom:3px solid #d42e2e;margin-bottom:20px;padding-bottom:12px;}' +
-            '.monokuma-header h1{font-size:clamp(28px,7vw,36px);letter-spacing:3px;color:#ffffff;text-shadow:3px 3px 0 #5a0000;}' +
-            '.monokuma-header p{font-size:14px;color:#ff8888;margin-top:8px;font-weight:bold;}' +
-            '.warning{background:#1a0505;border-left:8px solid #ff0000;padding:12px;margin-bottom:20px;font-weight:bold;color:#ffaaaa;font-size:13px;text-transform:uppercase;}' +
-            '.tabs-wrapper{overflow-x:auto;overflow-y:hidden;margin-bottom:20px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#aa4444 #1a0a0a;}' +
-            '.tabs-wrapper::-webkit-scrollbar{height:8px;}' +
-            '.tabs-wrapper::-webkit-scrollbar-track{background:#1a0a0a;border-radius:4px;border:1px solid #5a2a2a;}' +
-            '.tabs-wrapper::-webkit-scrollbar-thumb{background:#aa4444;border-radius:4px;}' +
-            '.tabs{display:flex;flex-wrap:nowrap;gap:6px;padding-bottom:5px;min-width:min-content;}' +
-            '.tab-btn{background:#1a0a0a;border:none;color:#cc9999;font-family:"Courier New",monospace;font-size:14px;font-weight:bold;padding:12px 16px;cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap;transition:0.2s;}' +
-            '.tab-btn:hover{background:#2a1515;color:#ffaaaa;}' +
-            '.tab-btn.active{background:#2a0a0a;color:#ff7777;border-bottom:2px solid #ff4444;}' +
-            '.tab-content{display:none;animation:fadeIn 0.25s ease;max-height:55vh;overflow-y:auto;padding-right:8px;scrollbar-width:thin;scrollbar-color:#aa4444 #1a0a0a;}' +
-            '.tab-content::-webkit-scrollbar{width:8px;}' +
-            '.tab-content::-webkit-scrollbar-track{background:#1a0a0a;border-radius:4px;border:1px solid #5a2a2a;}' +
-            '.tab-content::-webkit-scrollbar-thumb{background:#aa4444;border-radius:4px;}' +
-            '.tab-content::-webkit-scrollbar-thumb:hover{background:#ff6666;}' +
-            '.tab-content.active{display:block;}' +
-            '@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}' +
-            '.id-card{background:#111111;border:2px solid #333;padding:18px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:15px;}' +
-            '.id-avatar{background:#1a1a1a;width:80px;height:80px;border:2px solid #d42e2e;display:flex;align-items:center;justify-content:center;font-size:36px;color:#ff8888;flex-shrink:0;}' +
-            '.id-stats{flex:1;min-width:160px;}' +
-            '.id-stats p{margin:8px 0;font-size:15px;line-height:1.5;}' +
-            '.stat-label{color:#ffaaaa;font-weight:bold;}' +
-            '.quote{background:#181010;border-left:6px solid #ff4444;padding:14px;margin:15px 0;font-style:italic;font-size:15px;color:#ffddaa;font-weight:bold;}' +
-            '.sprite-pose,.evidence-card,.gallery-item,.track-item,.dialogue-scene{background:#0a0f0a;border:1px dashed #3a6a3a;padding:12px;margin:10px 0;font-size:14px;border-radius:6px;}' +
-            '.execution{background:#1a0000;border:2px solid #aa2222;padding:16px;margin:15px 0;color:#ffaaaa;font-size:15px;border-radius:8px;}' +
-            '.bracelet{display:inline-block;width:14px;height:14px;border-radius:50%;margin-left:8px;vertical-align:middle;}' +
-            '.bracelet.green{background:#00ff00;animation:pulseGreen 1s infinite;box-shadow:0 0 5px #00ff00;}' +
-            '.bracelet.red{background:#ff0000;animation:pulseRed 0.3s infinite;box-shadow:0 0 5px #ff0000;}' +
-            '.bracelet.yellow{background:#ffff00;animation:pulseYellow 0.5s infinite;box-shadow:0 0 5px #ffff00;}' +
-            '@keyframes pulseGreen{0%{opacity:0.6;transform:scale(0.9);}100%{opacity:1;transform:scale(1.1);}}' +
-            '@keyframes pulseRed{0%{opacity:0.5;transform:scale(0.8);}100%{opacity:1;transform:scale(1.2);}}' +
-            '@keyframes pulseYellow{0%{opacity:0.6;transform:scale(0.9);}100%{opacity:1;transform:scale(1.1);}}' +
-            'button:not(.tab-btn){background:#2a0a0a;color:#ffcccc;border:1px solid #aa4444;padding:14px;margin-top:18px;font-size:16px;width:100%;border-radius:8px;cursor:pointer;font-weight:bold;transition:0.2s;}' +
-            'button:not(.tab-btn):hover{background:#4a1a1a;border-color:#ff8888;color:white;}' +
-            'footer{text-align:center;font-size:12px;margin-top:20px;color:#886666;}' +
-            '@media (max-width:600px){.case-file{padding:15px;}.tab-btn{padding:10px 12px;font-size:12px;}.id-avatar{width:60px;height:60px;font-size:28px;}.id-stats p{font-size:13px;}.tab-content{max-height:50vh;}}' +
-            '</style></head><body><div class="crt"><div class="case-file">' +
-            '<div class="monokuma-header"><h1>⚡ ФАЙЛ MONOKUMA ⚡</h1><p>🔒 ' + name + ' • ЗАКРЫТЫЙ ДОСТУП 🔒</p></div>' +
-            '<div class="warning">⚠️ СТРОГО КОНФИДЕНЦИАЛЬНО. РАЗГЛАШЕНИЕ КАРАЕТСЯ КАЗНЬЮ. ⚠️</div>' +
-            '<div class="tabs-wrapper"><div class="tabs">' +
-            '<button class="tab-btn active" data-tab="tab1">📁 Личное дело</button>' +
-            '<button class="tab-btn" data-tab="tab2">🎭 Диалоги</button>' +
-            '<button class="tab-btn" data-tab="tab3">💀 Казнь</button>' +
-            '<button class="tab-btn" data-tab="tab4">🔍 Улики</button>' +
-            '<button class="tab-btn" data-tab="tab5">🖼️ Галерея</button>' +
-            '<button class="tab-btn" data-tab="tab6">🎵 Саундтрек</button>' +
-            '<button class="tab-btn" data-tab="tab7">📜 Секретный файл</button>' +
-            '<button class="tab-btn" data-tab="tab8">⚖️ Финальный суд</button>' +
-            '</div></div>' +
-            '<div id="tab1" class="tab-content active"><div class="id-card"><div class="id-avatar">' + avatar + '</div><div class="id-stats"><p><span class="stat-label">Имя:</span> ' + name + ' <span class="bracelet green" id="braceletIndicator"></span></p><p><span class="stat-label">Талант:</span> <strong style="color:#ff8888;">' + talent + '</strong></p><p><span class="stat-label">Роль:</span> ' + role + '</p><p><span class="stat-label">Фраза:</span> ' + phrase + '</p><p><span class="stat-label">Статус:</span> Активен. Разыскивается Monokuma.</p></div></div><div class="quote">' + phrase + '</div><h3>📖 FREE TIME EVENTS</h3>' + freeTimeEvents.map(ev => '<div class="sprite-pose">✨ ' + escapeHtml(ev) + '</div>').join('') + '<div class="warning">⚡ КОММЕНТАРИЙ MONOKUMA: ' + secret + '</div></div>' +
-            '<div id="tab2" class="tab-content">' + dialogues.map(d => '<div class="dialogue-scene"><span class="dialogue-name">' + escapeHtml(d.split('\n')[0]) + '</span><br>' + escapeHtml(d.substring(d.indexOf('\n')+1)) + '</div>').join('') + '</div>' +
-            '<div id="tab3" class="tab-content"><div class="execution"><strong>💀 КАЗНЬ: ' + execName + '</strong><br>' + execDesc + '</div><div class="quote"><strong>ФРАЗА ПЕРЕД КАЗНЬЮ:</strong><br>' + lastWords + '</div></div>' +
-            '<div id="tab4" class="tab-content">' + evidencesList.map(e => '<div class="evidence-card"><strong>🔍 ' + escapeHtml(e) + '</strong></div>').join('') + '</div>' +
-            '<div id="tab5" class="tab-content">' +
-            '<div class="gallery-item"><strong>🖼️ Нейтральный спрайт</strong><br>Спокойная поза, рука у подбородка.</div>' +
-            '<div class="gallery-item"><strong>🖼️ Эмоциональный спрайт</strong><br>Наклон вперёд.</div>' +
-            '<div class="gallery-item"><strong>🖼️ Угрожающий спрайт</strong><br>Чёлка закрывает глаза. Браслет КРАСНЫЙ.</div>' +
-            '<div class="gallery-item"><strong>🖼️ Повреждённый спрайт</strong><br>Спрайт распадается на пиксели.</div>' +
-            '<div class="gallery-item"><strong>🎨 ПРОМПТ ДЛЯ ВИЗУАЛИЗАЦИИ</strong><br>' +
-            '<div class="prompt-text" style="background:#1a1a1a; padding:10px; border-radius:12px; font-family:monospace; white-space:pre-wrap; border-left:3px solid #ffaa66;">' + escapeHtml(visualPrompt) + '</div>' +
-            '<button class="copy-prompt-btn" style="margin-top:10px; background:#1a3a1a; border:1px solid #66aa66; color:#ffccaa; padding:6px 12px; border-radius:30px; cursor:pointer; font-weight:bold;">📋 КОПИРОВАТЬ ПРОМПТ</button>' +
-            '</div></div>' +
-            '<div id="tab6" class="tab-content">' + soundtrack.map(t => '<div class="track-item">🎵 ' + escapeHtml(t) + '</div>').join('') + '</div>' +
-            '<div id="tab7" class="tab-content"><div class="warning" style="border-left-color:#ff00ff;">⚡ ЭТОТ ФАЙЛ НЕ ДОЛЖЕН СУЩЕСТВОВАТЬ</div><div class="execution" style="background:#110022;border-color:#ff44ff;">' + secretFile + '</div><div class="quote"><strong>🔐 КОД АКТИВАЦИИ БРАСЛЕТА:</strong><br><code>>_ root.access.granted<br>>_ ' + name.replace(/\s/g, '_') + '/промпт_уровень_0</code></div></div>' +
-            '<div id="tab8" class="tab-content"><div class="execution" style="background:#1a0000;border-color:#ff4444;"><strong>⚖️ ФИНАЛЬНЫЙ СУД</strong><br>' + finalTrial + '</div></div>' +
-            '<footer>⬤ DR: ПРОТОКОЛ 0xE7 ⬤ 8 вкладок ⬤ Уровень доступа: НЕОГРАНИЧЕН</footer>' +
-            '<button id="glitchBtn">🔍 НАЖАТЬ, ЕСЛИ ХОЧЕШЬ УМЕРЕТЬ</button>' +
-            '</div></div><script>' +
-            'var tabs=document.querySelectorAll(".tab-btn");var contents=document.querySelectorAll(".tab-content");' +
-            'tabs.forEach(function(t){t.addEventListener("click",function(){var target=t.getAttribute("data-tab");tabs.forEach(function(btn){btn.classList.remove("active");});contents.forEach(function(c){c.classList.remove("active");});t.classList.add("active");document.getElementById(target).classList.add("active");});});' +
-            'var bracelet=document.getElementById("braceletIndicator");var bstate=0;' +
-            'document.getElementById("glitchBtn").addEventListener("click",function(){bstate=(bstate+1)%3;bracelet.classList.remove("green","red","yellow");if(bstate===0)bracelet.classList.add("green");else if(bstate===1)bracelet.classList.add("yellow");else bracelet.classList.add("red");alert("Пупупу... ' + name + ' уже всё прочитал.");});' +
-            'document.querySelectorAll(".copy-prompt-btn").forEach(function(btn){btn.addEventListener("click",function(){var promptDiv=this.previousElementSibling;var text=promptDiv.innerText;navigator.clipboard.writeText(text);alert("✅ Промпт скопирован!");});});' +
-            '<\/script></body></html>';
-        return html;
+    // Определяем класс стиля в зависимости от роли
+    var roleClass = '';
+    var additionalStyles = '';
+    if (role === 'Убийца') {
+        roleClass = 'killer-theme';
+        additionalStyles = `
+            .killer-theme .case-file { background: #1a0000; border-color: #8b0000; }
+            .killer-theme .monokuma-header h1, .killer-theme .stat-label, .killer-theme .dialogue-name { color: #ff6666; }
+            .killer-theme .quote, .killer-theme .execution { border-left-color: #ff4444; background: #2a0505; }
+            .killer-theme .tab-btn.active { background: #4a1a1a; color: #ff8888; }
+            .killer-theme .warning { background: #2a0505; border-left-color: #ff0000; }
+            /* Пиксельные пятна крови */
+            .killer-theme .crt::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: radial-gradient(circle at 20% 30%, rgba(255,0,0,0.15) 1px, transparent 1px);
+                background-size: 12px 12px;
+                pointer-events: none;
+                z-index: 3;
+            }
+        `;
+    } else if (role === 'Жертва') {
+        roleClass = 'victim-theme';
+        additionalStyles = `
+            .victim-theme .case-file { background: #0a1a2a; border-color: #2a6f8f; }
+            .victim-theme .monokuma-header h1, .victim-theme .stat-label, .victim-theme .dialogue-name { color: #88aaff; }
+            .victim-theme .quote, .victim-theme .execution { border-left-color: #3399ff; background: #051520; }
+            .victim-theme .tab-btn.active { background: #1a3a5a; color: #aaddff; }
+            .victim-theme .warning { background: #051520; border-left-color: #2266cc; }
+            /* Эффект разбитого экрана */
+            .victim-theme .crt::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: repeating-linear-gradient(45deg, rgba(0,150,255,0.1) 0px, rgba(0,150,255,0.1) 2px, transparent 2px, transparent 8px),
+                            repeating-linear-gradient(135deg, rgba(0,100,200,0.08) 0px, rgba(0,100,200,0.08) 3px, transparent 3px, transparent 12px);
+                pointer-events: none;
+                z-index: 3;
+                animation: crackGlitch 2s infinite;
+            }
+            @keyframes crackGlitch {
+                0% { opacity: 0.3; transform: translate(0,0); }
+                20% { opacity: 0.6; transform: translate(-2px,1px); }
+                40% { opacity: 0.2; transform: translate(2px,-1px); }
+                60% { opacity: 0.5; transform: translate(-1px,2px); }
+                80% { opacity: 0.3; transform: translate(1px,-2px); }
+                100% { opacity: 0.3; transform: translate(0,0); }
+            }
+        `;
+    } else {
+        // Выживший – без изменений, но добавим класс для единообразия
+        roleClass = 'survivor-theme';
+        additionalStyles = ``;
+    }
+
+    var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + name + '</title><style>' +
+        '*{margin:0;padding:0;box-sizing:border-box;}body{background:linear-gradient(135deg,#1a0000,#2d0000);font-family:"Courier New",monospace;padding:15px 12px;min-height:100vh;}' +
+        '.crt{max-width:1000px;width:100%;margin:0 auto;background:#0a0a0a;border:8px solid #3a1a1a;border-radius:8px;position:relative;}' +
+        '.crt::before{content:" ";display:block;position:absolute;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(0deg,rgba(0,255,0,0.03) 0px,rgba(0,255,0,0.03) 2px,transparent 2px,transparent 4px);pointer-events:none;border-radius:6px;z-index:2;}' +
+        '.case-file{padding:20px 18px;color:#e0e0e0;border:1px solid #5a2a2a;background:#0d0d0d;position:relative;z-index:1;}' +
+        '.monokuma-header{text-align:center;border-bottom:3px solid #d42e2e;margin-bottom:20px;padding-bottom:12px;}' +
+        '.monokuma-header h1{font-size:clamp(28px,7vw,36px);letter-spacing:3px;color:#ffffff;text-shadow:3px 3px 0 #5a0000;}' +
+        '.monokuma-header p{font-size:14px;color:#ff8888;margin-top:8px;font-weight:bold;}' +
+        '.warning{background:#1a0505;border-left:8px solid #ff0000;padding:12px;margin-bottom:20px;font-weight:bold;color:#ffaaaa;font-size:13px;text-transform:uppercase;}' +
+        '.tabs-wrapper{overflow-x:auto;overflow-y:hidden;margin-bottom:20px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#aa4444 #1a0a0a;}' +
+        '.tabs-wrapper::-webkit-scrollbar{height:8px;}' +
+        '.tabs-wrapper::-webkit-scrollbar-track{background:#1a0a0a;border-radius:4px;border:1px solid #5a2a2a;}' +
+        '.tabs-wrapper::-webkit-scrollbar-thumb{background:#aa4444;border-radius:4px;}' +
+        '.tabs{display:flex;flex-wrap:nowrap;gap:6px;padding-bottom:5px;min-width:min-content;}' +
+        '.tab-btn{background:#1a0a0a;border:none;color:#cc9999;font-family:"Courier New",monospace;font-size:14px;font-weight:bold;padding:12px 16px;cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap;transition:0.2s;}' +
+        '.tab-btn:hover{background:#2a1515;color:#ffaaaa;}' +
+        '.tab-btn.active{background:#2a0a0a;color:#ff7777;border-bottom:2px solid #ff4444;}' +
+        '.tab-content{display:none;animation:fadeIn 0.25s ease;max-height:55vh;overflow-y:auto;padding-right:8px;scrollbar-width:thin;scrollbar-color:#aa4444 #1a0a0a;}' +
+        '.tab-content::-webkit-scrollbar{width:8px;}' +
+        '.tab-content::-webkit-scrollbar-track{background:#1a0a0a;border-radius:4px;border:1px solid #5a2a2a;}' +
+        '.tab-content::-webkit-scrollbar-thumb{background:#aa4444;border-radius:4px;}' +
+        '.tab-content::-webkit-scrollbar-thumb:hover{background:#ff6666;}' +
+        '.tab-content.active{display:block;}' +
+        '@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}' +
+        '.id-card{background:#111111;border:2px solid #333;padding:18px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:15px;}' +
+        '.id-avatar{background:#1a1a1a;width:80px;height:80px;border:2px solid #d42e2e;display:flex;align-items:center;justify-content:center;font-size:36px;color:#ff8888;flex-shrink:0;}' +
+        '.id-stats{flex:1;min-width:160px;}' +
+        '.id-stats p{margin:8px 0;font-size:15px;line-height:1.5;}' +
+        '.stat-label{color:#ffaaaa;font-weight:bold;}' +
+        '.quote{background:#181010;border-left:6px solid #ff4444;padding:14px;margin:15px 0;font-style:italic;font-size:15px;color:#ffddaa;font-weight:bold;}' +
+        '.sprite-pose,.evidence-card,.gallery-item,.track-item,.dialogue-scene{background:#0a0f0a;border:1px dashed #3a6a3a;padding:12px;margin:10px 0;font-size:14px;border-radius:6px;}' +
+        '.execution{background:#1a0000;border:2px solid #aa2222;padding:16px;margin:15px 0;color:#ffaaaa;font-size:15px;border-radius:8px;}' +
+        '.bracelet{display:inline-block;width:14px;height:14px;border-radius:50%;margin-left:8px;vertical-align:middle;}' +
+        '.bracelet.green{background:#00ff00;animation:pulseGreen 1s infinite;box-shadow:0 0 5px #00ff00;}' +
+        '.bracelet.red{background:#ff0000;animation:pulseRed 0.3s infinite;box-shadow:0 0 5px #ff0000;}' +
+        '.bracelet.yellow{background:#ffff00;animation:pulseYellow 0.5s infinite;box-shadow:0 0 5px #ffff00;}' +
+        '@keyframes pulseGreen{0%{opacity:0.6;transform:scale(0.9);}100%{opacity:1;transform:scale(1.1);}}' +
+        '@keyframes pulseRed{0%{opacity:0.5;transform:scale(0.8);}100%{opacity:1;transform:scale(1.2);}}' +
+        '@keyframes pulseYellow{0%{opacity:0.6;transform:scale(0.9);}100%{opacity:1;transform:scale(1.1);}}' +
+        'button:not(.tab-btn){background:#2a0a0a;color:#ffcccc;border:1px solid #aa4444;padding:14px;margin-top:18px;font-size:16px;width:100%;border-radius:8px;cursor:pointer;font-weight:bold;transition:0.2s;}' +
+        'button:not(.tab-btn):hover{background:#4a1a1a;border-color:#ff8888;color:white;}' +
+        'footer{text-align:center;font-size:12px;margin-top:20px;color:#886666;}' +
+        additionalStyles +
+        '@media (max-width:600px){.case-file{padding:15px;}.tab-btn{padding:10px 12px;font-size:12px;}.id-avatar{width:60px;height:60px;font-size:28px;}.id-stats p{font-size:13px;}.tab-content{max-height:50vh;}}' +
+        '</style></head><body class="' + roleClass + '"><div class="crt"><div class="case-file">' +
+        '<div class="monokuma-header"><h1>⚡ ФАЙЛ MONOKUMA ⚡</h1><p>🔒 ' + name + ' • ЗАКРЫТЫЙ ДОСТУП 🔒</p></div>' +
+        '<div class="warning">⚠️ СТРОГО КОНФИДЕНЦИАЛЬНО. РАЗГЛАШЕНИЕ КАРАЕТСЯ КАЗНЬЮ. ⚠️</div>' +
+        '<div class="tabs-wrapper"><div class="tabs">' +
+        '<button class="tab-btn active" data-tab="tab1">📁 Личное дело</button>' +
+        '<button class="tab-btn" data-tab="tab2">🎭 Диалоги</button>' +
+        '<button class="tab-btn" data-tab="tab3">💀 Казнь</button>' +
+        '<button class="tab-btn" data-tab="tab4">🔍 Улики</button>' +
+        '<button class="tab-btn" data-tab="tab5">🖼️ Галерея</button>' +
+        '<button class="tab-btn" data-tab="tab6">🎵 Саундтрек</button>' +
+        '<button class="tab-btn" data-tab="tab7">📜 Секретный файл</button>' +
+        '<button class="tab-btn" data-tab="tab8">⚖️ Финальный суд</button>' +
+        '</div></div>' +
+        '<div id="tab1" class="tab-content active"><div class="id-card"><div class="id-avatar">' + avatar + '</div><div class="id-stats"><p><span class="stat-label">Имя:</span> ' + name + ' <span class="bracelet green" id="braceletIndicator"></span></p><p><span class="stat-label">Талант:</span> <strong style="color:#ff8888;">' + talent + '</strong></p><p><span class="stat-label">Роль:</span> ' + role + '</p><p><span class="stat-label">Фраза:</span> ' + phrase + '</p><p><span class="stat-label">Статус:</span> Активен. Разыскивается Monokuma.</p></div></div><div class="quote">' + phrase + '</div><h3>📖 FREE TIME EVENTS</h3>' + freeTimeEvents.map(ev => '<div class="sprite-pose">✨ ' + escapeHtml(ev) + '</div>').join('') + '<div class="warning">⚡ КОММЕНТАРИЙ MONOKUMA: ' + secret + '</div></div>' +
+        '<div id="tab2" class="tab-content">' + dialogues.map(d => '<div class="dialogue-scene"><span class="dialogue-name">' + escapeHtml(d.split('\n')[0]) + '</span><br>' + escapeHtml(d.substring(d.indexOf('\n')+1)) + '</div>').join('') + '</div>' +
+        '<div id="tab3" class="tab-content"><div class="execution"><strong>💀 КАЗНЬ: ' + execName + '</strong><br>' + execDesc + '</div><div class="quote"><strong>ФРАЗА ПЕРЕД КАЗНЬЮ:</strong><br>' + lastWords + '</div></div>' +
+        '<div id="tab4" class="tab-content">' + evidencesList.map(e => '<div class="evidence-card"><strong>🔍 ' + escapeHtml(e) + '</strong></div>').join('') + '</div>' +
+        '<div id="tab5" class="tab-content">' +
+        '<div class="gallery-item"><strong>🖼️ Нейтральный спрайт</strong><br>Спокойная поза, рука у подбородка.</div>' +
+        '<div class="gallery-item"><strong>🖼️ Эмоциональный спрайт</strong><br>Наклон вперёд.</div>' +
+        '<div class="gallery-item"><strong>🖼️ Угрожающий спрайт</strong><br>Чёлка закрывает глаза. Браслет КРАСНЫЙ.</div>' +
+        '<div class="gallery-item"><strong>🖼️ Повреждённый спрайт</strong><br>Спрайт распадается на пиксели.</div>' +
+        '<div class="gallery-item"><strong>🎨 ПРОМПТ ДЛЯ ВИЗУАЛИЗАЦИИ</strong><br>' +
+        '<div class="prompt-text" style="background:#1a1a1a; padding:10px; border-radius:12px; font-family:monospace; white-space:pre-wrap; border-left:3px solid #ffaa66;">' + escapeHtml(visualPrompt) + '</div>' +
+        '<button class="copy-prompt-btn" style="margin-top:10px; background:#1a3a1a; border:1px solid #66aa66; color:#ffccaa; padding:6px 12px; border-radius:30px; cursor:pointer; font-weight:bold;">📋 КОПИРОВАТЬ ПРОМПТ</button>' +
+        '</div></div>' +
+        '<div id="tab6" class="tab-content">' + soundtrack.map(t => '<div class="track-item">🎵 ' + escapeHtml(t) + '</div>').join('') + '</div>' +
+        '<div id="tab7" class="tab-content"><div class="warning" style="border-left-color:#ff00ff;">⚡ ЭТОТ ФАЙЛ НЕ ДОЛЖЕН СУЩЕСТВОВАТЬ</div><div class="execution" style="background:#110022;border-color:#ff44ff;">' + secretFile + '</div><div class="quote"><strong>🔐 КОД АКТИВАЦИИ БРАСЛЕТА:</strong><br><code>>_ root.access.granted<br>>_ ' + name.replace(/\s/g, '_') + '/промпт_уровень_0</code></div></div>' +
+        '<div id="tab8" class="tab-content"><div class="execution" style="background:#1a0000;border-color:#ff4444;"><strong>⚖️ ФИНАЛЬНЫЙ СУД</strong><br>' + finalTrial + '</div></div>' +
+        '<footer>⬤ DR: ПРОТОКОЛ 0xE7 ⬤ 8 вкладок ⬤ Уровень доступа: НЕОГРАНИЧЕН</footer>' +
+        '<button id="glitchBtn">🔍 НАЖАТЬ, ЕСЛИ ХОЧЕШЬ УМЕРЕТЬ</button>' +
+        '</div></div><script>' +
+        'var tabs=document.querySelectorAll(".tab-btn");var contents=document.querySelectorAll(".tab-content");' +
+        'tabs.forEach(function(t){t.addEventListener("click",function(){var target=t.getAttribute("data-tab");tabs.forEach(function(btn){btn.classList.remove("active");});contents.forEach(function(c){c.classList.remove("active");});t.classList.add("active");document.getElementById(target).classList.add("active");});});' +
+        'var bracelet=document.getElementById("braceletIndicator");var bstate=0;' +
+        'document.getElementById("glitchBtn").addEventListener("click",function(){bstate=(bstate+1)%3;bracelet.classList.remove("green","red","yellow");if(bstate===0)bracelet.classList.add("green");else if(bstate===1)bracelet.classList.add("yellow");else bracelet.classList.add("red");alert("Пупупу... ' + name + ' уже всё прочитал.");});' +
+        'document.querySelectorAll(".copy-prompt-btn").forEach(function(btn){btn.addEventListener("click",function(){var promptDiv=this.previousElementSibling;var text=promptDiv.innerText;navigator.clipboard.writeText(text);alert("✅ Промпт скопирован!");});});' +
+        '<\/script></body></html>';
+    return html;
     }
 
     function loadMenu() {
