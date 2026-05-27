@@ -378,16 +378,171 @@
 </div>
 
 <script>
-    
-          // ========== ПАСХАЛКИ (секретное поле) ==========
+        // ========== ПАСХАЛКИ (секретное поле) ==========
     const secretInput = document.getElementById('secretEasterEgg');
     const secretBtn = document.getElementById('secretMonokumaBtn');
     
-    // Кнопка для открытия секретной страницы Monokuma
+    // Кнопка для открытия секретной страницы Monokuma (если нужна)
     if (secretBtn) {
         secretBtn.addEventListener('click', function() {
             window.open('monokuma_secret.html', '_blank');
         });
+    }
+    
+    // Функция для создания страницы благодарности Monokuma
+    function showMonokumaThanks() {
+        const thanksHTML = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monokuma :: Спасибо</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0000;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: bgGlitch 0.3s infinite;
+        }
+        @keyframes bgGlitch {
+            0% { background: #0a0000; }
+            20% { background: #1a0000; }
+            40% { background: #2a0505; }
+            60% { background: #1a0000; }
+            80% { background: #0a0000; }
+            100% { background: #0a0000; }
+        }
+        .crt {
+            max-width: 700px;
+            width: 100%;
+            background: #0a0a0a;
+            border: 8px solid #aa4444;
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(255,0,0,0.3);
+            position: relative;
+            animation: borderGlitch 1.5s infinite;
+        }
+        @keyframes borderGlitch {
+            0% { border-color: #aa4444; box-shadow: 0 0 10px red; }
+            50% { border-color: #ff6666; box-shadow: 0 0 20px #ff4444; }
+            100% { border-color: #aa4444; box-shadow: 0 0 10px red; }
+        }
+        .monokuma-icon {
+            text-align: center;
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: iconGlitch 0.8s infinite;
+        }
+        @keyframes iconGlitch {
+            0% { transform: translate(0,0); text-shadow: 0 0 0 red; }
+            25% { transform: translate(-2px,1px); text-shadow: -2px 0 red; }
+            50% { transform: translate(2px,-1px); text-shadow: 2px 0 blue; }
+            75% { transform: translate(-1px,2px); text-shadow: -1px 0 red; }
+            100% { transform: translate(0,0); text-shadow: 0 0 0 red; }
+        }
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            color: #ff6666;
+            text-shadow: 2px 2px 0 #5a0000;
+            margin-bottom: 20px;
+            animation: textGlitch 0.5s infinite;
+        }
+        @keyframes textGlitch {
+            0% { text-shadow: -1px 0 red, 1px 0 blue; transform: skew(0deg); }
+            20% { text-shadow: 1px 0 red, -1px 0 blue; transform: skew(2deg); }
+            40% { text-shadow: -1px 0 blue, 1px 0 red; transform: skew(-1deg); }
+            60% { text-shadow: 1px 0 blue, -1px 0 red; transform: skew(1deg); }
+            80% { text-shadow: -1px 0 red, 1px 0 blue; transform: skew(-1deg); }
+            100% { text-shadow: -1px 0 red, 1px 0 blue; transform: skew(0deg); }
+        }
+        .message {
+            background: #1a0505;
+            border-left: 6px solid #ff4444;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 18px;
+            line-height: 1.5;
+            color: #ffccaa;
+            position: relative;
+            animation: msgGlitch 0.2s infinite;
+        }
+        @keyframes msgGlitch {
+            0% { transform: translate(0,0); }
+            10% { transform: translate(-1px,1px); }
+            20% { transform: translate(1px,-1px); }
+            30% { transform: translate(-1px,-1px); }
+            40% { transform: translate(1px,1px); }
+            50% { transform: translate(0,0); }
+            100% { transform: translate(0,0); }
+        }
+        .signature {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #ff8888;
+            font-style: italic;
+        }
+        button {
+            background: #2a1a1a;
+            border: 2px solid #aa6644;
+            color: #ffccaa;
+            padding: 12px 24px;
+            font-family: monospace;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 60px;
+            transition: all 0.2s;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #4a2a2a;
+            box-shadow: 0 0 15px #ff8866;
+        }
+        .glitch-text {
+            display: inline-block;
+            animation: glitchWord 0.3s infinite;
+        }
+        @keyframes glitchWord {
+            0% { opacity: 1; }
+            20% { opacity: 0.8; transform: translateX(-2px); }
+            40% { opacity: 1; transform: translateX(2px); }
+            60% { opacity: 0.9; transform: translateX(-1px); }
+            80% { opacity: 1; transform: translateX(1px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+<div class="crt">
+    <div class="monokuma-icon">🐻</div>
+    <h1>⚡ <span class="glitch-text">СПАСИБО</span> ⚡</h1>
+    <div class="message">
+        <strong>Пупупу...</strong><br><br>
+        Ты ввёл <strong style="color:#ff8888;">11037</strong> – число, которое знают только настоящие фанаты.<br><br>
+        Я, Monokuma, хочу поблагодарить тебя за то, что ты прошёл этот долгий путь вместе со мной (и с Иваном Диогеновым). Ты исправлял ошибки, добавлял новые функции, спорил, искал баги – и в итоге создал настоящий проект.<br><br>
+        <span class="glitch-text">Ты – лучший Бета-тестер.</span><br><br>
+        Пупупу... Надеюсь, тебе понравилось. А теперь возвращайся в игру – там ещё много нераскрытых тайн.
+    </div>
+    <div class="signature">
+        — Monokuma, твой вечно глитчащий директор
+    </div>
+    <button onclick="window.close()">🔒 ЗАКРЫТЬ СЕКРЕТНУЮ СТРАНИЦУ</button>
+</div>
+</body>
+</html>`;
+        const blob = new Blob([thanksHTML], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
     
     // Текстовое поле с пасхалками
@@ -406,7 +561,7 @@
                     }, 3000);
                     secretInput.value = '';
                 }
-                // Пасхалка 2: "11037" -> сердечко "Откуда..."
+                // Пасхалка 2: "11037" -> сердечко + через 3 секунды страница благодарности
                 else if (val === '11037') {
                     const heart = document.createElement('div');
                     heart.className = 'heart-popup';
@@ -414,6 +569,7 @@
                     document.body.appendChild(heart);
                     setTimeout(() => {
                         if (heart.parentNode) heart.parentNode.removeChild(heart);
+                        showMonokumaThanks();
                     }, 3000);
                     secretInput.value = '';
                 }
