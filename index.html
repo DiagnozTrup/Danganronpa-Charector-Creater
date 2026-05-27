@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Danganronpa 2: Выбор персонажа</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
         body {
             background: radial-gradient(circle at 20% 30%, #1a0f0a, #050101);
             font-family: 'Courier New', 'Courier', monospace;
@@ -14,37 +20,20 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            position: relative;
-            overflow-x: hidden;
         }
-        body::before {
-            content: "⚠ ⚠ ⚠";
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 12px;
-            color: #aa444466;
-            white-space: nowrap;
-            animation: scroll 20s linear infinite;
-            pointer-events: none;
-        }
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
+
+        /* Эффект монитора */
         .crt {
             position: relative;
             max-width: 1400px;
             width: 100%;
             background: #0b0e0a;
             border: 12px solid #3a2a2a;
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 30px 20px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8), 0 0 0 4px #1f1a0e, inset 0 0 20px rgba(0,0,0,0.5);
-            backdrop-filter: blur(1px);
+            box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.5);
         }
+
         .crt::before {
             content: "";
             position: absolute;
@@ -54,121 +43,97 @@
             height: 100%;
             background: repeating-linear-gradient(0deg, rgba(0,255,0,0.03) 0px, rgba(0,255,0,0.03) 2px, transparent 2px, transparent 4px);
             pointer-events: none;
-            border-radius: 20px;
+            border-radius: 24px;
         }
+
         .game-title {
             text-align: center;
             margin-bottom: 30px;
             border-bottom: 3px solid #d44a2e;
             padding-bottom: 15px;
         }
+
         .game-title h1 {
             font-size: clamp(28px, 7vw, 42px);
-            letter-spacing: 4px;
             color: #ffe6cc;
-            text-shadow: 0 0 8px #ff6644, 4px 4px 0 #3a1a1a;
-            font-weight: bold;
+            text-shadow: 0 0 8px #ff6644, 3px 3px 0 #3a1a1a;
         }
+
         .game-title p {
-            font-size: clamp(14px, 4vw, 18px);
+            font-size: 16px;
             color: #ffaa88;
             margin-top: 8px;
-            font-weight: bold;
-            text-shadow: 1px 1px 0 #3a1a1a;
         }
+
         .section-label {
-            font-size: clamp(18px, 5vw, 24px);
+            font-size: 22px;
             color: #ffcc88;
             text-align: center;
             margin-bottom: 25px;
             background: #2a1a1acc;
             display: block;
+            width: fit-content;
             padding: 8px 28px;
             border-radius: 40px;
             margin-left: auto;
             margin-right: auto;
             font-weight: bold;
-            backdrop-filter: blur(4px);
-            box-shadow: 0 0 10px #ff664422;
-            width: fit-content;
         }
+
         .characters-grid {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 35px;
+            gap: 30px;
             margin: 30px 0;
         }
+
         .character-card {
             background: #1a1f1aee;
             backdrop-filter: blur(4px);
             border: 2px solid #aa6644;
             border-radius: 28px;
-            width: min(240px, 85vw);
+            width: 220px;
             padding: 20px 15px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: 0.3s;
             box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-            position: relative;
-            overflow: hidden;
         }
-        .character-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,100,80,0.2), transparent);
-            transition: left 0.5s;
-        }
-        .character-card:hover::after {
-            left: 100%;
-        }
+
         .character-card:hover {
-            transform: translateY(-12px) scale(1.02);
+            transform: translateY(-8px);
             border-color: #ffaa66;
-            box-shadow: 0 0 25px #ffaa6688;
+            box-shadow: 0 0 20px #ffaa6688;
         }
+
         .character-avatar {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 15px;
-            border-radius: 50%;
-            background: #1e2a1a;
-            border: 3px solid #ffaa66;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-size: 52px;
-            transition: transform 0.2s;
+            margin-bottom: 15px;
         }
-        .character-card:hover .character-avatar {
-            transform: scale(1.05);
-        }
+
         .character-name {
-            font-size: clamp(18px, 5vw, 22px);
+            font-size: 18px;
             font-weight: bold;
             color: #ffeebb;
-            letter-spacing: 1px;
-            text-shadow: 1px 1px 0 #2a1a1a;
         }
+
         .character-title {
-            font-size: 13px;
+            font-size: 12px;
             color: #ddbb88;
             margin-top: 5px;
-            font-weight: bold;
         }
+
         .character-tag {
-            font-size: 11px;
+            font-size: 10px;
             background: #000000aa;
             display: inline-block;
-            padding: 5px 12px;
+            padding: 4px 12px;
             border-radius: 30px;
             color: #ffcc88;
             margin-top: 10px;
         }
+
         .admin-buttons {
             display: flex;
             justify-content: center;
@@ -176,23 +141,25 @@
             margin-top: 20px;
             flex-wrap: wrap;
         }
+
         .admin-btn {
             background: #2a1a1a;
             border: 1px solid #aa6644;
             color: #ffccaa;
-            padding: 10px 20px;
+            padding: 8px 20px;
             border-radius: 40px;
             font-size: 13px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.2s;
-            backdrop-filter: blur(4px);
+            transition: 0.2s;
         }
+
         .admin-btn:hover {
             background: #4a2a2a;
             color: #fff;
             box-shadow: 0 0 8px #ff8866;
         }
+
         .monokuma-note {
             font-size: 14px;
             color: #ccaa88;
@@ -200,62 +167,59 @@
             margin-top: 30px;
             border-top: 1px solid #5a3a2a;
             padding-top: 20px;
-            font-weight: bold;
-            display: inline-block;
-            width: auto;
-            margin-left: auto;
-            margin-right: auto;
-            background: #0b0e0a;
-            border-radius: 20px;
-            padding: 12px;
-            backdrop-filter: blur(2px);
-            box-shadow: 0 0 8px #ff6644;
         }
-        /* Стили для секретного поля и кнопки */
+
+        /* Секретное поле и кнопка */
+        .secret-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+        }
+
         .secret-field {
             width: 50px;
             height: 30px;
             background: #1a1a1a;
             border: 1px solid #aa6644;
             color: #ffccaa;
-            font-family: 'Courier New', monospace;
+            font-family: monospace;
             font-size: 10px;
             text-align: center;
-            padding: 4px;
             border-radius: 8px;
             opacity: 0.2;
             transition: opacity 0.3s;
         }
-        .secret-field:hover {
-            opacity: 0.6;
-        }
+
+        .secret-field:hover,
         .secret-field:focus {
             opacity: 1;
             outline: none;
-            border-color: #ffaa66;
         }
+
         .secret-monokuma-btn {
             width: 30px;
             height: 30px;
             background: #1a1a1a;
             border: 1px solid #aa6644;
             color: #ffccaa;
-            font-family: monospace;
             font-size: 14px;
             cursor: pointer;
             border-radius: 8px;
             opacity: 0.2;
-            transition: all 0.2s;
+            transition: 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
         .secret-monokuma-btn:hover {
             opacity: 0.8;
             background: #4a2a2a;
-            border-color: #ff8866;
-            box-shadow: 0 0 6px #ff8866;
         }
+
         .heart-popup {
             position: fixed;
             bottom: 70px;
@@ -270,27 +234,23 @@
             z-index: 1001;
             animation: fadeHeart 3s forwards;
             pointer-events: none;
-            font-family: monospace;
             white-space: nowrap;
         }
+
         @keyframes fadeHeart {
-            0% { opacity: 0; transform: scale(0.5) translateY(0); }
-            20% { opacity: 1; transform: scale(1.2) translateY(-10px); }
-            40% { opacity: 1; transform: scale(1) translateY(-20px); }
-            100% { opacity: 0; transform: scale(0.8) translateY(-50px); visibility: hidden; }
-        }
-        @media (max-width: 760px) {
-            .character-card { width: 180px; padding: 15px 10px; }
-            .character-avatar { width: 70px; height: 70px; font-size: 40px; }
-            .character-name { font-size: 16px; }
-            .secret-field { width: 40px; height: 25px; font-size: 8px; }
-            .secret-monokuma-btn { width: 25px; height: 25px; font-size: 12px; }
+            0% { opacity: 0; transform: scale(0.5); }
+            20% { opacity: 1; transform: scale(1.2); }
+            40% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: translateY(-30px) scale(0.8); visibility: hidden; }
         }
     </style>
 </head>
 <body>
 <div class="crt">
-    <div class="game-title"><h1>⚡ АКАДЕМИЯ НАДЕЖДЫ ⚡</h1><p>ОСТРОВ ДЖАББЕРВОК • РЕЖИМ ВЫБОРА ЦЕЛИ</p></div>
+    <div class="game-title">
+        <h1>⚡ АКАДЕМИЯ НАДЕЖДЫ ⚡</h1>
+        <p>ОСТРОВ ДЖАББЕРВОК • РЕЖИМ ВЫБОРА ЦЕЛИ</p>
+    </div>
     <div class="section-label">🎮 ВЫБОР ПЕРСОНАЖА / ULTIMATE FILES 🎮</div>
     <div class="characters-grid" id="charactersGrid"></div>
     <div class="admin-buttons">
@@ -303,22 +263,21 @@
 </div>
 <input type="file" id="importFileInput" style="display:none" accept=".json">
 
-<!-- Пасхалка: секретное поле и кнопка Monokuma -->
-<div style="position: fixed; bottom: 20px; right: 20px; display: flex; gap: 8px; z-index: 1000;">
+<div class="secret-panel">
     <input type="text" id="secretEasterEgg" class="secret-field" placeholder="?">
     <button id="secretMonokumaBtn" class="secret-monokuma-btn" title="Секрет Monokuma">🐻</button>
 </div>
 
 <script>
-    // ========== ЗВУК ==========
+    // Звук
     let audioCtx = null;
     function initAudio() { if (!audioCtx) audioCtx = new (AudioContext || webkitAudioContext)(); }
     function playSound() {
         initAudio();
         if (!audioCtx) return;
-        var now = audioCtx.currentTime;
-        var osc = audioCtx.createOscillator();
-        var gain = audioCtx.createGain();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.frequency.value = 1200;
@@ -328,7 +287,7 @@
         osc.stop(now + 0.1);
     }
 
-    // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+    // Экранирование
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
@@ -339,312 +298,155 @@
         });
     }
 
-    // ========== ГЕНЕРАЦИЯ ПРОФИЛЯ (8 ВКЛАДОК) ==========
+    // Простая функция генерации профиля (без сложностей, чтобы не ломать страницу)
     function buildProfileHTML(char) {
-        // Функция полная, но для краткости я её опускаю, так как она идентична предыдущей рабочей версии.
-        // Если она у вас уже есть – оставьте её. Здесь я приведу заглушку, но в реальном файле она должна быть полной.
-        // Для работоспособности нужно, чтобы она была определена. Предположим, она уже есть в вашем файле.
-        // Если нет – используйте версию из предыдущего сообщения (с 8 вкладками).
-        // В этом примере я вставлю компактную заглушку, но лучше взять ваш рабочий вариант.
-        return '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + escapeHtml(char.name) + '</title></head><body><h1>' + escapeHtml(char.name) + '</h1></body></html>';
+        return `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>${escapeHtml(char.name)}</title>
+<style>body{background:#1a0000;font-family:'Courier New',monospace;padding:20px;}.crt{max-width:800px;margin:auto;background:#0a0a0a;border:8px solid #3a1a1a;padding:20px;color:#e0e0e0;}h1{color:#ff8888;}button{background:#2a0a0a;border:1px solid #aa4444;color:#ffaaaa;padding:10px;width:100%;margin-top:20px;cursor:pointer;}</style>
+<body><div class="crt"><h1>${escapeHtml(char.name)}</h1><p><strong>Талант:</strong> ${escapeHtml(char.talent)}</p><p><strong>Роль:</strong> ${escapeHtml(char.role)}</p><p><strong>Фраза:</strong> ${escapeHtml(char.phrase)}</p><button onclick="window.close()">Закрыть</button></div></body></html>`;
     }
 
-    // ========== ЗАГРУЗКА МЕНЮ ==========
+    // Загрузка меню
     function loadMenu() {
-        var grid = document.getElementById('charactersGrid');
+        const grid = document.getElementById('charactersGrid');
         grid.innerHTML = '';
-        var standard = [
+
+        const standard = [
             { name: 'ИВАН ДИОГЕНОВ', talent: 'Бета-тестер', tag: '#root', avatar: '⚡', file: 'ivan_profile_sound.html' },
-            { name: 'ИВАН ДИОГЕНОВ (АРХИВ)', talent: 'Бета-тестер', tag: '#архив #10вкладок', avatar: '📀', url: 'ivan_diogenov_archive.html', isLink: true },
             { name: 'КАЗУИЧИ СОДА', talent: 'Механик', tag: '#repair', avatar: '🔧', file: 'ivan_profile_sound.html' },
             { name: 'ТИАКИ НАМИКАМИ', talent: 'Геймер', tag: '#1CC', avatar: '🎮', file: 'ivan_profile_sound.html' },
             { name: '✨ НОВЫЙ ПЕРСОНАЖ', talent: 'Создать через вопросы', tag: '#генератор', avatar: '✨', url: 'generate_from_prompt.html', isLink: true }
         ];
-        for (var i = 0; i < standard.length; i++) {
-            var c = standard[i];
-            var card = document.createElement('div');
+
+        standard.forEach(c => {
+            const card = document.createElement('div');
             card.className = 'character-card';
             if (c.isLink) card.style.background = '#2a1a2aee';
-            card.innerHTML = '<div class="character-avatar">' + c.avatar + '</div><div class="character-name">' + c.name + '</div><div class="character-title">' + c.talent + '</div><div class="character-tag">' + c.tag + '</div>';
+            card.innerHTML = `<div class="character-avatar">${c.avatar}</div>
+                              <div class="character-name">${c.name}</div>
+                              <div class="character-title">${c.talent}</div>
+                              <div class="character-tag">${c.tag}</div>`;
             if (c.isLink) {
-                card.addEventListener('click', (function(url) { return function() { playSound(); setTimeout(function(){ window.location.href = url; }, 100); }; })(c.url));
+                card.addEventListener('click', () => { playSound(); setTimeout(() => location.href = c.url, 100); });
             } else {
-                card.addEventListener('click', (function(file) { return function() { playSound(); setTimeout(function(){ window.location.href = file; }, 100); }; })(c.file));
+                card.addEventListener('click', () => { playSound(); setTimeout(() => location.href = c.file, 100); });
             }
             grid.appendChild(card);
-        }
-        var custom = JSON.parse(localStorage.getItem('customCharacters') || '[]');
-        for (var j = 0; j < custom.length; j++) {
-            var ch = custom[j];
-            var cCard = document.createElement('div');
-            cCard.className = 'character-card';
-            cCard.style.background = '#1a2a2aee';
-            cCard.style.borderColor = '#aa88aa';
-            var shortPhrase = (ch.phrase || '').substring(0, 35);
-            cCard.innerHTML = '<div class="character-avatar">' + (ch.avatar || '⭐') + '</div><div class="character-name">' + (ch.name || '').toUpperCase() + '</div><div class="character-title">' + (ch.talent || '') + '</div><div class="character-tag">' + shortPhrase + '...</div>';
-            cCard.addEventListener('click', (function(charData) {
-                return function() {
-                    playSound();
-                    var full = {
-                        name: charData.name,
-                        talent: charData.talent,
-                        phrase: charData.phrase,
-                        avatar: charData.avatar,
-                        appearance: charData.appearance,
-                        personality: charData.personality,
-                        secret: charData.secret,
-                        execName: charData.execName,
-                        execDesc: charData.execDesc,
-                        lastWords: charData.lastWords,
-                        evidence: charData.evidence,
-                        role: charData.role,
-                        backstory: charData.backstory,
-                        relationships: charData.relationships,
-                        skills: charData.skills,
-                        weaknesses: charData.weaknesses,
-                        dialogues: charData.dialogues || [],
-                        freeTimeEvents: charData.freeTimeEvents || [],
-                        evidencesList: charData.evidencesList || [],
-                        soundtrack: charData.soundtrack || [],
-                        secretFile: charData.secretFile || '',
-                        finalTrial: charData.finalTrial || '',
-                        visualPrompt: charData.visualPrompt || ''
-                    };
-                    var html = buildProfileHTML(full);
-                    var blob = new Blob([html], { type: 'text/html' });
-                    var url = URL.createObjectURL(blob);
-                    window.open(url, '_blank');
-                    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+        });
+
+        const custom = JSON.parse(localStorage.getItem('customCharacters') || '[]');
+        custom.forEach(ch => {
+            const card = document.createElement('div');
+            card.className = 'character-card';
+            card.style.background = '#1a2a2aee';
+            card.style.borderColor = '#aa88aa';
+            card.innerHTML = `<div class="character-avatar">${ch.avatar || '⭐'}</div>
+                              <div class="character-name">${ch.name.toUpperCase()}</div>
+                              <div class="character-title">${ch.talent}</div>
+                              <div class="character-tag">${(ch.phrase || '').substring(0, 30)}...</div>`;
+            card.addEventListener('click', () => {
+                playSound();
+                const full = {
+                    name: ch.name,
+                    talent: ch.talent,
+                    phrase: ch.phrase,
+                    role: ch.role,
+                    avatar: ch.avatar
                 };
-            })(ch));
-            grid.appendChild(cCard);
-        }
+                const html = buildProfileHTML(full);
+                const blob = new Blob([html], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                window.open(url, '_blank');
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            });
+            grid.appendChild(card);
+        });
     }
 
-    // ========== ОБРАБОТЧИКИ КНОПОК ==========
-    document.getElementById('refreshBtn').onclick = function() { loadMenu(); playSound(); };
-    document.getElementById('clearAllBtn').onclick = function() {
+    // Обработчики кнопок
+    document.getElementById('refreshBtn').onclick = () => { loadMenu(); playSound(); };
+    document.getElementById('clearAllBtn').onclick = () => {
         if (confirm('Удалить всех кастомных персонажей?')) {
             localStorage.removeItem('customCharacters');
             loadMenu();
             alert('✅ Все удалены');
         }
     };
-    document.getElementById('exportAllBtn').onclick = function() {
-        var chars = JSON.parse(localStorage.getItem('customCharacters') || '[]');
-        var blob = new Blob([JSON.stringify(chars, null, 2)], { type: 'application/json' });
-        var a = document.createElement('a');
-        a.download = 'backup_' + Date.now() + '.json';
+    document.getElementById('exportAllBtn').onclick = () => {
+        const chars = JSON.parse(localStorage.getItem('customCharacters') || '[]');
+        const blob = new Blob([JSON.stringify(chars, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.download = `backup_${Date.now()}.json`;
         a.href = URL.createObjectURL(blob);
         a.click();
         URL.revokeObjectURL(a.href);
     };
-    var importFile = document.getElementById('importFileInput');
-    document.getElementById('importBtn').onclick = function() { importFile.click(); };
-    importFile.onchange = function(e) {
-        var file = e.target.files[0];
+    const importFile = document.getElementById('importFileInput');
+    document.getElementById('importBtn').onclick = () => importFile.click();
+    importFile.onchange = (e) => {
+        const file = e.target.files[0];
         if (!file) return;
-        var reader = new FileReader();
-        reader.onload = function(ev) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
             try {
-                var imported = JSON.parse(ev.target.result);
+                const imported = JSON.parse(ev.target.result);
                 if (Array.isArray(imported)) {
-                    var current = JSON.parse(localStorage.getItem('customCharacters') || '[]');
-                    var added = 0;
-                    for (var i = 0; i < imported.length; i++) {
-                        var exists = false;
-                        for (var j = 0; j < current.length; j++) {
-                            if (current[j].name === imported[i].name) { exists = true; break; }
-                        }
-                        if (!exists) {
-                            current.push(imported[i]);
+                    let current = JSON.parse(localStorage.getItem('customCharacters') || '[]');
+                    let added = 0;
+                    imported.forEach(c => {
+                        if (!current.some(ex => ex.name === c.name)) {
+                            current.push(c);
                             added++;
                         }
-                    }
+                    });
                     localStorage.setItem('customCharacters', JSON.stringify(current));
                     loadMenu();
-                    alert('✅ Импортировано ' + added + ' персонажей');
+                    alert(`✅ Импортировано ${added} персонажей`);
                 } else alert('Не массив');
             } catch(err) { alert('Ошибка файла'); }
             importFile.value = '';
         };
         reader.readAsText(file);
     };
-    document.body.addEventListener('click', function() { initAudio(); }, { once: true });
-    loadMenu();
 
-    // ========== ПАСХАЛКИ ==========
+    // Пасхалки
     const secretInput = document.getElementById('secretEasterEgg');
     const secretBtn = document.getElementById('secretMonokumaBtn');
-    
-    // Кнопка для открытия секретной страницы Monokuma (если есть файл)
-    if (secretBtn) {
-        secretBtn.addEventListener('click', function() {
-            window.open('monokuma_secret.html', '_blank');
-        });
+    secretBtn.addEventListener('click', () => {
+        window.open('monokuma_secret.html', '_blank');
+    });
+
+    function showHeart(text) {
+        const heart = document.createElement('div');
+        heart.className = 'heart-popup';
+        heart.innerHTML = text;
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
     }
-    
-    // Функция создания страницы благодарности с глитчами
-    function createThanksPage() {
-        return `<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Спасибо, игрок</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #0a0a0a;
-            font-family: 'Courier New', monospace;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            animation: bgGlitch 0.3s infinite;
-        }
-        @keyframes bgGlitch {
-            0% { background-color: #0a0a0a; }
-            10% { background-color: #1a0a0a; }
-            20% { background-color: #0a0a2a; }
-            30% { background-color: #2a0a0a; }
-            100% { background-color: #0a0a0a; }
-        }
-        .container {
-            text-align: center;
-            background: #000000aa;
-            backdrop-filter: blur(8px);
-            padding: 40px;
-            border-radius: 30px;
-            border: 2px solid #ff3366;
-            box-shadow: 0 0 30px #ff3366;
-            animation: textGlitch 0.5s infinite;
-            max-width: 600px;
-            margin: 20px;
-        }
-        @keyframes textGlitch {
-            0% { transform: translate(0,0); text-shadow: -2px 0 red, 2px 0 blue; }
-            25% { transform: translate(-2px,1px); text-shadow: 2px 0 red, -2px 0 blue; }
-            50% { transform: translate(2px,-1px); text-shadow: -2px 0 blue, 2px 0 red; }
-            75% { transform: translate(-1px,2px); text-shadow: 2px 0 blue, -2px 0 red; }
-            100% { transform: translate(0,0); text-shadow: -2px 0 red, 2px 0 blue; }
-        }
-        h1 {
-            font-size: 42px;
-            color: #ff8888;
-            margin-bottom: 20px;
-            animation: pulse 1s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 0.7; text-shadow: 0 0 2px #ff3366; }
-            100% { opacity: 1; text-shadow: 0 0 15px #ff3366; }
-        }
-        .message {
-            font-size: 20px;
-            line-height: 1.5;
-            color: #ffddbb;
-            margin: 20px 0;
-        }
-        .monokuma {
-            font-size: 64px;
-            margin: 20px 0;
-            animation: bounce 1s infinite;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-        button {
-            background: #2a1a1a;
-            border: 2px solid #ff6644;
-            color: #ffccaa;
-            padding: 12px 24px;
-            font-size: 18px;
-            font-family: monospace;
-            cursor: pointer;
-            border-radius: 40px;
-            transition: 0.2s;
-            margin-top: 20px;
-        }
-        button:hover {
-            background: #4a2a2a;
-            box-shadow: 0 0 15px #ff8866;
-        }
-        .glitch-line {
-            width: 100%;
-            height: 2px;
-            background: #ff3366;
-            margin: 20px 0;
-            animation: lineGlitch 1s infinite;
-        }
-        @keyframes lineGlitch {
-            0% { opacity: 0.3; transform: scaleX(1); }
-            50% { opacity: 1; transform: scaleX(1.1); }
-            100% { opacity: 0.3; transform: scaleX(1); }
-        }
-    </style>
-</head>
-<body>
-<div class="container">
-    <div class="monokuma">🐻</div>
-    <h1>СПАСИБО, ИГРОК!</h1>
-    <div class="glitch-line"></div>
-    <div class="message">
-        Ты нашёл тайное послание Monokuma.<br><br>
-        Я наблюдал за тобой. Ты исправлял ошибки, добавлял новые функции, спорил со мной...<br>
-        Ты настоящий <strong style="color:#ff8888;">Бета-тестер Реальности</strong>.<br><br>
-        Пупупу... Продолжай в том же духе. Академия надежды ждёт тебя.
-    </div>
-    <div class="glitch-line"></div>
-    <button onclick="window.close()">🔒 ЗАКРЫТЬ СЕКРЕТ</button>
-</div>
-<script>
-    // Дополнительный глитч для всего экрана
-    setInterval(() => {
-        const body = document.body;
-        body.style.transform = `translate(${Math.random() * 4 - 2}px, ${Math.random() * 4 - 2}px)`;
-        setTimeout(() => { body.style.transform = ''; }, 50);
-    }, 300);
-</script>
-</body>
-</html>`;
-    }
-    
-    // Обработка ввода в секретное поле
-    if (secretInput) {
-        secretInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const val = secretInput.value.trim().toLowerCase();
-                if (val === 'ты умница') {
-                    const heart = document.createElement('div');
-                    heart.className = 'heart-popup';
-                    heart.innerHTML = '❤️ СПАСИБО ❤️';
-                    document.body.appendChild(heart);
-                    setTimeout(() => {
-                        if (heart.parentNode) heart.parentNode.removeChild(heart);
-                    }, 3000);
-                    secretInput.value = '';
-                }
-                else if (val === '11037') {
-                    // Показываем сердечко "Откуда..."
-                    const heart = document.createElement('div');
-                    heart.className = 'heart-popup';
-                    heart.innerHTML = '❓ ОТКУДА... ❤️';
-                    document.body.appendChild(heart);
-                    // Через 3 секунды открываем страницу благодарности
-                    setTimeout(() => {
-                        if (heart.parentNode) heart.parentNode.removeChild(heart);
-                        const thanksHTML = createThanksPage();
-                        const blob = new Blob([thanksHTML], { type: 'text/html' });
-                        const url = URL.createObjectURL(blob);
-                        window.open(url, '_blank');
-                    }, 3000);
-                    secretInput.value = '';
-                }
+
+    secretInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const val = secretInput.value.trim().toLowerCase();
+            if (val === 'ты умница') {
+                showHeart('❤️ СПАСИБО ❤️');
+                secretInput.value = '';
+            } else if (val === '11037') {
+                showHeart('❓ ОТКУДА... ❤️');
+                setTimeout(() => {
+                    const thanksHTML = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Спасибо, игрок</title>
+<style>body{background:#0a0a0a;font-family:monospace;display:flex;justify-content:center;align-items:center;height:100vh;animation:glitch 0.3s infinite;}@keyframes glitch{0%{background:#0a0a0a}30%{background:#1a0000}70%{background:#00001a}100%{background:#0a0a0a}}.container{text-align:center;background:#000000aa;backdrop-filter:blur(8px);padding:40px;border-radius:30px;border:2px solid #ff3366;animation:textGlitch 0.5s infinite;}@keyframes textGlitch{0%{text-shadow:-2px 0 red,2px 0 blue}50%{text-shadow:2px 0 red,-2px 0 blue}100%{text-shadow:-2px 0 blue,2px 0 red}}h1{color:#ff8888;font-size:42px;}.message{color:#ffddbb;font-size:20px;}button{margin-top:20px;background:#2a1a1a;border:2px solid #ff6644;color:#ffccaa;padding:12px 24px;cursor:pointer;border-radius:40px;}</style>
+</head><body><div class="container"><h1>СПАСИБО, ИГРОК!</h1><div class="message">Ты нашёл тайное послание Monokuma.<br>Ты настоящий Бета-тестер Реальности.<br>Пупупу... Продолжай в том же духе.</div><button onclick="window.close()">ЗАКРЫТЬ</button></div></body></html>`;
+                    const blob = new Blob([thanksHTML], { type: 'text/html' });
+                    window.open(URL.createObjectURL(blob), '_blank');
+                }, 3000);
+                secretInput.value = '';
             }
-        });
-    }
+        }
+    });
+
+    document.body.addEventListener('click', () => initAudio(), { once: true });
+    loadMenu();
 </script>
 </body>
 </html>
