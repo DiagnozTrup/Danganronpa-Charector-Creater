@@ -212,32 +212,51 @@
             box-shadow: 0 0 8px #ff6644;
         }
         /* Стили для пасхалки */
-        .secret-field {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 30px;
-            background: #1a1a1a;
-            border: 1px solid #aa6644;
-            color: #ffccaa;
-            font-family: 'Courier New', monospace;
-            font-size: 10px;
-            text-align: center;
-            padding: 4px;
-            border-radius: 8px;
-            opacity: 0.2;
-            transition: opacity 0.3s;
-            z-index: 1000;
-        }
-        .secret-field:hover {
-            opacity: 0.6;
-        }
-        .secret-field:focus {
-            opacity: 1;
-            outline: none;
-            border-color: #ffaa66;
-        }
+        /* Стили для секретного поля и кнопки */
+.secret-field {
+    width: 50px;
+    height: 30px;
+    background: #1a1a1a;
+    border: 1px solid #aa6644;
+    color: #ffccaa;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    text-align: center;
+    padding: 4px;
+    border-radius: 8px;
+    opacity: 0.2;
+    transition: opacity 0.3s;
+}
+.secret-field:hover {
+    opacity: 0.6;
+}
+.secret-field:focus {
+    opacity: 1;
+    outline: none;
+    border-color: #ffaa66;
+}
+.secret-monokuma-btn {
+    width: 30px;
+    height: 30px;
+    background: #1a1a1a;
+    border: 1px solid #aa6644;
+    color: #ffccaa;
+    font-family: monospace;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 8px;
+    opacity: 0.2;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.secret-monokuma-btn:hover {
+    opacity: 0.8;
+    background: #4a2a2a;
+    border-color: #ff8866;
+    box-shadow: 0 0 6px #ff8866;
+}
         .heart-popup {
             position: fixed;
             bottom: 70px;
@@ -284,13 +303,22 @@
 </div>
 <input type="file" id="importFileInput" style="display:none" accept=".json">
 
-<!-- Пасхалка: незаметное текстовое поле -->
-<input type="text" id="secretEasterEgg" class="secret-field" placeholder="?">
+<!-- Пасхалка: незаметное текстовое поле + кнопка -->
+<div style="position: fixed; bottom: 20px; right: 20px; display: flex; gap: 8px; z-index: 1000;">
+    <input type="text" id="secretEasterEgg" class="secret-field" placeholder="?">
+    <button id="secretMonokumaBtn" class="secret-monokuma-btn" title="Секрет Monokuma">🐻</button>
+</div>
 
 <script>
-    // ========== ПАСХАЛКА ==========
-        // ========== ПАСХАЛКИ (секретное поле) ==========
+    
+       // ========== ПАСХАЛКИ (секретное поле) ==========
     const secretInput = document.getElementById('secretEasterEgg');
+    const secretBtn = document.getElementById('secretMonokumaBtn');
+    
+    // Кнопка для открытия секретной страницы Monokuma
+    secretBtn.addEventListener('click', function() {
+        window.open('monokuma_secret.html', '_blank');
+    });
     secretInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             const val = secretInput.value.trim().toLowerCase();
