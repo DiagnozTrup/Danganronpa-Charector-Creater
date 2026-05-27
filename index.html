@@ -289,20 +289,133 @@
 
 <script>
     // ========== ПАСХАЛКА ==========
+        // ========== ПАСХАЛКИ (секретное поле) ==========
     const secretInput = document.getElementById('secretEasterEgg');
     secretInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             const val = secretInput.value.trim().toLowerCase();
+            // Пасхалка 1: "Ты умница" -> сердечко
             if (val === 'ты умница') {
-                // Создаём всплывающее сердечко
                 const heart = document.createElement('div');
                 heart.className = 'heart-popup';
                 heart.innerHTML = '❤️ СПАСИБО ❤️';
                 document.body.appendChild(heart);
-                // Удаляем через 3 секунды
                 setTimeout(() => {
                     if (heart.parentNode) heart.parentNode.removeChild(heart);
                 }, 3000);
+                secretInput.value = '';
+            }
+            // Пасхалка 2: "11037" -> секретная страница Monokuma
+            else if (val === '11037') {
+                // Создаём страницу Monokuma
+                const monokumaHTML = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Секретная страница Monokuma</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at 20% 30%, #1a0f0a, #050101);
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .crt {
+            max-width: 800px;
+            width: 100%;
+            background: #0a0a0a;
+            border: 8px solid #3a2a2a;
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        .crt::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,255,0,0.03) 0px, rgba(0,255,0,0.03) 2px, transparent 2px, transparent 4px);
+            pointer-events: none;
+            border-radius: 24px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 42px;
+            color: #ff6666;
+            text-shadow: 3px 3px 0 #5a0000;
+            margin-bottom: 20px;
+        }
+        .message {
+            background: #1a1a1a;
+            border-left: 6px solid #ff4444;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #f0e0d0;
+        }
+        .signature {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #ff8888;
+        }
+        button {
+            background: #2a1a1a;
+            border: 2px solid #aa6644;
+            color: #ffccaa;
+            padding: 12px 24px;
+            font-family: monospace;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 60px;
+            transition: all 0.2s;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #4a2a2a;
+            box-shadow: 0 0 15px #ff8866;
+        }
+        .monokuma-icon {
+            text-align: center;
+            font-size: 64px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="crt">
+    <div class="monokuma-icon">🐻</div>
+    <h1>⚡ СЕКРЕТНЫЙ ФАЙЛ MONOKUMA ⚡</h1>
+    <div class="message">
+        <strong>Пупупу... Ты нашёл моё секретное послание!</strong><br><br>
+        Ты ввел число <strong style="color:#ff8888;">11037</strong> – то самое число, с которого всё началось. Помнишь первую игру?<br><br>
+        Я не ожидал, что ты заглянешь так глубоко. Но раз уж ты здесь...<br><br>
+        Знай: я горжусь тобой. Ты прошёл долгий путь – от первых промптов до этой страницы. Ты исправлял ошибки, добавлял новые функции, спорил со мной и в итоге создал настоящего персонажа.<br><br>
+        <strong>Ты – настоящий Бета-тестер Реальности.</strong><br><br>
+        Пупупу... А теперь возвращайся в игру. Тебя ждут новые испытания.
+    </div>
+    <div class="signature">
+        — Monokuma, твой верный директор
+    </div>
+    <button onclick="window.location.href='index.html'">🏠 ВЕРНУТЬСЯ В ГЛАВНОЕ МЕНЮ</button>
+</div>
+</body>
+</html>`;
+                const blob = new Blob([monokumaHTML], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                window.open(url, '_blank');
                 secretInput.value = '';
             }
         }
